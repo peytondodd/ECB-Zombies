@@ -3,6 +3,7 @@ package net.endercraftbuild.zombies.commands;
 import net.endercraftbuild.zombies.ZombiesMain;
 import net.endercraftbuild.zombies.utils.Utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,13 +34,20 @@ public class JoinCommand implements CommandExecutor{
 
 		if (cmd.getName().equalsIgnoreCase("join"))
 		{
-			if (sender.hasPermission("zombies.user"))
+			if(args.length == 1) 
 			{
+				String gamename = "read gamename from file";
+				if(args[0].equalsIgnoreCase(gamename))
+				{
+				if (sender.hasPermission("zombies.user"))
+				{
 				Utils.setInGame(player, false);
 				//teleport player to game
-				sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You joined {GAMENAME}");
+				Bukkit.broadcastMessage(plugin.prefix + ChatColor.GREEN + player.getName() + " just joined" + gamename);
+					}
+				}
 			}
 		}
-	return true;
+		return true;	
 	}
 }
