@@ -26,7 +26,7 @@ public class JoinCommand implements CommandExecutor{
 		}
 		Player player = (Player) sender;
 
-		if(Utils.isInGame(player) == true)
+		if(Utils.isInGameZ(player) == true)
 		{
 			player.sendMessage(plugin.prefix + "Please leave the game you are in before joining another");
 			return true;
@@ -41,7 +41,7 @@ public class JoinCommand implements CommandExecutor{
 				{
 				if (sender.hasPermission("zombies.user"))
 				{
-				Utils.setInGame(player, false);
+				Utils.setInGameZ(player, false);
 				//teleport player to game
 				Bukkit.broadcastMessage(plugin.prefix + ChatColor.GREEN + player.getName() + " just joined" + gamename);
 					}

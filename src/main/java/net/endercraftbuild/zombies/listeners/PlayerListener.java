@@ -29,7 +29,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(ignoreCancelled = true) //Join Signs
 	public void Join(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if(Utils.isInGame(player) )
+		if(Utils.isInGameZ(player) )
 			player.sendMessage(plugin.prefix + ChatColor.RED + "You are already in the game!");
 		else
 
@@ -43,7 +43,7 @@ public class PlayerListener implements Listener {
 						if (sign.getLine(1).equalsIgnoreCase("Join") && player.hasPermission("zombies.user"))
 						{
 							//Location loc = read coords from file to tp  player to game
-							Utils.setInGame(player, true);
+							Utils.setInGameZ(player, true);
 							String game = "get game info from fileeeeee";
 							player.sendMessage(plugin.prefix + ChatColor.GREEN + "You have joined " + game);
 						}
@@ -73,7 +73,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(ignoreCancelled = true)//Walll gunzzzz
 	public void WallWeapons(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if(Utils.isInGame(player))
+		if(Utils.isInGameZ(player))
 		{
 			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 			{
@@ -120,7 +120,7 @@ public class PlayerListener implements Listener {
 	{
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		if(Utils.isInGame(player))
+		if(Utils.isInGameZ(player))
 		{
 			if(block.getType() == Material.CHEST)
 			{

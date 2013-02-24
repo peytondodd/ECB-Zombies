@@ -8,29 +8,56 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Utils {
 
-	public static ArrayList<String> Playing = new ArrayList<String>();
+	//Temp methods
+	public static ArrayList<String> PlayingZ = new ArrayList<String>();
+	public static ArrayList<String> PlayingPvP = new ArrayList<String>();
+	public static ArrayList<String> ISA = new ArrayList<String>();
+	public static ArrayList<String> Mercs = new ArrayList<String>();
 
-
-	public static boolean isInGame(Player player) {
+	public static boolean isInGameZ(Player player) {
 		String playerName = player.getName();
-		if(Playing.contains(playerName)) {
+		if(PlayingZ.contains(playerName)) {
 			return true;
 		}
 		else
 			return false;
 	}
-	public static void setInGame(Player player, boolean bool) {
+	public static void setInGameZ(Player player, boolean bool) {
 		String playerName = player.getName();
-		if(isInGame(player)== false)
+		if(isInGameZ(player)== false)
 		{
 			if(bool == true)
-				Playing.add(playerName);
+				PlayingZ.add(playerName);
 			else
-				if(isInGame(player) == true)
+				if(isInGameZ(player) == true)
 				{
 					if(bool == false)
 					{
-						Playing.remove(playerName);
+						PlayingZ.remove(playerName);
+					}
+				}
+		}
+	}
+	public static boolean isInGamePvP(Player player) {
+		String playerName = player.getName();
+		if(PlayingZ.contains(playerName)) {
+			return true;
+		}
+		else
+			return false;
+	}
+	public static void setInGamePvP(Player player, boolean bool, ArrayList<String> team) {
+		String playerName = player.getName();
+		if(isInGamePvP(player)== false)
+		{
+			if(bool == true)
+				PlayingPvP.add(playerName);
+			else
+				if(isInGamePvP(player) == true)
+				{
+					if(bool == false)
+					{
+						PlayingPvP.remove(playerName);
 					}
 				}
 		}

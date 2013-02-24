@@ -25,7 +25,7 @@ public class LeaveCommand implements CommandExecutor{
 		}
 		Player player = (Player) sender;
 
-		if(Utils.isInGame(player) == false)
+		if(Utils.isInGameZ(player) == false)
 		{
 			player.sendMessage(plugin.prefix + "You are not in a game");
 			return true;
@@ -35,7 +35,7 @@ public class LeaveCommand implements CommandExecutor{
 		{
 			if (sender.hasPermission("zombies.user"))
 			{
-				Utils.setInGame(player, false);
+				Utils.setInGameZ(player, false);
 				//teleport player to spawn
 				sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You left {GAMENAME}");
 			}
