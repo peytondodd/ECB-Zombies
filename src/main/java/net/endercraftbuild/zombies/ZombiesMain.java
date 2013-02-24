@@ -1,6 +1,7 @@
 package net.endercraftbuild.zombies;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -40,6 +41,7 @@ public List<String> pistol = new ArrayList<String>();
 public List<String> reloaders = new ArrayList<String>();
 public List<String> reloadersRocket = new ArrayList<String>();
 public List<String> reloading = new ArrayList<String>();
+public HashMap<String, Integer> kills = new HashMap();
 
 
 /*
