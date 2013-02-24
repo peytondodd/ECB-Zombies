@@ -5,20 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-import net.endercraftbuild.zombies.commands.JoinCommand;
+import net.endercraftbuild.zombies.commands.*;
+import net.endercraftbuild.zombies.listeners.*;
+import net.endercraftbuild.zombies.games.GameManager;
 import net.endercraftbuild.zombies.guns.Shoot;
-import net.endercraftbuild.zombies.listeners.BlockListener;
-import net.endercraftbuild.zombies.listeners.PlayerListener;
-import net.endercraftbuild.zombies.listeners.PointsListener;
 import net.endercraftbuild.zombies.utils.Door;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,9 +26,11 @@ public class ZombiesMain extends JavaPlugin {
 public String prefix = "[" + ChatColor.DARK_GREEN + ChatColor.BOLD + "ECB Zombies" + ChatColor.RESET + "] ";
 
 public static Economy economy = null; //Vault for points system
+public static WorldGuardPlugin worldGuard = null;
+
+private GameManager gameManager;
 
 private Shoot Shoot;
-protected final YamlConfiguration config = new YamlConfiguration();
 public Logger log = Logger.getLogger("Minecraft");
 public List<String> pistol = new ArrayList<String>();
 public List<String> reloaders = new ArrayList<String>();
@@ -57,23 +56,38 @@ public List<Door> doors = new ArrayList<Door>();
  */
 
 public void onEnable() {
-	if (!setupEconomy()) { System.out.println("Warning no economy plugin found!"); }
-	PluginManager pm = this.getServer().getPluginManager();
-	pm.registerEvents(new PlayerListener(this), this);
-	pm.registerEvents(new BlockListener(this), this);
-	pm.registerEvents(new PointsListener(this), this);
-	getCommand("join").setExecutor(new JoinCommand(this));
-	getCommand("leave").setExecutor(new JoinCommand(this));
-	pm.registerEvents(new Shoot(this), this);
-	getLogger().info("ECB Zombies enabled!"); {
-	getWorldGuard();
-
-	}
-	setupEconomy();
-	//Ill import all the doors listed in the config file(as their bottom half) here into the "doors" list(When you guys create the config file)
+	if (!setupEconomy())
+		getLogger().warning("Vault not found!");
+	
+	if (!setupWorldGuard())
+		getLogger().warning("WorldGuard not found!");
+	
+	registerListeners();
+	registerCommands();
+	setupGameManager();
 }
-private boolean setupEconomy()
-{
+
+public void onDisable() {
+	getLogger().info("ECB Zombies disabled");
+}
+
+private void registerListeners() {
+	getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+	getServer().getPluginManager().registerEvents(new BlockListener(this), this);
+	getServer().getPluginManager().registerEvents(new PointsListener(this), this);
+	getServer().getPluginManager().registerEvents(new Shoot(this), this);  // FIXME: should be called ShootListener
+}
+
+private void registerCommands() {
+	getCommand("join").setExecutor(new JoinCommand(this));
+	getCommand("leave").setExecutor(new LeaveCommand(this));
+	getCommand("create").setExecutor(new CreateCommand(this));
+	getCommand("edit").setExecutor(new EditCommand(this));
+	getCommand("save").setExecutor(new SaveCommand(this));
+}
+
+private boolean setupEconomy() {
+	// FIXME: should use the same setup format as worldguard below
 	RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 	if (economyProvider != null) {
 		economy = economyProvider.getProvider();
@@ -85,21 +99,31 @@ private boolean setupEconomy()
 public static Economy getEconomy() {
 	return economy;
 }
-private WorldGuardPlugin getWorldGuard() {
+
+private boolean setupWorldGuard() {
     Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
 
     // WorldGuard may not be loaded
-    if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
-        return null; // Maybe you want throw an exception instead
-    }
+    if (plugin == null || !(plugin instanceof WorldGuardPlugin))
+        return false;
+    
+    worldGuard = (WorldGuardPlugin) plugin;
 
-    return (WorldGuardPlugin) plugin;
+    return true;
 }
 
+public WorldGuardPlugin getWorldGuard() {
+    return worldGuard;
+}
 
-public void onDisable(){
-	getLogger().info("ECB Zombies disabled");
-	}
+private void setupGameManager() {
+	gameManager = new GameManager(this);
+	gameManager.load();
+}
+
+public GameManager getGameManager() {
+	return this.gameManager;
+}
 //buy ammo from a sign in the spawn of the map
 public void reload(final Player player) {
         player.sendMessage(prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");

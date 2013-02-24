@@ -1,0 +1,69 @@
+name: ECB-Zombies
+author: [superpeanut911, geekguy44, MortuTBK]
+description: CoD Zombies plugin for Endercraftbuild minecraft server! endercraftbuild.net!
+website: http://ci.mortu.net/job/ECB-Zombies/
+main: net.endercraftbuild.zombies.ZombiesMain
+version: 1.0
+depend: [Vault, WorldGuard]
+commands:
+  join:
+    description: Joins a CoD Zombies game.
+    usage: |
+      /join <name>
+      Example: /join nacht - join the game on Nacht
+      Example: /guard nuketown - join the game on Nuketown
+    permissions: cod.play.join
+    permission-message: You do not have permission to run that command.
+  leave:
+    description: Leaves the CoD Zombies game you are currently in.
+    usage: /leave
+    permissions: cod.play.leave
+    permission-message: You do not have permission to run that command.
+  create:
+    description: Creates a new CoD Zombies game with the spawnpoint set to your current location.
+    usage: |
+      /create <name> <min players> <max players> <zombie multiplier> <max waves>
+      Example: /create nacht 1 8 1 128
+      Example: /create nuketown 2 16 2 128
+    permissions: cod.admin.create
+    permission-message: You do not have permission to run that command.
+  edit:
+    description: Edits an existing CoD Zombies game with the spawnpoint set to your current location.
+    usage: |
+      /edit <name> <new name> <min players> <max players> <zombie multiplier> <max waves>
+      Example: /edit notch nacth 1 8 1 128
+      Example: /edit nooktown nuketown 2 16 2 128
+    permissions: cod.admin.edit
+    permission-message: You do not have permission to run that command.
+  save:
+    description: Saves the current CoD Zombies games setup.
+    usage: /save - saves the current CoD Zombies games setup
+    permissions: cod.admin.save
+    permission-message: You do not have permission to run that command.
+permissions:
+  cod.*:
+    description: Gives access to all CoD Zombies commands.
+    children:
+      cod.play.*: true
+      cod.admin.*: true
+  cod.play.*:
+    description: Gives access to all CoD Zombies player commands.
+    children:
+      cod.play.join: true
+      cod.play.leave: true
+  cod.play.join:
+    description: Allows you to join a CoD Zombies game.
+  cod.play.leave:
+    description: Allows you to leave a CoD Zombies game.
+  cod.admin.*:
+    description: Gives access to all CoD Zombies admin commands.
+    children:
+      cod.admin.create: true
+      cod.admin.edit: true
+      cod.admin.save: true
+  cod.admin.create:
+    description: Allows you to create a CoD Zombies game.
+  cod.admin.edit:
+    description: Allows you to edit an existing CoD Zombies game.
+  cod.admin.save:
+    description: Allows you to save the existing CoD Zombies games setup.
