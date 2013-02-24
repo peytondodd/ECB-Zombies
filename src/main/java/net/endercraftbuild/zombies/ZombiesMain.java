@@ -10,6 +10,7 @@ import net.endercraftbuild.zombies.guns.Shoot;
 import net.endercraftbuild.zombies.listeners.BlockListener;
 import net.endercraftbuild.zombies.listeners.PlayerListener;
 import net.endercraftbuild.zombies.listeners.PointsListener;
+import net.endercraftbuild.zombies.utils.Door;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 
@@ -42,6 +43,7 @@ public List<String> reloaders = new ArrayList<String>();
 public List<String> reloadersRocket = new ArrayList<String>();
 public List<String> reloading = new ArrayList<String>();
 public HashMap<String, Integer> kills = new HashMap();
+public List<Door> doors = new ArrayList<Door>();
 
 
 /*
@@ -73,6 +75,7 @@ public void onEnable() {
 
 	}
 	setupEconomy();
+	//Ill import all the doors listed in the config file(as their bottom half) here into the "doors" list(When you guys create the config file)
 }
 private boolean setupEconomy()
 {
@@ -133,5 +136,44 @@ public void reload(final Player player) {
     , 100L);
   }
 
+public void DoorChecker()
+{
+    Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
+    {
+      public void run()
+      {
+        try
+        {
+        	for(int j = 0; j < doors.size(); j++)
+        	{
+        		if(doors.get(j).checkForZombies())
+        		{
+        			doors.get(j).statIncrease();
+        		}
+        	}
+        }
+        catch (Exception localException)
+        {
+        }
+      }
+    }
+	
+   , 400L, 100L);// every 5 seconds
+}
+
+//functions for getting/setting names
+public String getItemName(ItemStack is)
+{
+	ItemMeta im = is.getItemMeta();
+	return im.getDisplayName();
+}
+
+public ItemStack setItemName(ItemStack is, String str)
+{
+	ItemMeta im = is.getItemMeta();
+	im.setDisplayName(str);
+	is.setItemMeta(im);
+	return is;
+}
 }
 
