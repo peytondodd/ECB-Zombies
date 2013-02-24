@@ -27,10 +27,10 @@ public class PlayerListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler(ignoreCancelled =  true)//Join Signs
+	@EventHandler(ignoreCancelled = true) //Join Signs
 	public void Join(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if(Utils.isInGame(player) == true)
+		if(Utils.isInGame(player) )
 			player.sendMessage(plugin.prefix + ChatColor.RED + "You are already in the game!");
 		else
 
@@ -74,7 +74,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(ignoreCancelled = true)//Walll gunzzzz
 	public void WallWeapons(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if(Utils.isInGame(player) == true)
+		if(Utils.isInGame(player))
 		{
 			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 			{
@@ -123,7 +123,7 @@ public class PlayerListener implements Listener {
 	{
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		if(Utils.isInGame(player) == true)
+		if(Utils.isInGame(player))
 		{
 			if(block.getType() == Material.CHEST)
 			{
