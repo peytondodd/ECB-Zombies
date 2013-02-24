@@ -17,11 +17,20 @@ public class Utils {
 		else
 			return false;
 	}
-	public static void setInGame(Player player) {
+	public static void setInGame(Player player, boolean bool) {
 		String playerName = player.getName();
 		if(isInGame(player)== false) 
 		{
+			if(bool == true)
 			Playing.add(playerName);
+			else 
+				if(isInGame(player) == true)
+				{
+					if(bool == false)
+					{
+						Playing.remove(playerName);
+					}
+				}
 		}
 	}
 }

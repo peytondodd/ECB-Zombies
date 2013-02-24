@@ -44,7 +44,7 @@ public class PlayerListener implements Listener {
 						if (sign.getLine(1).equalsIgnoreCase("Join") && player.hasPermission("zombies.user")) 
 						{
 							//Location loc = read coords from file to tp  player to game
-							//Set player in some game array or something
+							Utils.setInGame(player, true);
 							String game = "get game info from fileeeeee";
 							player.sendMessage(plugin.prefix + ChatColor.GREEN + "You have joined " + game);
 						}

@@ -9,11 +9,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class JoinCommand implements CommandExecutor{
+public class LeaveCommand implements CommandExecutor{
 
 	private ZombiesMain plugin;
 
-	public JoinCommand(ZombiesMain plugin) {
+	public LeaveCommand(ZombiesMain plugin) {
 		this.plugin = plugin;
 	}
 
@@ -23,9 +23,9 @@ public class JoinCommand implements CommandExecutor{
 		{}
 		Player player = (Player) sender;
 		
-		if(Utils.isInGame(player) == true) {}
+		if(Utils.isInGame(player) == false) {}
 		
-		if (cmd.getName().equalsIgnoreCase("join"))
+		if (cmd.getName().equalsIgnoreCase("leave"))
 		{
 			if (args.length == 1) 
 			{
@@ -33,7 +33,7 @@ public class JoinCommand implements CommandExecutor{
 				{
 					if (sender.hasPermission("zombies.user"))
 					{
-						Utils.setInGame(player, true);
+						Utils.setInGame(player, false);
 						//teleport player to gamae
 						sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You joined {GAMENAME}");
 					}
