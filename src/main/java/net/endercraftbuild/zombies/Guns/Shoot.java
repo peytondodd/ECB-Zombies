@@ -105,50 +105,6 @@ public class Shoot
           }
         }
         , 60L);
-      } else if (hand.getType() == Material.DIAMOND_HOE) {
-        if (this.plugin.reloadersRocket.contains(player.getName())) {
-          return;
-        }
-        if (!player.getInventory().contains(Material.CLAY_BALL, 20)) {
-          if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
-            this.plugin.reloading.add(player.getName().toLowerCase());
-            player.sendMessage(ChatColor.RED + "Reloading weapons!");
-            this.plugin.reload(player);
-          }
-          return;
-        }
-        player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 20) });
-        player.updateInventory();
-        this.plugin.reloadersRocket.add(player.getName());
-        player.launchProjectile(Arrow.class);
-        Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
-        smokepase(player, loc);
-        player.playSound(player.getLocation(), Sound.ITEM_BREAK, 200.0F, 0.0F);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
-        {
-          public void run() {
-            Shoot.this.plugin.reloadersRocket.remove(player.getName());
-          }
-        }
-        , 100L);
-      }
-      else if (hand.getType() == Material.GOLD_HOE)
-      {
-        if (!player.getInventory().contains(Material.CLAY_BALL, 7)) {
-          if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
-            this.plugin.reloading.add(player.getName().toLowerCase());
-            player.sendMessage(ChatColor.RED + "Reloading weapons!");
-            this.plugin.reload(player);
-          }
-          return;
-        }
-
-        player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 7) });
-        player.updateInventory();
-        player.launchProjectile(SmallFireball.class);
-        Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
-        smokepase(player, loc);
-        player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
       }
       else if (hand.getType() == Material.WOOD_HOE) {
         if (this.plugin.pistol.contains(player.getName())) {
