@@ -131,19 +131,5 @@ public void reload(final Player player) {
     , 100L);
   }
 
-//functions for getting/setting names
-public String getItemName(ItemStack is)
-{
-	ItemMeta im = is.getItemMeta();
-	return im.getDisplayName();
-}
-
-public ItemStack setItemName(ItemStack is, String str)
-{
-	ItemMeta im = is.getItemMeta();
-	im.setDisplayName(str);
-	is.setItemMeta(im);
-	return is;
-}
 }
 

@@ -98,7 +98,7 @@ public class PlayerListener implements Listener {
 								PlayerInventory inv = player.getInventory();
 								int id = Integer.parseInt(sign.getLine(2));
 								ItemStack weapon = new ItemStack(id, 1);
-								weapon = plugin.setItemName(weapon, sign.getLine(1));
+								weapon = Utils.setItemName(weapon, sign.getLine(1));
 								inv.addItem(weapon);
 								player.sendMessage(plugin.prefix + ChatColor.GREEN + "You have purchased " + sign.getLine(1));
 							}
