@@ -8,8 +8,6 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -17,13 +15,11 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.entity.Snowball;
-import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -42,9 +38,6 @@ public class Shoot
     Action action = event.getAction();
     final Player player = event.getPlayer();
     ItemStack hand = player.getItemInHand();
-    Integer totalkill = Integer.valueOf(1);
-    if (this.plugin.kills.containsKey(player.getName()))
-      totalkill = (Integer)this.plugin.kills.get(player.getName());
     if ((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK))
       if (hand.getType() == Material.IRON_HOE)
       {
@@ -184,43 +177,7 @@ public class Shoot
         }
         , 12L);
       }
-      else if (hand.getType() == Material.LEVER) {
-        if (totalkill.intValue() >= 10) {
-          this.plugin.kills.put(player.getName(), Integer.valueOf(totalkill.intValue() - 5));
-          Block b = player.getTargetBlock(null, 200);
-          Location loc = b.getLocation();
-          World world = loc.getWorld();
-          for (int x = -10; x <= 10; x += 5)
-          {
-            for (int z = -10; z <= 10; z += 5)
-            {
-              Location tntloc = new Location(world, loc.getBlockX() + x, world.getHighestBlockYAt(loc) + 64, loc.getBlockZ() + z);
-              world.spawn(tntloc, TNTPrimed.class);
-            }
-          }
-        } else {
-          player.sendMessage(ChatColor.RED + "You need a kill streak of at least 10 to use this!");
-        }
-      } else if (hand.getType() == Material.STONE_BUTTON) {
-        if (totalkill.intValue() >= 5) {
-          this.plugin.kills.put(player.getName(), Integer.valueOf(totalkill.intValue() - 10));
-          Block b = player.getTargetBlock(null, 200);
-          Location loc = b.getLocation();
-          World world = loc.getWorld();
-          for (int x = -10; x <= 20; x++)
-          {
-            for (int z = -10; z <= 20; z++)
-            {
-              Location tntloc = new Location(world, loc.getBlockX() + x, world.getHighestBlockYAt(loc) + 64, loc.getBlockZ() + z);
-              world.spawn(tntloc, Snowball.class);
-            }
-          }
-        } else {
-          player.sendMessage(ChatColor.RED + "You need a kill streak of at least 5 to use this!");
-        }
-      }
   }
-
   @EventHandler
   public void onPlayerDamageArrow(EntityDamageByEntityEvent ev)
   {

@@ -40,7 +40,6 @@ public List<String> pistol = new ArrayList<String>();
 public List<String> reloaders = new ArrayList<String>();
 public List<String> reloadersRocket = new ArrayList<String>();
 public List<String> reloading = new ArrayList<String>();
-public HashMap<String, Integer> kills = new HashMap<String, Integer>();
 
 
 /*
@@ -108,13 +107,14 @@ public void reload(final Player player) {
       public void run()
       {
         try {
-        	double payreload = 35.0;
-        	EconomyResponse r = ZombiesMain.economy.withdrawPlayer(player.getName(), payreload);
-			if(!r.transactionSuccess()) 
+        	
+        double payreload = 35.0;
+        EconomyResponse r = ZombiesMain.economy.withdrawPlayer(player.getName(), payreload);
+		if(!r.transactionSuccess()) 
 			{
-				player.sendMessage(prefix + ChatColor.RED + "You need " + payreload + " points to reload!");
-			}
-				else {				
+		  player.sendMessage(prefix + ChatColor.RED + "You need " + payreload + " points to reload!");
+		  }
+			else {				
           ItemStack stack = new ItemStack(Material.CLAY_BALL, 64);
           player.getInventory().addItem(new ItemStack[] { stack });
           player.sendMessage(ChatColor.GREEN + "Done reloading!");
