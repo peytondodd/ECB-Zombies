@@ -29,7 +29,6 @@ public static Economy economy = null; //Vault for points system
  * Keeping track of rounds + increasing zombie health and numbers on round increase
  * Reward points on Zombie kills (Done, other than guns - Peanut)
  * Game creation
- * 
  */
 
 public void onEnable() {

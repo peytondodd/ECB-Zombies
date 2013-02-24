@@ -33,6 +33,4 @@ public class BlockListener implements Listener {
 	public void preventLandDestructionOnExplode(EntityExplodeEvent event) {
 		event.blockList().clear(); 
 	}
-	
-	
 }
