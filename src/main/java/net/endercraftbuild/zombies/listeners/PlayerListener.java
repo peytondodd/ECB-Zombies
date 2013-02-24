@@ -17,6 +17,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.*;
 
 public class PlayerListener implements Listener {
 
@@ -112,6 +113,9 @@ public class PlayerListener implements Listener {
 								PlayerInventory inv = player.getInventory();
 								int id = Integer.parseInt(sign.getLine(2));
 								ItemStack weapon = new ItemStack(id, 1);
+								ItemMeta wm = weapon.getItemMeta();
+								wm.setDisplayName(sign.getLine(1));
+								weapon.setItemMeta(wm);
 								inv.addItem(weapon);
 								player.sendMessage(plugin.prefix + ChatColor.GREEN + "You have purchased " + sign.getLine(1));
 							}
