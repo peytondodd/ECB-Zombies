@@ -20,6 +20,7 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -130,5 +131,20 @@ public void reload(final Player player) {
     }
     , 100L);
   }
+
+//functions for getting/setting names
+public String getItemName(ItemStack is)
+{
+	ItemMeta im = is.getItemMeta();
+	return im.getDisplayName();
+}
+
+public ItemStack setItemName(ItemStack is, String str)
+{
+	ItemMeta im = is.getItemMeta();
+	im.setDisplayName(str);
+	is.setItemMeta(im);
+	return is;
+}
 }
 
