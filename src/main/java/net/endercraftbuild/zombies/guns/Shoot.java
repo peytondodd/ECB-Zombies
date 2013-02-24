@@ -1,4 +1,4 @@
-package net.endercraftbuild.zombies.Guns;
+package net.endercraftbuild.zombies.guns;
 
 import net.endercraftbuild.zombies.ZombiesMain;
 

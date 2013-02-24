@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import net.endercraftbuild.zombies.Guns.Shoot;
 import net.endercraftbuild.zombies.commands.JoinCommand;
+import net.endercraftbuild.zombies.guns.Shoot;
 import net.endercraftbuild.zombies.listeners.BlockListener;
 import net.endercraftbuild.zombies.listeners.PlayerListener;
 import net.endercraftbuild.zombies.listeners.PointsListener;

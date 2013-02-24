@@ -36,7 +36,7 @@ public class Utils {
 		}
 	}
 	//functions for getting/setting names
-	public String getItemName(ItemStack is)
+	public static String getItemName(ItemStack is)
 	{
 		ItemMeta im = is.getItemMeta();
 		return im.getDisplayName();
