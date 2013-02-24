@@ -44,7 +44,7 @@
         	<url>http://repo.bukkit.org/content/groups/public</url></repository>
         <repository>
         	<id>sk89q-repo</id>
-        	<url>http://repo.bukkit.org/content/groups/public</url></repository>
+        	<url>https://github.com/sk89q/worldguard</url></repository>
     </repositories>
 
     <build>

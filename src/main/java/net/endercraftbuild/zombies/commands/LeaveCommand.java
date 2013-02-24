@@ -22,24 +22,20 @@ public class LeaveCommand implements CommandExecutor{
 		if (!(sender instanceof Player)) 
 		{}
 		Player player = (Player) sender;
-		
+
 		if(Utils.isInGame(player) == false) {}
-		
+
 		if (cmd.getName().equalsIgnoreCase("leave"))
 		{
-			if (args.length == 1) 
+			if (sender.hasPermission("zombies.user"))
 			{
-				if (args[0].equalsIgnoreCase("a-known-game-name"))
-				{
-					if (sender.hasPermission("zombies.user"))
-					{
-						Utils.setInGame(player, false);
-						//teleport player to gamae
-						sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You joined {GAMENAME}");
-					}
-				}
+				Utils.setInGame(player, false);
+				//teleport player to gamae
+				sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You leave {GAMENAME}");
 			}
 		}
-		return true;
-	}
+		{
+	return true;
+}
+}
 }

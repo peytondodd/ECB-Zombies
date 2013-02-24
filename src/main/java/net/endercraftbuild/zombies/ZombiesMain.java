@@ -41,6 +41,7 @@ public void onEnable() {
 	pm.registerEvents(new BlockListener(this), this);
 	pm.registerEvents(new PointsListener(this), this);
 	getCommand("join").setExecutor(new JoinCommand(this));
+	getCommand("leave").setExecutor(new JoinCommand(this));
 	getLogger().info("ECB Zombies enabled!"); {
 	getWorldGuard();
 		
