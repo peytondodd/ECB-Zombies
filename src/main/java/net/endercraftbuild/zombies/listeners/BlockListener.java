@@ -29,7 +29,7 @@ public class BlockListener implements Listener {
 			}
 		}
 	}
-	@EventHandler (priority = EventPriority.HIGH)//Prevent land damage
+	@EventHandler (priority = EventPriority.LOW)//Prevent land damage
 	public void preventLandDestructionOnExplode(EntityExplodeEvent event) {
 		event.blockList().clear();
 	}

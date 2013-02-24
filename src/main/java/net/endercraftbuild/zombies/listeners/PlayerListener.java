@@ -143,7 +143,7 @@ public class PlayerListener implements Listener {
 							}
 							//Open the chest with 1 of the random items
 							else
-								player.sendMessage(plugin.prefix + ChatColor.RED + " You need " + amount + " to use the Mystery Box!");
+								player.sendMessage(plugin.prefix + ChatColor.RED + "You need " + amount + " to use the Mystery Box!");
 								event.setCancelled(true);
 						}
 					}

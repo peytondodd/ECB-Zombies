@@ -1,0 +1,290 @@
+package net.endercraftbuild.zombies.Guns;
+
+import net.endercraftbuild.zombies.ZombiesMain;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.SmallFireball;
+import org.bukkit.entity.Snowball;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
+
+public class Shoot
+  implements Listener
+{
+	private ZombiesMain plugin;
+
+	public Shoot(ZombiesMain plugin) {
+		this.plugin = plugin; }
+	
+  @EventHandler
+  public void onPlayerInteract(PlayerInteractEvent event) {
+    Action action = event.getAction();
+    final Player player = event.getPlayer();
+    ItemStack hand = player.getItemInHand();
+    Integer totalkill = Integer.valueOf(1);
+    if (this.plugin.kills.containsKey(player.getName()))
+      totalkill = (Integer)this.plugin.kills.get(player.getName());
+    if ((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK))
+      if (hand.getType() == Material.IRON_HOE)
+      {
+        if (!player.getInventory().contains(Material.CLAY_BALL, 2)) {
+          if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
+            this.plugin.reloading.add(player.getName().toLowerCase());
+            player.sendMessage(ChatColor.RED + "Reloading weapons!");
+            this.plugin.reload(player);
+          }
+          return;
+        }
+
+        player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 2) });
+        player.updateInventory();
+        player.launchProjectile(Snowball.class);
+        Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+        smokepase(player, loc);
+        player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
+      }
+      else if (hand.getType() == Material.STONE_HOE) {
+        if (this.plugin.reloaders.contains(player.getName())) {
+          return;
+        }
+        if (!player.getInventory().contains(Material.CLAY_BALL, 5)) {
+          if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
+            this.plugin.reloading.add(player.getName().toLowerCase());
+            player.sendMessage(ChatColor.RED + "Reloading weapons!");
+            this.plugin.reload(player);
+          }
+          return;
+        }
+        player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 5) });
+        player.updateInventory();
+        this.plugin.reloaders.add(player.getName());
+        player.launchProjectile(Snowball.class);
+        player.launchProjectile(Snowball.class);
+        player.launchProjectile(Snowball.class);
+        player.launchProjectile(Snowball.class);
+        player.launchProjectile(Snowball.class);
+        player.launchProjectile(Snowball.class);
+        Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+        smokepase(player, loc);
+        player.playSound(player.getLocation(), Sound.EXPLODE, 70.0F, 70.0F);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
+        {
+          public void run() {
+            Shoot.this.plugin.reloaders.remove(player.getName());
+          }
+        }
+        , 40L);
+      }
+      else if (player.getItemInHand().getType() == Material.SLIME_BALL) {
+        ItemStack item = player.getItemInHand();
+        Material soup = Material.SLIME_BALL;
+        player.setItemInHand(new ItemStack(soup, item.getAmount() - 1));
+        player.updateInventory();
+        final Item grenade = player.getWorld().dropItem(player.getEyeLocation(), new ItemStack(Material.SLIME_BALL));
+        grenade.setVelocity(player.getEyeLocation().getDirection());
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
+        {
+          public void run() {
+            Location loc = grenade.getLocation();
+            grenade.getWorld().createExplosion(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 4.0F, false, false);
+            grenade.remove();
+          }
+        }
+        , 60L);
+      } else if (hand.getType() == Material.DIAMOND_HOE) {
+        if (this.plugin.reloadersRocket.contains(player.getName())) {
+          return;
+        }
+        if (!player.getInventory().contains(Material.CLAY_BALL, 20)) {
+          if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
+            this.plugin.reloading.add(player.getName().toLowerCase());
+            player.sendMessage(ChatColor.RED + "Reloading weapons!");
+            this.plugin.reload(player);
+          }
+          return;
+        }
+        player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 20) });
+        player.updateInventory();
+        this.plugin.reloadersRocket.add(player.getName());
+        player.launchProjectile(Arrow.class);
+        Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+        smokepase(player, loc);
+        player.playSound(player.getLocation(), Sound.ITEM_BREAK, 200.0F, 0.0F);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
+        {
+          public void run() {
+            Shoot.this.plugin.reloadersRocket.remove(player.getName());
+          }
+        }
+        , 100L);
+      }
+      else if (hand.getType() == Material.GOLD_HOE)
+      {
+        if (!player.getInventory().contains(Material.CLAY_BALL, 7)) {
+          if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
+            this.plugin.reloading.add(player.getName().toLowerCase());
+            player.sendMessage(ChatColor.RED + "Reloading weapons!");
+            this.plugin.reload(player);
+          }
+          return;
+        }
+
+        player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 7) });
+        player.updateInventory();
+        player.launchProjectile(SmallFireball.class);
+        Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+        smokepase(player, loc);
+        player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
+      }
+      else if (hand.getType() == Material.WOOD_HOE) {
+        if (this.plugin.pistol.contains(player.getName())) {
+          return;
+        }
+        if (!player.getInventory().contains(Material.CLAY_BALL, 1)) {
+          if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
+            this.plugin.reloading.add(player.getName().toLowerCase());
+            player.sendMessage(ChatColor.RED + "Reloading weapons!");
+            this.plugin.reload(player);
+          }
+          return;
+        }
+        player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 1) });
+        player.updateInventory();
+        this.plugin.pistol.add(player.getName());
+        player.launchProjectile(Snowball.class);
+        Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+        smokepase(player, loc);
+        player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
+        {
+          public void run() {
+            Shoot.this.plugin.pistol.remove(player.getName());
+          }
+        }
+        , 12L);
+      }
+      else if (hand.getType() == Material.LEVER) {
+        if (totalkill.intValue() >= 10) {
+          this.plugin.kills.put(player.getName(), Integer.valueOf(totalkill.intValue() - 5));
+          Block b = player.getTargetBlock(null, 200);
+          Location loc = b.getLocation();
+          World world = loc.getWorld();
+          for (int x = -10; x <= 10; x += 5)
+          {
+            for (int z = -10; z <= 10; z += 5)
+            {
+              Location tntloc = new Location(world, loc.getBlockX() + x, world.getHighestBlockYAt(loc) + 64, loc.getBlockZ() + z);
+              world.spawn(tntloc, TNTPrimed.class);
+            }
+          }
+        } else {
+          player.sendMessage(ChatColor.RED + "You need a kill streak of at least 10 to use this!");
+        }
+      } else if (hand.getType() == Material.STONE_BUTTON) {
+        if (totalkill.intValue() >= 5) {
+          this.plugin.kills.put(player.getName(), Integer.valueOf(totalkill.intValue() - 10));
+          Block b = player.getTargetBlock(null, 200);
+          Location loc = b.getLocation();
+          World world = loc.getWorld();
+          for (int x = -10; x <= 20; x++)
+          {
+            for (int z = -10; z <= 20; z++)
+            {
+              Location tntloc = new Location(world, loc.getBlockX() + x, world.getHighestBlockYAt(loc) + 64, loc.getBlockZ() + z);
+              world.spawn(tntloc, Snowball.class);
+            }
+          }
+        } else {
+          player.sendMessage(ChatColor.RED + "You need a kill streak of at least 5 to use this!");
+        }
+      }
+  }
+
+  @EventHandler
+  public void onPlayerDamageArrow(EntityDamageByEntityEvent ev)
+  {
+    Entity damager = ev.getDamager();
+    if ((damager instanceof Snowball)) {
+      damager = ((Snowball)damager).getShooter();
+      ((HumanEntity)damager).getItemInHand();
+      ev.setDamage(10);
+    }
+  }
+  @EventHandler
+  public void shootArrow(ProjectileLaunchEvent e)
+  {
+    if ((e.getEntity() instanceof Snowball)) {
+      double x = 3.0D;
+      Vector v = e.getEntity().getVelocity();
+      v.multiply(new Vector(x, x, x));
+      e.getEntity().setVelocity(v);
+    }
+    else if ((e.getEntity() instanceof Arrow)) {
+      double x = 1.0D;
+      Vector v = e.getEntity().getVelocity();
+      v.multiply(new Vector(x, x, x));
+      e.getEntity().setVelocity(v);
+    }
+  }
+
+  @EventHandler
+  public void onEntityExplode(EntityExplodeEvent event) {
+    event.setCancelled(true);
+    Location loc = event.getLocation();
+    event.getLocation().getWorld().createExplosion(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 4.0F, false, false);
+  }
+
+  public void smokepase(Player player, Location loc) {
+    double rotation = (player.getLocation().getYaw() - 90.0F) % 360.0F;
+    if (rotation < 0.0D) {
+      rotation += 360.0D;
+    }
+    if ((0.0D <= rotation) && (rotation < 22.5D)) {
+      player.getWorld().playEffect(loc, Effect.SMOKE, 3);
+    }
+    else if ((22.5D <= rotation) && (rotation < 67.5D)) {
+      player.getWorld().playEffect(loc, Effect.SMOKE, 9);
+    }
+    else if ((67.5D <= rotation) && (rotation < 112.5D)) {
+      player.getWorld().playEffect(loc, Effect.SMOKE, 1);
+    }
+    else if ((112.5D <= rotation) && (rotation < 157.5D)) {
+      player.getWorld().playEffect(loc, Effect.SMOKE, 2);
+    }
+    else if ((157.5D <= rotation) && (rotation < 202.5D)) {
+      player.getWorld().playEffect(loc, Effect.SMOKE, 5);
+    }
+    else if ((202.5D <= rotation) && (rotation < 247.5D)) {
+      player.getWorld().playEffect(loc, Effect.SMOKE, 8);
+    }
+    else if ((247.5D <= rotation) && (rotation < 292.5D)) {
+      player.getWorld().playEffect(loc, Effect.SMOKE, 7);
+    }
+    else if ((292.5D <= rotation) && (rotation < 337.5D)) {
+      player.getWorld().playEffect(loc, Effect.SMOKE, 6);
+    }
+    else if ((337.5D <= rotation) && (rotation < 360.0D))
+      player.getWorld().playEffect(loc, Effect.SMOKE, 3);
+  }
+}
