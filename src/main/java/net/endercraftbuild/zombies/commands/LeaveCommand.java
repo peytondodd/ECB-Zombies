@@ -20,22 +20,26 @@ public class LeaveCommand implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) 
-		{}
+		{
+			return true;
+		}
 		Player player = (Player) sender;
 
-		if(Utils.isInGame(player) == false) {}
+		if(Utils.isInGame(player) == false)
+		{
+			player.sendMessage(plugin.prefix + "You are not in a game");
+			return true;
+		}
 
 		if (cmd.getName().equalsIgnoreCase("leave"))
 		{
 			if (sender.hasPermission("zombies.user"))
 			{
 				Utils.setInGame(player, false);
-				//teleport player to gamae
-				sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You leave {GAMENAME}");
+				//teleport player to spawn
+				sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You left {GAMENAME}");
 			}
 		}
-		{
 	return true;
-}
-}
+	}
 }

@@ -20,17 +20,26 @@ public class JoinCommand implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) 
-		{}
+		{
+			return true;
+		}
 		Player player = (Player) sender;
 
-		if(Utils.isInGame(player) == true) {}
+		if(Utils.isInGame(player) == true)
+		{
+			player.sendMessage(plugin.prefix + "Please leave the game you are in before joining another");
+			return true;
+		}
 
 		if (cmd.getName().equalsIgnoreCase("join"))
 		{
-			Utils.setInGame(player, true);
-			//teleport player to gamae
-			sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You joined {GAMENAME}");
+			if (sender.hasPermission("zombies.user"))
+			{
+				Utils.setInGame(player, false);
+				//teleport player to game
+				sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You joined {GAMENAME}");
+			}
 		}
-		return true;
+	return true;
 	}
 }
