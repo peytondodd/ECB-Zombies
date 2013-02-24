@@ -13,7 +13,8 @@ public class Utils {
 	public static ArrayList<String> PlayingPvP = new ArrayList<String>();
 	public static ArrayList<String> ISA = new ArrayList<String>();
 	public static ArrayList<String> Mercs = new ArrayList<String>();
-
+	public static ArrayList<String> Out = new ArrayList<String>();
+	
 	public static boolean isInGameZ(Player player) {
 		String playerName = player.getName();
 		if(PlayingZ.contains(playerName)) {

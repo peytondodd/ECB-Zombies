@@ -18,7 +18,10 @@ public class LeaveCommand implements CommandExecutor{
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) 
+	{
+		if (cmd.getName().equalsIgnoreCase("leave"))
+		{
 		if (!(sender instanceof Player))
 		{
 			return true;
@@ -27,19 +30,30 @@ public class LeaveCommand implements CommandExecutor{
 
 		if(Utils.isInGameZ(player) == false)
 		{
-			player.sendMessage(plugin.prefix + "You are not in a game");
+			player.sendMessage(plugin.prefix + "You are not in a zombies game");
+			return true;
+		}
+		if(Utils.isInGamePvP(player) == false)
+		{
+			player.sendMessage(plugin.prefix + "You are not in a pvp game");
 			return true;
 		}
 
-		if (cmd.getName().equalsIgnoreCase("leave"))
-		{
 			if (sender.hasPermission("zombies.user"))
 			{
-				Utils.setInGameZ(player, false);
+				if(Utils.isInGameZ(player) == true)
+					Utils.setInGameZ(player, false);
 				//teleport player to spawn
 				sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You left {GAMENAME}");
 			}
+			else if(Utils.isInGamePvP(player) == true)
+			{
+				Utils.setInGamePvP(player, false, Utils.Out);
+				sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You left {GAMENAME}");
+			}
 		}
-	return true;
+		{
+			return true;
+		}
 	}
 }

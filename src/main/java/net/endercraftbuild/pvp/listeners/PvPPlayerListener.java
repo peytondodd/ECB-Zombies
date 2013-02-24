@@ -26,9 +26,8 @@ public void onPlayerDeath(PlayerDeathEvent event) {
 		this.plugin.kills.remove(event.getEntity().getName());
 	if ((event.getEntity().getKiller() instanceof Player)) {
 		Player killer = event.getEntity().getKiller();
-		if(Utils.isInGamePvP(killer)) {
-			
-		}
+		if(Utils.isInGamePvP(killer)) 
+		{	
 		Integer totalkill = (Integer)this.plugin.kills.get(killer.getName());
 		if (totalkill == null)
 			this.plugin.kills.put(killer.getName(), Integer.valueOf(1));
@@ -41,32 +40,40 @@ public void onPlayerDeath(PlayerDeathEvent event) {
 			this.plugin.getServer().broadcastMessage(plugin.prefix + ChatColor.RED + killer.getName() + ChatColor.GOLD + " has a kill streak of 10!");
 		}
 	}
+}
+
 
 @EventHandler(ignoreCancelled = true) //Join for pvpSigns
-public void Join(PlayerInteractEvent event) {
+public void Join(PlayerInteractEvent event) 
+{
 	Player player = event.getPlayer();
 	if(Utils.isInGamePvP(player) )
 		player.sendMessage(plugin.prefix + ChatColor.RED + "You are already in the game!");
 	else
-
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 		{
-			if (event.getClickedBlock().getType().equals(Material.SIGN_POST) || event.getClickedBlock().getType().equals(Material.WALL_SIGN))
+		if (event.getClickedBlock().getType().equals(Material.SIGN_POST) || event.getClickedBlock().getType().equals(Material.WALL_SIGN))
+		{
+		Sign sign = (Sign)event.getClickedBlock().getState();
+		if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("ECB TDM"))
+		{
+			if (ChatColor.stripColor(sign.getLine(1)).equalsIgnoreCase("Join"))
 			{
-				Sign sign = (Sign)event.getClickedBlock().getState();
-				if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("ECB TDM")) {
-					if(Utils.ISA.size() > Utils.Mercs.size())
-					//teleport to game locations
-					//Give starter items
-					Utils.setInGamePvP(player, true, Utils.Mercs);
-					else {
-						Utils.setInGamePvP(player, true, Utils.ISA);
+			//if(ChatColor.stripColor(sign.getLine(2)).equalsIgnoreCase(mapname)) {
+			
+			if(Utils.ISA.size() > Utils.Mercs.size())
+				//teleport to game locations
+				//Give starter items
+				Utils.setInGamePvP(player, true, Utils.Mercs);
+				else {
+					Utils.setInGamePvP(player, true, Utils.ISA);
 					}
 					
 				}
 			}
 		}
 	}
+}
 }
 					
 					
