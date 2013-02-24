@@ -105,36 +105,10 @@ private WorldGuardPlugin getWorldGuard() {
 public void onDisable(){
 	getLogger().info("ECB Zombies disabled");
 	}
-
+//buy ammo from a sign in the spawn of the map
 public void reload(final Player player) {
-    Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable()
-    {
-      public void run()
-      {
-        try {
-        	
-        double payreload = 35.0;
-        EconomyResponse r = ZombiesMain.economy.withdrawPlayer(player.getName(), payreload);
-		if(!r.transactionSuccess()) 
-			{
-		  player.sendMessage(prefix + ChatColor.RED + "You need " + payreload + " points to reload!");
-		  }
-			else {				
-          ItemStack stack = new ItemStack(Material.CLAY_BALL, 64);
-          player.getInventory().addItem(new ItemStack[] { stack });
-          player.sendMessage(ChatColor.GREEN + "Done reloading!");
-          reloading.remove(player.getName().toLowerCase());
-          player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 80.0F);
-          player.updateInventory();
+        player.sendMessage(prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
         }
-        }
-        catch (Exception localException)
-        {
-        }
-      }
-    }
-    , 100L);
-  }
 
 public void DoorChecker()
 {
