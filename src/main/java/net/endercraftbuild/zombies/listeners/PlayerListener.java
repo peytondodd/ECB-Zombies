@@ -64,7 +64,7 @@ public class PlayerListener implements Listener {
 			if (event.getLine(0).equalsIgnoreCase("ECB Zombies")) 
 			{		
 				event.setLine(0, "§9ECB Zombies");
-				player.sendMessage(plugin.prefix + ChatColor.GREEN + " Sign created!");
+				player.sendMessage(plugin.prefix + ChatColor.GREEN + "Sign created!");
 			}
 		}
 	}
@@ -78,7 +78,7 @@ public class PlayerListener implements Listener {
 			if (event.getLine(0).equalsIgnoreCase("ECB Zombies")) 
 			{
 				event.setLine(0, "§4No Permission!");
-				player.sendMessage(plugin.prefix + ChatColor.RED + " No permissions!");
+				player.sendMessage(plugin.prefix + ChatColor.RED + "No permissions!");
 			}
 		}
 	}

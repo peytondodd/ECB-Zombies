@@ -28,6 +28,10 @@
         	<artifactId>Vault</artifactId>
         	<groupId>net.milkbowl.vault</groupId>
         	<version>1.2.9-SNAPSHOT</version></dependency>
+        <dependency>
+        	<artifactId>worldguard</artifactId>
+        	<groupId>com.sk89q</groupId>
+        	<version>5.7.2-SNAPSHOT</version></dependency>
     </dependencies>
 
     <repositories>
@@ -37,6 +41,9 @@
         </repository>
         <repository>
         	<id>vault-repo</id>
+        	<url>http://repo.bukkit.org/content/groups/public</url></repository>
+        <repository>
+        	<id>sk89q-repo</id>
         	<url>http://repo.bukkit.org/content/groups/public</url></repository>
     </repositories>
 

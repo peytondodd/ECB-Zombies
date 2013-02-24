@@ -7,9 +7,12 @@ import main.java.net.endercraftbuild.zombies.listeners.PointsListener;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class ZombiesMain extends JavaPlugin {
  
@@ -39,6 +42,7 @@ public void onEnable() {
 	pm.registerEvents(new PointsListener(this), this);
 	getCommand("join").setExecutor(new JoinCommand(this));
 	getLogger().info("ECB Zombies enabled!"); {
+	getWorldGuard();
 		
 	}
 	setupEconomy();
@@ -56,7 +60,16 @@ private boolean setupEconomy()
 public static Economy getEconomy() {
 	return economy;
 }
-
+private WorldGuardPlugin getWorldGuard() {
+    Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
+ 
+    // WorldGuard may not be loaded
+    if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
+        return null; // Maybe you want throw an exception instead
+    }
+ 
+    return (WorldGuardPlugin) plugin;
+}
 
 
 public void onDisable(){
