@@ -30,7 +30,7 @@ public class PointsListener implements Listener {
 		if(player != null && player instanceof Player)
 		{
 			Player killerPlayer = (Player)player;
-			if(Utils.isInGame(killerPlayer))
+			if(Utils.isInGameZ(killerPlayer))
 			{
 			if (event.getEntity().getType().equals(EntityType.ZOMBIE) || event.getEntity().getType().equals(EntityType.WOLF)) {
 				Random random = new Random();

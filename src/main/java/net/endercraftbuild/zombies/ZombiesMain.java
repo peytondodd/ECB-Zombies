@@ -160,20 +160,6 @@ public void DoorChecker()
 	
    , 400L, 100L);// every 5 seconds
 }
-
-//functions for getting/setting names
-public String getItemName(ItemStack is)
-{
-	ItemMeta im = is.getItemMeta();
-	return im.getDisplayName();
 }
 
-public ItemStack setItemName(ItemStack is, String str)
-{
-	ItemMeta im = is.getItemMeta();
-	im.setDisplayName(str);
-	is.setItemMeta(im);
-	return is;
-}
-}
 
