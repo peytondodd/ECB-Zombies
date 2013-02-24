@@ -1,7 +1,7 @@
-package main.java.net.endercraftbuild.zombies.listeners;
+package net.endercraftbuild.zombies.listeners;
 
-import main.java.net.endercraftbuild.zombies.ZombiesMain;
-import main.java.net.endercraftbuild.zombies.utils.Utils;
+import net.endercraftbuild.zombies.ZombiesMain;
+import net.endercraftbuild.zombies.utils.Utils;
 import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.ChatColor;
@@ -27,9 +27,8 @@ public class PlayerListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler//Join Signs
+	@EventHandler(ignoreCancelled =  true)//Join Signs
 	public void Join(PlayerInteractEvent event) {
-		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		if(Utils.isInGame(player) == true)
 			player.sendMessage(plugin.prefix + ChatColor.RED + "You are already in the game!");
@@ -37,12 +36,12 @@ public class PlayerListener implements Listener {
 
 			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 			{
-				if (event.getClickedBlock().getType().equals(Material.SIGN_POST) || event.getClickedBlock().getType().equals(Material.WALL_SIGN)) 
+				if (event.getClickedBlock().getType().equals(Material.SIGN_POST) || event.getClickedBlock().getType().equals(Material.WALL_SIGN))
 				{
 					Sign sign = (Sign)event.getClickedBlock().getState();
-					if (sign.getLine(0).equalsIgnoreCase("§9ECB Zombies")) 
+					if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("ECB Zombies"))
 					{
-						if (sign.getLine(1).equalsIgnoreCase("Join") && player.hasPermission("zombies.user")) 
+						if (sign.getLine(1).equalsIgnoreCase("Join") && player.hasPermission("zombies.user"))
 						{
 							//Location loc = read coords from file to tp  player to game
 							Utils.setInGame(player, true);
@@ -56,48 +55,35 @@ public class PlayerListener implements Listener {
 				}
 			}
 	}
-	@EventHandler//Create join signs
+	@EventHandler(ignoreCancelled = true) //Create join signs
 	public void SignCreate(SignChangeEvent event) {
-		if (event.isCancelled()) return;
-		Player player = event.getPlayer();
-		if (player.hasPermission("zombies.signs.create")) 
-		{
-			if (event.getLine(0).equalsIgnoreCase("ECB Zombies")) 
-			{		
-				event.setLine(0, "§9ECB Zombies");
-				player.sendMessage(plugin.prefix + ChatColor.GREEN + "Sign created!");
-			}
-		}
+        if (!ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase("ECB Zombies"))
+            return;
+
+        Player player = event.getPlayer();
+
+        if (player.hasPermission("zombies.signs.create")) {
+            event.setLine(0, ChatColor.BLUE + "ECB Zombies");
+            player.sendMessage(plugin.prefix + ChatColor.GREEN + "Sign created!");
+		} else {
+            event.setLine(0, ChatColor.DARK_RED + "No Permission!");
+            player.sendMessage(plugin.prefix + ChatColor.RED + "No permissions!");
+        }
 	}
 
-	@EventHandler
-	public void noPerm(SignChangeEvent event) {
-		if (event.isCancelled()) return;
-		Player player = event.getPlayer();
-		if (!player.hasPermission("zombies.signs.create")) 
-		{
-			if (event.getLine(0).equalsIgnoreCase("ECB Zombies")) 
-			{
-				event.setLine(0, "§4No Permission!");
-				player.sendMessage(plugin.prefix + ChatColor.RED + "No permissions!");
-			}
-		}
-	}
-
-	@EventHandler//Walll gunzzzz
+	@EventHandler(ignoreCancelled = true)//Walll gunzzzz
 	public void WallWeapons(PlayerInteractEvent event) {
-		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		if(Utils.isInGame(player) == true)
 		{
 			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 			{
-				if (event.getClickedBlock().getType().equals(Material.SIGN_POST) || event.getClickedBlock().getType().equals(Material.WALL_SIGN)) 
+				if (event.getClickedBlock().getType().equals(Material.SIGN_POST) || event.getClickedBlock().getType().equals(Material.WALL_SIGN))
 				{
 					Sign sign = (Sign)event.getClickedBlock().getState();
-					if (sign.getLine(0).equalsIgnoreCase("§9ECB Zombies")) 
+					if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("ECB Zombies"))
 					{
-						if (player.hasPermission("zombies.user")) 
+						if (player.hasPermission("zombies.user"))
 						{
 							//Line 1 can be the name EX: "Grenades"
 							double amount = 0;
@@ -120,7 +106,7 @@ public class PlayerListener implements Listener {
 								player.sendMessage(plugin.prefix + ChatColor.GREEN + "You have purchased " + sign.getLine(1));
 							}
 							else {
-								player.sendMessage(plugin.prefix + ChatColor.GREEN + "You need " + ChatColor.DARK_GREEN + amount 
+								player.sendMessage(plugin.prefix + ChatColor.GREEN + "You need " + ChatColor.DARK_GREEN + amount
 										+ ChatColor.GREEN + " to buy " + ChatColor.DARK_GREEN + sign.getLine(1));
 							}
 						}
@@ -133,18 +119,18 @@ public class PlayerListener implements Listener {
 
 
 	@EventHandler
-	public void MysteryBox(PlayerInteractEvent event) 
+	public void MysteryBox(PlayerInteractEvent event)
 	{
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
 		if(Utils.isInGame(player) == true)
 		{
-			if(block.getType() == Material.CHEST) 
+			if(block.getType() == Material.CHEST)
 			{
 				Sign sign = (Sign)block.getRelative(BlockFace.UP, 1).getState();
-				if(sign.getType() == Material.WALL_SIGN) 
+				if(sign.getType() == Material.WALL_SIGN)
 				{
-					if (sign.getLine(0).equalsIgnoreCase("§9ECB Zombies")) 
+					if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("ECB Zombies"))
 					{
 						double amount = 0;
 						try {
@@ -162,7 +148,7 @@ public class PlayerListener implements Listener {
 						}
 					}
 				}
-				{	
+				{
 				}
 
 			}

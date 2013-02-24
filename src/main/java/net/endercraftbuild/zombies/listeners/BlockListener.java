@@ -1,6 +1,6 @@
-package main.java.net.endercraftbuild.zombies.listeners;
+package net.endercraftbuild.zombies.listeners;
 
-import main.java.net.endercraftbuild.zombies.ZombiesMain;
+import net.endercraftbuild.zombies.ZombiesMain;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,9 +21,9 @@ public class BlockListener implements Listener {
 	@EventHandler
 	public void inGameBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
-		if(!(event.getBlock().getType() == Material.SIGN_POST)) 
+		if(!(event.getBlock().getType() == Material.SIGN_POST))
 		{
-			if(!player.isOp()) 
+			if(!player.isOp())
 			{
 				event.setCancelled(true);
 			}
@@ -31,6 +31,6 @@ public class BlockListener implements Listener {
 	}
 	@EventHandler (priority = EventPriority.HIGH)//Prevent land damage
 	public void preventLandDestructionOnExplode(EntityExplodeEvent event) {
-		event.blockList().clear(); 
+		event.blockList().clear();
 	}
 }

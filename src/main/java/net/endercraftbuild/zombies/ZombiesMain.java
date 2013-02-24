@@ -1,9 +1,9 @@
-package main.java.net.endercraftbuild.zombies;
+package net.endercraftbuild.zombies;
 
-import main.java.net.endercraftbuild.zombies.commands.JoinCommand;
-import main.java.net.endercraftbuild.zombies.listeners.BlockListener;
-import main.java.net.endercraftbuild.zombies.listeners.PlayerListener;
-import main.java.net.endercraftbuild.zombies.listeners.PointsListener;
+import net.endercraftbuild.zombies.commands.JoinCommand;
+import net.endercraftbuild.zombies.listeners.BlockListener;
+import net.endercraftbuild.zombies.listeners.PlayerListener;
+import net.endercraftbuild.zombies.listeners.PointsListener;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
@@ -15,7 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class ZombiesMain extends JavaPlugin {
- 
+
 public String prefix = "[" + ChatColor.DARK_GREEN + ChatColor.BOLD + "ECB Zombies" + ChatColor.RESET + "] ";
 
 public static Economy economy = null; //Vault for points system
@@ -44,7 +44,7 @@ public void onEnable() {
 	getCommand("leave").setExecutor(new JoinCommand(this));
 	getLogger().info("ECB Zombies enabled!"); {
 	getWorldGuard();
-		
+
 	}
 	setupEconomy();
 }
@@ -63,18 +63,18 @@ public static Economy getEconomy() {
 }
 private WorldGuardPlugin getWorldGuard() {
     Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
- 
+
     // WorldGuard may not be loaded
     if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
         return null; // Maybe you want throw an exception instead
     }
- 
+
     return (WorldGuardPlugin) plugin;
 }
 
 
 public void onDisable(){
-	getLogger().info("ECB Zombies disabled"); 
+	getLogger().info("ECB Zombies disabled");
 	}
 }
 

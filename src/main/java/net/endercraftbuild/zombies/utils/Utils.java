@@ -1,4 +1,4 @@
-package main.java.net.endercraftbuild.zombies.utils;
+package net.endercraftbuild.zombies.utils;
 
 import java.util.ArrayList;
 
@@ -19,11 +19,11 @@ public class Utils {
 	}
 	public static void setInGame(Player player, boolean bool) {
 		String playerName = player.getName();
-		if(isInGame(player)== false) 
+		if(isInGame(player)== false)
 		{
 			if(bool == true)
 			Playing.add(playerName);
-			else 
+			else
 				if(isInGame(player) == true)
 				{
 					if(bool == false)

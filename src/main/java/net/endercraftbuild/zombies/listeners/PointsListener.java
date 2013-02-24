@@ -1,9 +1,9 @@
-package main.java.net.endercraftbuild.zombies.listeners;
+package net.endercraftbuild.zombies.listeners;
 
 import java.util.Random;
 
-import main.java.net.endercraftbuild.zombies.ZombiesMain;
-import main.java.net.endercraftbuild.zombies.utils.Utils;
+import net.endercraftbuild.zombies.ZombiesMain;
+import net.endercraftbuild.zombies.utils.Utils;
 import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.ChatColor;
@@ -18,14 +18,14 @@ public class PointsListener implements Listener {
 	private ZombiesMain plugin;
 
 	public PointsListener(ZombiesMain plugin) {
-		this.plugin = plugin; 
+		this.plugin = plugin;
 	}
-	
+
 	//TODO: Add an error free listener for gun kills
-	
+
 	@EventHandler
 	public void ZombieDeath(EntityDeathEvent event) {
-		
+
 		Player player = event.getEntity().getKiller();
 		if(player != null && player instanceof Player)
 		{

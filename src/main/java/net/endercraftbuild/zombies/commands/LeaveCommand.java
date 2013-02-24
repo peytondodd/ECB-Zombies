@@ -1,7 +1,7 @@
-package main.java.net.endercraftbuild.zombies.commands;
+package net.endercraftbuild.zombies.commands;
 
-import main.java.net.endercraftbuild.zombies.ZombiesMain;
-import main.java.net.endercraftbuild.zombies.utils.Utils;
+import net.endercraftbuild.zombies.ZombiesMain;
+import net.endercraftbuild.zombies.utils.Utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,7 +19,7 @@ public class LeaveCommand implements CommandExecutor{
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!(sender instanceof Player)) 
+		if (!(sender instanceof Player))
 		{
 			return true;
 		}
