@@ -44,7 +44,6 @@ public class Shoot
         if (!player.getInventory().contains(Material.CLAY_BALL, 2)) {
           if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
             this.plugin.reloading.add(player.getName().toLowerCase());
-            player.sendMessage(ChatColor.RED + "Reloading weapons!");
             this.plugin.reload(player);
           }
           return;
@@ -64,7 +63,6 @@ public class Shoot
         if (!player.getInventory().contains(Material.CLAY_BALL, 5)) {
           if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
             this.plugin.reloading.add(player.getName().toLowerCase());
-            player.sendMessage(ChatColor.RED + "Reloading weapons!");
             this.plugin.reload(player);
           }
           return;
@@ -113,7 +111,6 @@ public class Shoot
         if (!player.getInventory().contains(Material.CLAY_BALL, 1)) {
           if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
             this.plugin.reloading.add(player.getName().toLowerCase());
-            player.sendMessage(ChatColor.RED + "Reloading weapons!");
             this.plugin.reload(player);
           }
           return;
