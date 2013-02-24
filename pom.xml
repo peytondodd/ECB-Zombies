@@ -15,7 +15,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <build.number>Unknown</build.number>
-        <main.class>main.java.net.endercraftbuild.zombies.ZombiesMain</main.class>
+        <main.class>net.endercraftbuild.zombies.ZombiesMain</main.class>
     </properties>
 
     <dependencies>
