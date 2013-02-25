@@ -44,6 +44,7 @@ public class JoinCommand implements CommandExecutor{
 				Utils.setInGameZ(player, false);
 				//teleport player to game
 				Bukkit.broadcastMessage(plugin.prefix + ChatColor.GREEN + player.getName() + " just joined" + gamename);
+				player.setExp(0);
 					}
 				}
 			}

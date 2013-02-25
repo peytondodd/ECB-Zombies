@@ -45,6 +45,7 @@ public class LeaveCommand implements CommandExecutor{
 					Utils.setInGameZ(player, false);
 				//teleport player to spawn
 				sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You left {GAMENAME}");
+				player.setExp(0);
 			}
 			else if(Utils.isInGamePvP(player) == true)
 			{
