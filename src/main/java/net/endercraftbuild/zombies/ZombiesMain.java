@@ -76,6 +76,7 @@ private void registerListeners() {
 	getServer().getPluginManager().registerEvents(new BlockListener(this), this);
 	getServer().getPluginManager().registerEvents(new PointsListener(this), this);
 	getServer().getPluginManager().registerEvents(new Shoot(this), this);  // FIXME: should be called ShootListener
+	getServer().getPluginManager().registerEvents(new EntityListener(this), this);
 }
 
 private void registerCommands() {
