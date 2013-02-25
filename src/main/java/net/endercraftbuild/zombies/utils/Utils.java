@@ -15,6 +15,7 @@ public class Utils {
 	public static ArrayList<String> Mercs = new ArrayList<String>();
 	public static ArrayList<String> Out = new ArrayList<String>();
 	
+	
 	public static boolean isInGameZ(Player player) {
 		String playerName = player.getName();
 		if(PlayingZ.contains(playerName)) {
@@ -58,6 +59,7 @@ public class Utils {
 				{
 					if(bool == false)
 					{
+						//teleport to spawn
 						PlayingPvP.remove(playerName);
 					}
 				}
@@ -78,3 +80,10 @@ public class Utils {
 		return is;
 	}
 }
+
+
+
+
+
+
+

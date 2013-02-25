@@ -1,9 +1,9 @@
 package net.endercraftbuild.zombies.guns;
 
 import net.endercraftbuild.zombies.ZombiesMain;
+import net.endercraftbuild.zombies.utils.Utils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,7 +13,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.SmallFireball;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -139,7 +138,7 @@ public class Shoot
       damager = ((Snowball)damager).getShooter();
       ((HumanEntity)damager).getItemInHand();
       ev.setDamage(10);
-    }
+      }
   }
   @EventHandler
   public void shootArrow(ProjectileLaunchEvent e)
