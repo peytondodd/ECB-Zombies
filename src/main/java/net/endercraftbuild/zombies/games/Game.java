@@ -1,7 +1,13 @@
 package net.endercraftbuild.zombies.games;
 
+import net.endercraftbuild.zombies.ZombiesMain;
+import net.endercraftbuild.zombies.customevents.RoundAdvanceEvent;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+
+
 
 public class Game {
 	
@@ -107,7 +113,9 @@ public class Game {
 	}
 	
 	public void advanceWave() {
-		this.setCurrentWave(this.currentWave + 1);
+		this.setCurrentWave(currentWave + 1);
+		RoundAdvanceEvent roundevent = new RoundAdvanceEvent();
+		Bukkit.getServer().getPluginManager().callEvent(roundevent);
 	}
 
 }
