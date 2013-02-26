@@ -37,14 +37,12 @@ public List<String> reloaders = new ArrayList<String>();
 public List<String> reloadersRocket = new ArrayList<String>();
 public List<String> reloading = new ArrayList<String>();
 public HashMap<String, Integer> kills = new HashMap();
-public List<Door> doors = new ArrayList<Door>(); // right now its global for all games, i will fix that later
-
 
 /*
  * TODO list
  * Put players in games and stuff (Started)
  * Zombie Spawns
- * Zombies breaking down doors
+ * Zombies breaking down doors (done - geek)
  * Door Link
  * Mystery Box
  * Wall Weapons (DONE - Peanut)
@@ -129,36 +127,6 @@ public GameManager getGameManager() {
 public void reload(final Player player) {
         player.sendMessage(prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
         }
-
-public void DoorChecker()
-{
-    Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
-    {
-      public void run()
-      {
-        try
-        {
-        	for(int j = 0; j < doors.size(); j++)
-        	{
-        		if(doors.get(j).checkForZombies())
-        		{
-        			doors.get(j).statIncrease();
-        		}
-        	}
-        }
-        catch (Exception localException)
-        {
-        }
-      }
-    }
-	
-   , 400L, 100L);// every 5 seconds
-}
-
-public List<Door> getDoorList()
-{
-	return doors;
-}
 }
 
 

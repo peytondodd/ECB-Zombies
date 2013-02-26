@@ -2,6 +2,7 @@ package net.endercraftbuild.zombies.games;
 
 import net.endercraftbuild.zombies.ZombiesMain;
 import net.endercraftbuild.zombies.customevents.RoundAdvanceEvent;
+import net.endercraftbuild.zombies.utils.DoorHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,6 +18,7 @@ public class Game {
 	private Double zombieMultiplier;
 	private Long maxWaves;
 	private Location spawnLocation;
+	private DoorHandler DH;
 	
 	private boolean isActive;
 	private Long currentWave;
@@ -42,6 +44,9 @@ public class Game {
 	
 	public String getName() {
 		return name;
+	}
+	public DoorHandler getDoorHandler() {
+		return DH;
 	}
 
 	public void setName(String name) {
@@ -90,6 +95,7 @@ public class Game {
 	
 	public void start() {
 		this.setActive(true);
+		DH.DoorChecker();
 	}
 	
 	public void stop() {

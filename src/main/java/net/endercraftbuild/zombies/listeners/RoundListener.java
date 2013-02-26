@@ -18,11 +18,11 @@ public class RoundListener implements Listener
 	@EventHandler
 	public void onRoundAdvance(RoundAdvanceEvent event)
 	{
-		for(int i = 0; i < plugin.getDoorList().size(); i++)
+		for(int i = 0; i < event.getGame().getDoorHandler().getDoorList().size(); i++)
 		{
-			if(plugin.getDoorList().get(i).loc.getBlock().getType() != Material.WOODEN_DOOR)
+			if(event.getGame().getDoorHandler().getDoorList().get(i).loc.getBlock().getType() != Material.WOODEN_DOOR)
 			{
-				plugin.getDoorList().get(i).buildDoor();
+				event.getGame().getDoorHandler().getDoorList().get(i).buildDoor();
 			}
 		}
 	}
