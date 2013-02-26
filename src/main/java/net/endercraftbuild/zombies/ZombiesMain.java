@@ -37,7 +37,7 @@ public List<String> reloaders = new ArrayList<String>();
 public List<String> reloadersRocket = new ArrayList<String>();
 public List<String> reloading = new ArrayList<String>();
 public HashMap<String, Integer> kills = new HashMap();
-public List<Door> doors = new ArrayList<Door>();
+public List<Door> doors = new ArrayList<Door>(); // right now its global for all games, i will fix that later
 
 
 /*
@@ -153,6 +153,11 @@ public void DoorChecker()
     }
 	
    , 400L, 100L);// every 5 seconds
+}
+
+public List<Door> getDoorList()
+{
+	return doors;
 }
 }
 
