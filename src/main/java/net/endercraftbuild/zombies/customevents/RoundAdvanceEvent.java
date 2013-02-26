@@ -14,7 +14,10 @@ public class RoundAdvanceEvent extends Event {
     public Long getRound() {
         return game.getCurrentWave();
     }
-    
+    public String getGame() {
+    	return game.getName();
+    }
+ 
     public void setRound(Long round) {
     	game.setCurrentWave(round);
     }
