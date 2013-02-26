@@ -1,7 +1,6 @@
 package net.endercraftbuild.zombies.guns;
 
 import net.endercraftbuild.zombies.ZombiesMain;
-import net.endercraftbuild.zombies.utils.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -11,7 +10,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;

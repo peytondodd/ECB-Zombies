@@ -54,12 +54,14 @@ public HashMap<String, Integer> kills = new HashMap();
  */
 
 public void onEnable() {
+	//if(!(getServer().getIp() == "127.0.0.1"))
+		//setEnabled(false);
+//	else Will add in final release! Restrict teh plugin for ECB only
 	if (!setupEconomy())
 		getLogger().warning("Vault not found!");
 	
 	if (!setupWorldGuard())
 		getLogger().warning("WorldGuard not found!");
-	
 	registerListeners();
 	registerCommands();
 	setupGameManager();

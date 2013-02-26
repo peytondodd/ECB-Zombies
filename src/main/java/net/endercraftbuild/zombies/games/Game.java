@@ -1,6 +1,7 @@
 package net.endercraftbuild.zombies.games;
 
-import net.endercraftbuild.zombies.ZombiesMain;
+import net.endercraftbuild.zombies.customevents.GameEndEvent;
+import net.endercraftbuild.zombies.customevents.GameStartEvent;
 import net.endercraftbuild.zombies.customevents.RoundAdvanceEvent;
 import net.endercraftbuild.zombies.utils.DoorHandler;
 
@@ -96,10 +97,14 @@ public class Game {
 	public void start() {
 		this.setActive(true);
 		DH.DoorChecker();
+		GameStartEvent gsevent = new GameStartEvent();
+		Bukkit.getServer().getPluginManager().callEvent(gsevent);
 	}
 	
 	public void stop() {
 		this.setActive(false);
+		GameEndEvent geevent = new GameEndEvent();
+		Bukkit.getServer().getPluginManager().callEvent(geevent);
 	}
 
 	public Location getSpawnLocation() {
