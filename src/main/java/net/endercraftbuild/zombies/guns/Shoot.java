@@ -86,23 +86,26 @@ public class Shoot
         }
         , 40L);
       }
-      else if (player.getItemInHand().getType() == Material.SLIME_BALL) {
-        ItemStack item = player.getItemInHand();
-        Material soup = Material.SLIME_BALL;
-        player.setItemInHand(new ItemStack(soup, item.getAmount() - 1));
-        player.updateInventory();
-        final Item grenade = player.getWorld().dropItem(player.getEyeLocation(), new ItemStack(Material.SLIME_BALL));
-        grenade.setVelocity(player.getEyeLocation().getDirection());
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
-        {
-          public void run() {
-            Location loc = grenade.getLocation();
-            grenade.getWorld().createExplosion(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 4.0F, false, false);
-            grenade.remove();
+      else //Better machine gun, uses less ammo + shoots double the shots. 
+    	  if ((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK))
+          if (hand.getType() == Material.DIAMOND_HOE)
+          {
+            if (!player.getInventory().contains(Material.CLAY_BALL, 1)) {
+              if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
+                this.plugin.reloading.add(player.getName().toLowerCase());
+                this.plugin.reload(player);
+              }
+              return;
+            }
+
+            player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 1) });
+            player.updateInventory();
+            player.launchProjectile(Snowball.class);
+            player.launchProjectile(Snowball.class);
+            Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+            smokepase(player, loc);
+            player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
           }
-        }
-        , 60L);
-      }
       else if (hand.getType() == Material.WOOD_HOE) {
         if (this.plugin.pistol.contains(player.getName())) {
           return;
@@ -122,6 +125,7 @@ public class Shoot
         smokepase(player, loc);
         player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
         Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
+        
         {
           public void run() {
             Shoot.this.plugin.pistol.remove(player.getName());
