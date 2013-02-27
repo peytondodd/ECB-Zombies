@@ -11,6 +11,8 @@ public class GameEndEvent extends Event {
     
     private Game game;
     
+    //Check if game is zombies or PvP
+    
     public String getName() {
     	return game.getName();
     }

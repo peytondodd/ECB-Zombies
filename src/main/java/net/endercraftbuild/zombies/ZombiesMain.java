@@ -9,10 +9,8 @@ import net.endercraftbuild.zombies.commands.*;
 import net.endercraftbuild.zombies.listeners.*;
 import net.endercraftbuild.zombies.games.GameManager;
 import net.endercraftbuild.zombies.guns.Shoot;
-import net.endercraftbuild.zombies.utils.Door;
 import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
