@@ -6,13 +6,12 @@ import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.Spawner;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class ZombieGame extends Game {
-
+	
 	private Double zombieMultiplier;
 	private Long maxWaves;
 	private Location spawnLocation;
@@ -95,7 +94,7 @@ public class ZombieGame extends Game {
 	
 	public void advanceWave() {
 		this.setCurrentWave(getCurrentWave() + 1);
-		RoundAdvanceEvent roundevent = new RoundAdvanceEvent();
+		RoundAdvanceEvent roundevent = new RoundAdvanceEvent(this);
 		Bukkit.getServer().getPluginManager().callEvent(roundevent);
 	}
 

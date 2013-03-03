@@ -1,9 +1,7 @@
 package net.endercraftbuild.cod.commands;
 
 import net.endercraftbuild.cod.CoDMain;
-import net.endercraftbuild.cod.utils.Utils;
-
-import org.bukkit.Bukkit;
+import net.endercraftbuild.cod.games.Game;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,34 +19,21 @@ public class JoinCommand implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
-		{
 			return true;
-		}
+		if (args.length < 1)
+			return false;
+		
 		Player player = (Player) sender;
-
-		if(Utils.isInGameZ(player) == true)
-		{
-			player.sendMessage(plugin.prefix + "Please leave the game you are in before joining another");
-			return true;
+		
+		try {
+			Game game = plugin.getGameManager().get(args[0]);
+			game.addPlayer(player);
+			player.getServer().broadcastMessage(ChatColor.GREEN + player.getName() + " just joined " + game.getName() + ".");
+		} catch (RuntimeException e) {
+			player.sendMessage(ChatColor.RED + e.getLocalizedMessage());
 		}
-
-		if (cmd.getName().equalsIgnoreCase("join"))
-		{
-			if(args.length == 1) 
-			{
-				String gamename = "read gamename from file";
-				if(args[0].equalsIgnoreCase(gamename))
-				{
-				if (sender.hasPermission("zombies.user"))
-				{
-				Utils.setInGameZ(player, false);
-				//teleport player to game
-				Bukkit.broadcastMessage(plugin.prefix + ChatColor.GREEN + player.getName() + " just joined" + gamename);
-				player.setExp(0);
-					}
-				}
-			}
-		}
-		return true;	
+		
+		return true;
 	}
+	
 }

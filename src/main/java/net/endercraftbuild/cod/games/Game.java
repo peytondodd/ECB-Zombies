@@ -6,18 +6,23 @@ import java.util.List;
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
-import org.bukkit.Bukkit;
+import net.endercraftbuild.cod.events.PlayerJoinEvent;
+import net.endercraftbuild.cod.events.PlayerLeaveEvent;
+
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-public class Game {
+public abstract class Game {
 	
 	private final CoDMain plugin;
+	
 	private final List<Listener> listeners;
+	private final List<Player> players;
 	
 	private String name;
-	private Long mininumPlayers;
+	private Long minimumPlayers;
 	private Long maximumPlayers;
 	
 	private boolean isActive;
@@ -25,6 +30,7 @@ public class Game {
 	public Game(CoDMain plugin) {
 		this.plugin = plugin;
 		this.listeners = new ArrayList<Listener>();
+		this.players = new ArrayList<Player>();
 	}
 	
 	public CoDMain getPlugin() {
@@ -37,7 +43,7 @@ public class Game {
 	
 	public ConfigurationSection load(ConfigurationSection config) {
 		this.setName(config.getName());
-		this.setMininumPlayers(config.getLong("min-players"));
+		this.setMinimumPlayers(config.getLong("min-players"));
 		this.setMaximumPlayers(config.getLong("max-players"));
 		
 		return config;
@@ -46,7 +52,7 @@ public class Game {
 	public ConfigurationSection save(ConfigurationSection parent) {
 		ConfigurationSection gameSection = parent.createSection(getName());
 		
-		gameSection.set("min-players", getMininumPlayers());
+		gameSection.set("min-players", getMinimumPlayers());
 		gameSection.set("max-players", getMaximumPlayers());
 		
 		return gameSection;
@@ -60,12 +66,12 @@ public class Game {
 		this.name = name;
 	}
 
-	public Long getMininumPlayers() {
-		return mininumPlayers;
+	public Long getMinimumPlayers() {
+		return minimumPlayers;
 	}
 
-	public void setMininumPlayers(Long mininumPlayers) {
-		this.mininumPlayers = mininumPlayers;
+	public void setMinimumPlayers(Long mininumPlayers) {
+		this.minimumPlayers = mininumPlayers;
 	}
 
 	public Long getMaximumPlayers() {
@@ -86,14 +92,14 @@ public class Game {
 	
 	public void start() {
 		this.setActive(true);
-		GameStartEvent event = new GameStartEvent();
-		Bukkit.getServer().getPluginManager().callEvent(event);
+		GameStartEvent event = new GameStartEvent(this);
+		plugin.getServer().getPluginManager().callEvent(event);
 	}
 	
 	public void stop() {
 		this.setActive(false);
-		GameEndEvent event = new GameEndEvent();
-		Bukkit.getServer().getPluginManager().callEvent(event);
+		GameEndEvent event = new GameEndEvent(this);
+		plugin.getServer().getPluginManager().callEvent(event);
 	}
 	
 	public void registerListener(Listener listener) {
@@ -109,6 +115,35 @@ public class Game {
 	public void clearListeners() {
 		for (Listener listener : listeners)
 			unregisterListener(listener);
+	}
+	
+	public boolean isInGame(Player player) {
+		return players.contains(player);
+	}
+	
+	public List<Player> getPlayers() {
+		return players;
+	}
+	
+	public void addPlayer(Player player) {
+		if (isInGame(player))
+			throw new IllegalArgumentException(player.getName() + " is already in this game.");
+		if (players.size() == maximumPlayers)
+			throw new RuntimeException(getName() + " is currently full");
+		players.add(player);
+		if (isActive())
+			plugin.getServer().getPluginManager().callEvent(new PlayerJoinEvent(player, this));
+		else if (players.size() >= minimumPlayers)
+			start();
+	}
+	
+	public void removePlayer(Player player) {
+		if (!isInGame(player))
+			throw new IllegalArgumentException(player.getName() + " is not in this game.");
+		players.remove(player);
+		plugin.getServer().getPluginManager().callEvent(new PlayerLeaveEvent(player, this));
+		if (isActive() && players.size() < minimumPlayers)
+			stop();
 	}
 	
 }

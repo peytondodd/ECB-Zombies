@@ -23,35 +23,7 @@ public class SignListener implements Listener {
 	public SignListener(CoDMain plugin) {
 		this.plugin = plugin;
 	}
-
-	@EventHandler(ignoreCancelled = true) //Join Signs
-	public void Join(PlayerInteractEvent event) {
-		Player player = event.getPlayer();
-		if(Utils.isInGameZ(player) )
-			player.sendMessage(plugin.prefix + ChatColor.RED + "You are already in the game!");
-		else
-
-			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
-			{
-				if (event.getClickedBlock().getType().equals(Material.SIGN_POST) || event.getClickedBlock().getType().equals(Material.WALL_SIGN))
-				{
-					Sign sign = (Sign)event.getClickedBlock().getState();
-					if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("ECB Zombies"))
-					{
-						if (sign.getLine(1).equalsIgnoreCase("Join") && player.hasPermission("zombies.user"))
-						{
-							//Location loc = read coords from file to tp  player to game
-							Utils.setInGameZ(player, true);
-							String game = "get game info from fileeeeee";
-							player.sendMessage(plugin.prefix + ChatColor.GREEN + "You have joined " + game);
-						}
-						else {
-							player.sendMessage(plugin.prefix + ChatColor.RED + "Failed to join game!");
-						}
-					}
-				}
-			}
-	}
+		
 	@EventHandler(ignoreCancelled = true) //Create join signs
 	public void SignCreate(SignChangeEvent event) {
 		if (!ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase("ECB Zombies"))
@@ -90,7 +62,7 @@ public class SignListener implements Listener {
 								player.sendMessage(ChatColor.RED + ex.toString());
 
 							}
-							EconomyResponse r = CoDMain.economy.withdrawPlayer(player.getName(), amount);
+							EconomyResponse r = plugin.getEconomy().withdrawPlayer(player.getName(), amount);
 							if(r.transactionSuccess())
 							{
 								PlayerInventory inv = player.getInventory();
@@ -135,7 +107,7 @@ public class SignListener implements Listener {
 									player.sendMessage(ChatColor.RED + ex.toString());
 
 								}
-								EconomyResponse r = CoDMain.economy.withdrawPlayer(player.getName(), amount);
+								EconomyResponse r = plugin.getEconomy().withdrawPlayer(player.getName(), amount);
 								if(r.transactionSuccess())
 								{
 									//make pack a punched

@@ -8,6 +8,8 @@ import net.endercraftbuild.cod.zombies.commands.*;
 import net.endercraftbuild.cod.zombies.listeners.*;
 import net.endercraftbuild.cod.GameManager;
 import net.endercraftbuild.cod.guns.Shoot;
+import net.endercraftbuild.cod.listeners.PlayerJoinLeaveSignInteractListener;
+import net.endercraftbuild.cod.listeners.PlayerJoinQuitServerListener;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
@@ -22,8 +24,8 @@ public class CoDMain extends JavaPlugin {
 
 public String prefix = "[" + ChatColor.DARK_GREEN + ChatColor.BOLD + "ECB Zombies" + ChatColor.RESET + "] ";
 
-public static Economy economy = null; //Vault for points system
-public static WorldGuardPlugin worldGuard = null;
+private Economy economy;
+private WorldGuardPlugin worldGuard;
 
 private GameManager gameManager;
 
@@ -67,6 +69,11 @@ public void onDisable() {
 }
 
 private void registerListeners() {
+	getServer().getPluginManager().registerEvents(new PlayerJoinQuitServerListener(this), this);
+	getServer().getPluginManager().registerEvents(new PlayerJoinLeaveGameListener(this), this);
+	getServer().getPluginManager().registerEvents(new PlayerJoinLeaveSignInteractListener(this), this);
+	getServer().getPluginManager().registerEvents(new GameStartEndListener(this), this);
+	
 	getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 	getServer().getPluginManager().registerEvents(new BlockListener(this), this);
 	getServer().getPluginManager().registerEvents(new PointsListener(this), this);
@@ -94,10 +101,10 @@ private boolean setupEconomy() {
 		economy = economyProvider.getProvider();
 	}
 
-	return (economy != null);
+	return economy != null;
 }
 
-public static Economy getEconomy() {
+public Economy getEconomy() {
 	return economy;
 }
 

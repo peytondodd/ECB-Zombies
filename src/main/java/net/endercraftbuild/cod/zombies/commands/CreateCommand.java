@@ -32,7 +32,7 @@ public class CreateCommand implements CommandExecutor{
 			game.setSpawnLocation(player.getLocation());
 			
 			game.setName(args[0]);
-			game.setMininumPlayers(Long.parseLong(args[1]));
+			game.setMinimumPlayers(Long.parseLong(args[1]));
 			game.setMaximumPlayers(Long.parseLong(args[2]));
 			game.setZombieMultiplier(Double.parseDouble(args[3]));
 			game.setMaxWaves(Long.parseLong(args[4]));

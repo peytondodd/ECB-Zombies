@@ -33,7 +33,7 @@ public class EditCommand implements CommandExecutor{
 			game.setSpawnLocation(player.getLocation());
 			
 			game.setName(args[1]);
-			game.setMininumPlayers(Long.parseLong(args[2]));
+			game.setMinimumPlayers(Long.parseLong(args[2]));
 			game.setMaximumPlayers(Long.parseLong(args[3]));
 			game.setZombieMultiplier(Double.parseDouble(args[4]));
 			game.setMaxWaves(Long.parseLong(args[5]));

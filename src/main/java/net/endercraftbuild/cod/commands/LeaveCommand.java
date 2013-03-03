@@ -1,8 +1,7 @@
 package net.endercraftbuild.cod.commands;
 
 import net.endercraftbuild.cod.CoDMain;
-import net.endercraftbuild.cod.utils.Utils;
-
+import net.endercraftbuild.cod.games.Game;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,43 +17,23 @@ public class LeaveCommand implements CommandExecutor{
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) 
-	{
-		if (cmd.getName().equalsIgnoreCase("leave"))
-		{
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
-		{
 			return true;
-		}
+		
 		Player player = (Player) sender;
-
-		if(Utils.isInGameZ(player) == false)
-		{
-			player.sendMessage(plugin.prefix + "You are not in a zombies game");
-			return true;
+		
+		try {
+			Game game = plugin.getGameManager().get(player);
+			if (game == null)
+				throw new RuntimeException("You are not in a game.");
+			game.removePlayer(player);
+			player.getServer().broadcastMessage(ChatColor.GREEN + player.getName() + " just left " + game.getName() + ".");
+		} catch (RuntimeException e) {
+			player.sendMessage(ChatColor.RED + e.getLocalizedMessage());
 		}
-		if(Utils.isInGamePvP(player) == false)
-		{
-			player.sendMessage(plugin.prefix + "You are not in a pvp game");
-			return true;
-		}
-
-			if (sender.hasPermission("zombies.user"))
-			{
-				if(Utils.isInGameZ(player) == true)
-					Utils.setInGameZ(player, false);
-				//teleport player to spawn
-				sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You left {GAMENAME}");
-				player.setExp(0);
-			}
-			else if(Utils.isInGamePvP(player) == true)
-			{
-				Utils.setInGamePvP(player, false, Utils.Out);
-				sender.sendMessage(plugin.prefix + ChatColor.GREEN + "You left {GAMENAME}");
-			}
-		}
-		{
-			return true;
-		}
+		
+		return true;
 	}
+	
 }

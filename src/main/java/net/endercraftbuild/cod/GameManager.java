@@ -11,6 +11,7 @@ import net.endercraftbuild.cod.games.ZombieGame;
 import net.endercraftbuild.cod.CoDMain;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 public class GameManager {
 	
@@ -66,6 +67,13 @@ public class GameManager {
 		return games.get(name);
 	}
 	
+	public Game get(Player player) {
+		for (Game game : getGames())
+			if (game.isInGame(player))
+				return game;
+		return null;
+	}
+	
 	public void add(Game game) {
 		if (games.containsKey(game.getName()))
 			throw new IllegalArgumentException("A game with that name already exists.");
@@ -80,6 +88,10 @@ public class GameManager {
 	
 	public Collection<Game> getGames() {
 		return games.values();
+	}
+	
+	public boolean isInGame(Player player) {
+		return get(player) != null;
 	}
 	
 }

@@ -35,9 +35,9 @@ public class PointsListener implements Listener {
 			if (event.getEntity().getType().equals(EntityType.ZOMBIE) || event.getEntity().getType().equals(EntityType.WOLF)) {
 				Random random = new Random();
 				int amount = (new Double(1.0 + random.nextDouble() * 15.0)).intValue();
-				EconomyResponse r = CoDMain.economy.depositPlayer(killerPlayer.getName(), amount);
+				EconomyResponse r = plugin.getEconomy().depositPlayer(killerPlayer.getName(), amount);
 				if(r.transactionSuccess()) {
-					killerPlayer.sendMessage(plugin.prefix + ChatColor.GREEN + "You have " + ChatColor.DARK_GREEN + CoDMain.economy.getBalance(killerPlayer.getName())
+					killerPlayer.sendMessage(plugin.prefix + ChatColor.GREEN + "You have " + ChatColor.DARK_GREEN + plugin.getEconomy().getBalance(killerPlayer.getName())
 							+ ChatColor.GREEN + " points! Gained: " + ChatColor.DARK_GREEN + amount);
 				}
 			}

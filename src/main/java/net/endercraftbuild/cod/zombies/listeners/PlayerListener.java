@@ -30,12 +30,6 @@ public class PlayerListener implements Listener {
 		event.setDroppedExp(0);
 		//save inv if revived
 	}
-	public void leave(PlayerQuitEvent event)
-	{
-		Player player = event.getPlayer();
-		Utils.setInGamePvP(player, false, Utils.Out);
-		Utils.setInGameZ(player, false);
-	}
 
 
 	@EventHandler
@@ -57,7 +51,7 @@ public class PlayerListener implements Listener {
 							amount = Double.parseDouble(sign.getLine(1));
 						} catch (NumberFormatException ex) {
 							player.sendMessage(ChatColor.RED + ex.toString());
-							EconomyResponse r = CoDMain.economy.withdrawPlayer(player.getName(), amount);
+							EconomyResponse r = plugin.getEconomy().withdrawPlayer(player.getName(), amount);
 							if(r.transactionSuccess())
 							{
 							}

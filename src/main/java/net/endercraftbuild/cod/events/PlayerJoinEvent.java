@@ -2,14 +2,22 @@ package net.endercraftbuild.cod.events;
 
 import net.endercraftbuild.cod.games.Game;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
  
-public class GameStartEvent extends GameEvent {
+public class PlayerJoinEvent extends GameEvent {
 	
     private static final HandlerList handlers = new HandlerList();
     
-    public GameStartEvent(Game game) {
+    private final Player player;
+    
+    public PlayerJoinEvent(Player player, Game game) {
     	super(game);
+    	this.player = player;
+    }
+    
+    public Player getPlayer() {
+    	return player;
     }
     
 	public HandlerList getHandlers() {
