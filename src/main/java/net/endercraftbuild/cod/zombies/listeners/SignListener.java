@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -24,22 +23,6 @@ public class SignListener implements Listener {
 		this.plugin = plugin;
 	}
 		
-	@EventHandler(ignoreCancelled = true) //Create join signs
-	public void SignCreate(SignChangeEvent event) {
-		if (!ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase("ECB Zombies"))
-			return;
-
-		Player player = event.getPlayer();
-
-		if (player.hasPermission("zombies.signs.create")) {
-			event.setLine(0, ChatColor.BLUE + "ECB Zombies");
-			player.sendMessage(plugin.prefix + ChatColor.GREEN + "Sign created!");
-		} else {
-			event.setLine(0, ChatColor.DARK_RED + "No Permission!");
-			player.sendMessage(plugin.prefix + ChatColor.RED + "No permissions!");
-		}
-	}
-
 	@EventHandler(ignoreCancelled = true)//Walll gunzzzz
 	public void WallWeapons(PlayerInteractEvent event) {
 		Player player = event.getPlayer();

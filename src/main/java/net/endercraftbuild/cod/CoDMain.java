@@ -10,6 +10,7 @@ import net.endercraftbuild.cod.GameManager;
 import net.endercraftbuild.cod.guns.Shoot;
 import net.endercraftbuild.cod.listeners.PlayerJoinLeaveSignInteractListener;
 import net.endercraftbuild.cod.listeners.PlayerJoinQuitServerListener;
+import net.endercraftbuild.cod.listeners.SignAdminListener;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
@@ -69,6 +70,7 @@ public void onDisable() {
 }
 
 private void registerListeners() {
+	getServer().getPluginManager().registerEvents(new SignAdminListener(this), this);
 	getServer().getPluginManager().registerEvents(new PlayerJoinQuitServerListener(this), this);
 	getServer().getPluginManager().registerEvents(new PlayerJoinLeaveGameListener(this), this);
 	getServer().getPluginManager().registerEvents(new PlayerJoinLeaveSignInteractListener(this), this);
