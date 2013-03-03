@@ -3,7 +3,7 @@ package net.endercraftbuild.cod.zombies.listeners;
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
-import net.endercraftbuild.cod.games.ZombieGame;
+import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

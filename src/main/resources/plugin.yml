@@ -54,6 +54,14 @@ commands:
       Example: /<command> nuketown
     permissions: cod.admin.spawn
     permission-message: You do not have permission to run that command.
+  zbarrier:
+    description: Puts you in CoD Zombies barrier edit mode, allowing you to add and remove barriers.
+    usage: |
+      /<command> <name>
+      Example: /<command> nacht
+      Example: /<command> nuketown
+    permissions: cod.admin.barrier
+    permission-message: You do not have permission to run that command.
 
 permissions:
   cod.*:
@@ -78,6 +86,7 @@ permissions:
       cod.admin.zcreate: true
       cod.admin.zedit: true
       cod.admin.zspawn: true
+      cod.admin.zspawn: true
       cod.admin.signs: true
   cod.admin.save:
     description: Allows you to save the existing games setup.
@@ -87,5 +96,7 @@ permissions:
     description: Allows you to edit an existing CoD Zombies game.
   cod.admin.zspawn:
     description: Allows you to edit CoD Zombies game spawners.
+  cod.admin.zbarrier:
+    description: Allows you to edit CoD Zombies game barriers.
   cod.admin.signs:
     description: Allows you to create/edit CoD signs.

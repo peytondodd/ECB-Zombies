@@ -1,10 +1,10 @@
-package net.endercraftbuild.cod.games;
+package net.endercraftbuild.cod.zombies;
 
 import java.util.List;
 
 import net.endercraftbuild.cod.CoDMain;
+import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.utils.Utils;
-import net.endercraftbuild.cod.zombies.Spawner;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,7 +15,9 @@ public class ZombieGame extends Game {
 	private Double zombieMultiplier;
 	private Long maxWaves;
 	private Location spawnLocation;
+	
 	private List<Spawner> spawners;
+	private List<Barrier> barriers;
 
 	private Long currentWave;
 
@@ -34,11 +36,18 @@ public class ZombieGame extends Game {
 		
 		@SuppressWarnings("unchecked")
 		List<ConfigurationSection> spawnerList = (List<ConfigurationSection>) config.getList("spawners");
-
 		for (ConfigurationSection spawnerSection : spawnerList) {
 			Spawner spawner = new Spawner();
 			spawner.load(spawnerSection);
 			spawners.add(spawner);
+		}
+		
+		@SuppressWarnings("unchecked")
+		List<ConfigurationSection> barrierList = (List<ConfigurationSection>) config.getList("barriers");
+		for (ConfigurationSection barrierSection : barrierList) {
+			Barrier barrier = new Barrier();
+			barrier.load(barrierSection);
+			barriers.add(barrier);
 		}
 		
 		return config;
@@ -56,6 +65,10 @@ public class ZombieGame extends Game {
 		ConfigurationSection spawnersSection = gameSection.createSection("spawners");
 		for (Spawner spawner : getSpawners())
 			spawner.save(spawnersSection);
+		
+		ConfigurationSection barriersSection = gameSection.createSection("barriers");
+		for (Barrier barrier : getBarriers())
+			barrier.save(barriersSection);
 		
 		return gameSection;
 	}
@@ -125,6 +138,40 @@ public class ZombieGame extends Game {
 	public void hideSpawners() {
 		for (Spawner spawner : spawners)
 			spawner.hide();
+	}
+	
+	public List<Barrier> getBarriers() {
+		return barriers;
+	}
+	
+	public void addBarrier(Barrier barrier) {
+		barriers.add(barrier);
+	}
+	
+	public void removeBarrier(Barrier barrier) {
+		barriers.remove(barrier);
+	}
+	
+	public Barrier findBarrier(Location location) {
+		for (Barrier barrier : barriers)
+			if (barrier.getLocation().equals(location))
+				return barrier;
+		return null;
+	}
+	
+	public void showBarriers() {
+		for (Barrier barrier : barriers)
+			barrier.show();
+	}
+	
+	public void hideBarriers() {
+		for (Barrier barrier : barriers)
+			barrier.hide();
+	}
+	
+	public void rebuildBarriers() {
+		for (Barrier barrier : barriers)
+			barrier.rebuild();
 	}
 
 }

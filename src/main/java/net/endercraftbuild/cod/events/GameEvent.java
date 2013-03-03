@@ -1,6 +1,6 @@
 package net.endercraftbuild.cod.events;
 
-import net.endercraftbuild.cod.games.Game;
+import net.endercraftbuild.cod.Game;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

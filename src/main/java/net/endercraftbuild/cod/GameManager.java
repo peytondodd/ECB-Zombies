@@ -5,9 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.endercraftbuild.cod.games.CoDGame;
-import net.endercraftbuild.cod.games.Game;
-import net.endercraftbuild.cod.games.ZombieGame;
+import net.endercraftbuild.cod.pvp.CoDGame;
+import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.CoDMain;
 
 import org.bukkit.configuration.ConfigurationSection;

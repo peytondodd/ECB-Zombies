@@ -1,9 +1,8 @@
-package net.endercraftbuild.cod.games;
+package net.endercraftbuild.cod;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;

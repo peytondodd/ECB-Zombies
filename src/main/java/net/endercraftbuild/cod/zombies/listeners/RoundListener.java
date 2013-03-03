@@ -1,7 +1,10 @@
 package net.endercraftbuild.cod.zombies.listeners;
 
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import net.endercraftbuild.cod.CoDMain;
+import net.endercraftbuild.cod.zombies.ZombieGame;
+import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 
 public class RoundListener implements Listener {
 	
@@ -12,6 +15,9 @@ public class RoundListener implements Listener {
 		this.plugin = plugin;
 	}
 	
-	// TODO(mortu): rebuild doors
+	@EventHandler
+	public void onRoundAdvance(RoundAdvanceEvent event) {
+		((ZombieGame) event.getGame()).rebuildBarriers();
+	}
 	
 }

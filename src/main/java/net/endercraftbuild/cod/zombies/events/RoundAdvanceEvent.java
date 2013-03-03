@@ -1,7 +1,7 @@
 package net.endercraftbuild.cod.zombies.events;
 
 import net.endercraftbuild.cod.events.GameEvent;
-import net.endercraftbuild.cod.games.ZombieGame;
+import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.event.HandlerList;
  

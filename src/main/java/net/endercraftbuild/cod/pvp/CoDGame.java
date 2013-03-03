@@ -1,6 +1,7 @@
-package net.endercraftbuild.cod.games;
+package net.endercraftbuild.cod.pvp;
 
 import net.endercraftbuild.cod.CoDMain;
+import net.endercraftbuild.cod.Game;
 
 public class CoDGame extends Game {
 

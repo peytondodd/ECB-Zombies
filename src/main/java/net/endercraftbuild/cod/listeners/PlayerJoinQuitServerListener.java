@@ -1,7 +1,7 @@
 package net.endercraftbuild.cod.listeners;
 
 import net.endercraftbuild.cod.CoDMain;
-import net.endercraftbuild.cod.games.Game;
+import net.endercraftbuild.cod.Game;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -1,7 +1,8 @@
 package net.endercraftbuild.cod.commands;
 
 import net.endercraftbuild.cod.CoDMain;
-import net.endercraftbuild.cod.games.Game;
+import net.endercraftbuild.cod.Game;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

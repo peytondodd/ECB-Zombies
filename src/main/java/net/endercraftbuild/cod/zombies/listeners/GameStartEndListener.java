@@ -4,10 +4,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import net.endercraftbuild.cod.CoDMain;
+import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
-import net.endercraftbuild.cod.games.Game;
+import net.endercraftbuild.cod.zombies.ZombieGame;
 
 public class GameStartEndListener implements Listener {
 	
@@ -26,11 +27,10 @@ public class GameStartEndListener implements Listener {
 	
 	@EventHandler
 	public void onGameEnd(GameEndEvent event) {
-		Game game = event.getGame();
+		ZombieGame game = (ZombieGame) event.getGame();
 		for (Player player : game.getPlayers())
 			game.removePlayer(player);
+		game.rebuildBarriers();
 	}
-	
-	// TODO(mortu): rebuild doors
 	
 }

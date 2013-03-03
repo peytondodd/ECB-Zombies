@@ -1,7 +1,7 @@
 package net.endercraftbuild.cod.zombies.commands;
 
 import net.endercraftbuild.cod.CoDMain;
-import net.endercraftbuild.cod.games.ZombieGame;
+import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
