@@ -1,4 +1,4 @@
-package net.endercraftbuild.cod.zombies.utils;
+package net.endercraftbuild.cod.zombies;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +59,8 @@ public class Door
 		case WEST:
 			loc.getBlock().setData((byte)0x0, false);
 			top.getBlock().setData((byte)0x0, false);
+			break;
+		default:
 			break;
 		}
 	}

@@ -1,7 +1,7 @@
 package net.endercraftbuild.cod.zombies.commands;
 
 import net.endercraftbuild.cod.CoDMain;
-import net.endercraftbuild.cod.games.Game;
+import net.endercraftbuild.cod.games.ZombieGame;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -17,7 +17,7 @@ public class EditCommand implements CommandExecutor{
 		this.plugin = plugin;
 	}
 	
-	// /edit <name> <new name> <min players> <max players> <zombie multiplier> <max waves>
+	// /zedit <name> <new name> <min players> <max players> <zombie multiplier> <max waves>
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
@@ -28,9 +28,7 @@ public class EditCommand implements CommandExecutor{
 		Player player = (Player) sender;
 		
 		try {
-			Game game = plugin.getGameManager().get(args[0]);
-			if (game == null)
-				throw new IllegalArgumentException("There is no game by that name.");
+			ZombieGame game = (ZombieGame) plugin.getGameManager().get(args[0]);
 			
 			game.setSpawnLocation(player.getLocation());
 			
@@ -40,7 +38,7 @@ public class EditCommand implements CommandExecutor{
 			game.setZombieMultiplier(Double.parseDouble(args[4]));
 			game.setMaxWaves(Long.parseLong(args[5]));
 			
-			plugin.getGameManager().put(game.getName(), game);
+			plugin.getGameManager().replace(game);
 		} catch (IllegalArgumentException e) {
 			player.sendMessage(ChatColor.RED + e.getLocalizedMessage());
 			return true;

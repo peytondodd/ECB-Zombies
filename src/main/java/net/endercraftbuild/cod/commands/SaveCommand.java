@@ -1,4 +1,4 @@
-package net.endercraftbuild.cod.zombies.commands;
+package net.endercraftbuild.cod.commands;
 
 import net.endercraftbuild.cod.CoDMain;
 import org.bukkit.ChatColor;

@@ -1,6 +1,6 @@
-package net.endercraftbuild.cod.events;
+package net.endercraftbuild.cod.zombies.events;
 
-import net.endercraftbuild.cod.games.Game;
+import net.endercraftbuild.cod.games.ZombieGame;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -9,7 +9,7 @@ public class RoundAdvanceEvent extends Event {
 	
     private static final HandlerList handlers = new HandlerList();
     
-    private Game game;
+    private ZombieGame game;
 
     public Long getRound() {
         return game.getCurrentWave();
@@ -19,19 +19,17 @@ public class RoundAdvanceEvent extends Event {
     	return game.getName();
     }
     
-    public Game getGame() {
+    public ZombieGame getGame() {
     	return game;
     }
  
     public void setRound(Long round) {
     	game.setCurrentWave(round);
     }
+
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
     
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-    
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
 }

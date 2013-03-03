@@ -3,8 +3,7 @@ package net.endercraftbuild.cod;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
-
+import net.endercraftbuild.cod.commands.*;
 import net.endercraftbuild.cod.zombies.commands.*;
 import net.endercraftbuild.cod.zombies.listeners.*;
 import net.endercraftbuild.cod.GameManager;
@@ -28,13 +27,11 @@ public static WorldGuardPlugin worldGuard = null;
 
 private GameManager gameManager;
 
-private Shoot Shoot;
-public Logger log = Logger.getLogger("Minecraft");
 public List<String> pistol = new ArrayList<String>();
 public List<String> reloaders = new ArrayList<String>();
 public List<String> reloadersRocket = new ArrayList<String>();
 public List<String> reloading = new ArrayList<String>();
-public HashMap<String, Integer> kills = new HashMap();
+public HashMap<String, Integer> kills = new HashMap<String, Integer>();
 
 /*
  * TODO list
@@ -80,9 +77,14 @@ private void registerListeners() {
 private void registerCommands() {
 	getCommand("join").setExecutor(new JoinCommand(this));
 	getCommand("leave").setExecutor(new LeaveCommand(this));
-	getCommand("create").setExecutor(new CreateCommand(this));
-	getCommand("edit").setExecutor(new EditCommand(this));
+	
+	// generic admin commands
 	getCommand("save").setExecutor(new SaveCommand(this));
+	
+	// zombie admin commands
+	getCommand("zcreate").setExecutor(new CreateCommand(this));
+	getCommand("zedit").setExecutor(new EditCommand(this));
+	getCommand("zspawn").setExecutor(new SpawnerAdminCommand(this));
 }
 
 private boolean setupEconomy() {

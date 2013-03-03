@@ -11,8 +11,6 @@ public class GameEndEvent extends Event {
     
     private Game game;
     
-    //Check if game is zombies or PvP
-    
     public String getName() {
     	return game.getName();
     }
@@ -21,10 +19,6 @@ public class GameEndEvent extends Event {
     	return game;
     }
  
-    public void setRound(Long round) {
-    	game.setCurrentWave(round);
-    }
-    
     public HandlerList getHandlers() {
         return handlers;
     }

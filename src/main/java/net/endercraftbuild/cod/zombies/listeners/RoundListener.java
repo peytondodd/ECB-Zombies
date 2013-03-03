@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import net.endercraftbuild.cod.CoDMain;
-import net.endercraftbuild.cod.events.RoundAdvanceEvent;
+import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 
 public class RoundListener implements Listener
 {

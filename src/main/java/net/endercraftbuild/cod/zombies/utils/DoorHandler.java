@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.endercraftbuild.cod.CoDMain;
+import net.endercraftbuild.cod.zombies.Door;
 
 import org.bukkit.Bukkit;
 
