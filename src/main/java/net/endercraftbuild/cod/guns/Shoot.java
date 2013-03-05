@@ -22,14 +22,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-public class Shoot
-  implements Listener
-{
+public class Shoot implements Listener {
 	private CoDMain plugin;
 
 	public Shoot(CoDMain plugin) {
-		this.plugin = plugin; }
+		this.plugin = plugin;
+	}
 	
+  @SuppressWarnings("deprecation")
   @EventHandler
   public void onPlayerInteract(PlayerInteractEvent event) {
     Action action = event.getAction();

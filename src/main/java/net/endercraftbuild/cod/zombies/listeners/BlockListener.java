@@ -12,23 +12,24 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class BlockListener implements Listener {
 
+	@SuppressWarnings("unused")
 	private CoDMain plugin;
 
 	public BlockListener(CoDMain plugin) {
-		this.plugin = plugin; }
+		this.plugin = plugin;
+	}
 
 
 	@EventHandler
 	public void inGameBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
-		if(!(event.getBlock().getType() == Material.SIGN_POST))
-		{
-			if(!player.isOp())
-			{
+		if (!(event.getBlock().getType() == Material.SIGN_POST)) {
+			if (!player.isOp()) {
 				event.setCancelled(true);
 			}
 		}
 	}
+	
 	@EventHandler (priority = EventPriority.LOW)//Prevent land damage
 	public void preventLandDestructionOnExplode(EntityExplodeEvent event) {
 		event.blockList().clear();

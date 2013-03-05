@@ -1,14 +1,12 @@
 package net.endercraftbuild.cod.zombies.listeners;
 
 import net.endercraftbuild.cod.zombies.Barrier;
-import net.endercraftbuild.cod.zombies.Spawner;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import net.endercraftbuild.cod.commands.*;
+import net.endercraftbuild.cod.tasks.GameTickTask;
 import net.endercraftbuild.cod.zombies.commands.*;
 import net.endercraftbuild.cod.zombies.listeners.*;
 import net.endercraftbuild.cod.GameManager;
@@ -29,6 +30,7 @@ private Economy economy;
 private WorldGuardPlugin worldGuard;
 
 private GameManager gameManager;
+private GameTickTask gameTickTask;
 
 public List<String> pistol = new ArrayList<String>();
 public List<String> reloaders = new ArrayList<String>();
@@ -63,9 +65,14 @@ public void onEnable() {
 	registerListeners();
 	registerCommands();
 	setupGameManager();
+	
+	gameTickTask = new GameTickTask(this);
+	gameTickTask.start();
 }
 
 public void onDisable() {
+	gameTickTask.stop();
+	
 	getLogger().info("ECB Zombies disabled");
 }
 
