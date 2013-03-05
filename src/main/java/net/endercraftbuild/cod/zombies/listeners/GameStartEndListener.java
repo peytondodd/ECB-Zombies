@@ -23,11 +23,13 @@ public class GameStartEndListener implements Listener {
 		game.rebuildBarriers();
 		for (Player player : game.getPlayers())
 			plugin.getServer().getPluginManager().callEvent(new PlayerJoinEvent(player, game));
+		game.activateSpawners();
 	}
 	
 	@EventHandler
 	public void onGameEnd(GameEndEvent event) {
 		ZombieGame game = (ZombieGame) event.getGame();
+		game.deactivateSpawners();
 		game.rebuildBarriers();
 		for (Player player : game.getPlayers())
 			game.removePlayer(player);

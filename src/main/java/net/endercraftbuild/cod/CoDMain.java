@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import net.endercraftbuild.cod.commands.*;
-import net.endercraftbuild.cod.tasks.GameTickTask;
 import net.endercraftbuild.cod.zombies.commands.*;
 import net.endercraftbuild.cod.zombies.listeners.*;
 import net.endercraftbuild.cod.GameManager;
@@ -30,7 +29,6 @@ private Economy economy;
 private WorldGuardPlugin worldGuard;
 
 private GameManager gameManager;
-private GameTickTask gameTickTask;
 
 public List<String> pistol = new ArrayList<String>();
 public List<String> reloaders = new ArrayList<String>();
@@ -65,14 +63,9 @@ public void onEnable() {
 	registerListeners();
 	registerCommands();
 	setupGameManager();
-	
-	gameTickTask = new GameTickTask(this);
-	gameTickTask.start();
 }
 
 public void onDisable() {
-	gameTickTask.stop();
-	
 	getLogger().info("ECB Zombies disabled");
 }
 
@@ -100,18 +93,22 @@ private void registerCommands() {
 	// zombie admin commands
 	getCommand("zcreate").setExecutor(new CreateCommand(this));
 	getCommand("zedit").setExecutor(new EditCommand(this));
-	getCommand("zspawn").setExecutor(new SpawnerAdminCommand(this));
-	getCommand("zsbarrier").setExecutor(new BarrierAdminCommand(this));
-	getCommand("zsdoor").setExecutor(new DoorAdminCommand(this));
+	getCommand("zspawn").setExecutor(new SpawnerCommand(this));
+	getCommand("zbarrier").setExecutor(new BarrierCommand(this));
+	getCommand("zdoor").setExecutor(new DoorCommand(this));
+	getCommand("zlink").setExecutor(new LinkCommand(this));
+	getCommand("zlinkclear").setExecutor(new LinkClearCommand(this));
 }
 
 private boolean setupEconomy() {
-	// FIXME: should use the same setup format as worldguard below
-	RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-	if (economyProvider != null) {
-		economy = economyProvider.getProvider();
-	}
+	if (getServer().getPluginManager().getPlugin("Vault") == null)
+		return false;
 
+	RegisteredServiceProvider<Economy> provider = getServer().getServicesManager().getRegistration(Economy.class);
+	if (provider == null)
+		return false;
+
+	economy = provider.getProvider();
 	return economy != null;
 }
 

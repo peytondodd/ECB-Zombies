@@ -12,6 +12,8 @@ import org.bukkit.material.Wool;
 
 public class Barrier extends SerializableGameObject {
 	
+	public static final DyeColor COLOR = DyeColor.ORANGE;
+	
 	private static final int DURABILITY = 8;
 	private static final int DAMAGE = 1;
 	
@@ -71,13 +73,18 @@ public class Barrier extends SerializableGameObject {
 	
 	public void show() {
 		getLowerBlock().setType(Material.WOOL);
-		((Wool) getLowerBlock()).setColor(DyeColor.PINK);
+		((Wool) getLowerBlock()).setColor(COLOR);
 		getUpperBlock().setType(Material.WOOL);
-		((Wool) getUpperBlock()).setColor(DyeColor.PURPLE);
+		((Wool) getUpperBlock()).setColor(COLOR);
 	}
 	
 	public void hide() {
 		rebuild();
+	}
+	
+	public void open() {
+		getLowerBlock().setType(Material.AIR);
+		getUpperBlock().setType(Material.AIR);
 	}
 	
 	public void damage() {

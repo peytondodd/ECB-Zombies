@@ -1,5 +1,6 @@
 package net.endercraftbuild.cod.zombies;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.endercraftbuild.cod.CoDMain;
@@ -63,7 +64,13 @@ public class ZombieGame extends Game {
 		List<ConfigurationSection> doorList = (List<ConfigurationSection>) config.getList("doors");
 		for (ConfigurationSection doorSection : doorList) {
 			Door door = new Door();
+			
 			door.load(doorSection);
+			
+			List<String> spawnerLinks = doorSection.getStringList("spawners");
+			for (String spawnerId : spawnerLinks)
+				door.addSpawner(findSpawner(spawnerId));
+			
 			doors.add(door);
 		}
 		
@@ -88,8 +95,15 @@ public class ZombieGame extends Game {
 			barrier.save(barriersSection);
 		
 		ConfigurationSection doorsSection = gameSection.createSection("doors");
-		for (Door door : getDoors())
-			door.save(doorsSection);
+		for (Door door : getDoors()) {
+			ConfigurationSection doorSection = door.save(doorsSection);
+			
+			List<String> spawnerLinks = new ArrayList<String>();
+			for (Spawner spawner : door.getSpawners())
+				spawnerLinks.add(spawner.getId().toString());
+			
+			doorSection.set("spawners", spawnerLinks);
+		}
 		
 		return gameSection;
 	}
@@ -165,6 +179,13 @@ public class ZombieGame extends Game {
 		return null;
 	}
 	
+	public Spawner findSpawner(String id) {
+		for (Spawner spawner : spawners)
+			if (spawner.getId().toString().equals(id))
+				return spawner;
+		return null;
+	}
+	
 	public void showSpawners() {
 		for (Spawner spawner : spawners)
 			spawner.show();
@@ -173,6 +194,17 @@ public class ZombieGame extends Game {
 	public void hideSpawners() {
 		for (Spawner spawner : spawners)
 			spawner.hide();
+	}
+	
+	public void activateSpawners() {
+		for (Spawner spawner : spawners)
+			if (!spawner.isLinked())
+				spawner.activate();
+	}
+	
+	public void deactivateSpawners() {
+		for (Spawner spawner : spawners)
+			spawner.deactivate();
 	}
 	
 	public List<Barrier> getBarriers() {
@@ -207,6 +239,11 @@ public class ZombieGame extends Game {
 	public void rebuildBarriers() {
 		for (Barrier barrier : barriers)
 			barrier.rebuild();
+	}
+	
+	public void openBarriers() {
+		for (Barrier barrier : barriers)
+			barrier.open();
 	}
 	
 	public List<Door> getDoors() {
@@ -261,5 +298,5 @@ public class ZombieGame extends Game {
 				return gameEntity;
 		return null;
 	}
-
+	
 }

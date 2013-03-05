@@ -91,14 +91,12 @@ public abstract class Game {
 	
 	public void start() {
 		this.setActive(true);
-		GameStartEvent event = new GameStartEvent(this);
-		plugin.getServer().getPluginManager().callEvent(event);
+		plugin.getServer().getPluginManager().callEvent(new GameStartEvent(this));
 	}
 	
 	public void stop() {
 		this.setActive(false);
-		GameEndEvent event = new GameEndEvent(this);
-		plugin.getServer().getPluginManager().callEvent(event);
+		plugin.getServer().getPluginManager().callEvent(new GameEndEvent(this));
 	}
 	
 	public void registerListener(Listener listener) {

@@ -10,8 +10,11 @@ import org.bukkit.material.Wool;
 
 public class Spawner extends SerializableGameObject {
 	
+	public static final DyeColor COLOR = DyeColor.RED; 
+	
 	private Location location;
 	
+	private boolean isLinked;
 	private boolean isActive;
 	
 	public ConfigurationSection load(ConfigurationSection config) {
@@ -37,18 +40,30 @@ public class Spawner extends SerializableGameObject {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
+	
+	public boolean isLinked() {
+		return isLinked;
+	}
+	
+	public void setIsLinked(boolean isLinked) {
+		this.isLinked = isLinked;
+	}
 
 	public boolean isActive() {
 		return isActive;
 	}
 
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
+	public void activate() {
+		this.isActive = true;
+	}
+	
+	public void deactivate() {
+		this.isActive = false;
 	}
 	
 	public void show() {
 		location.getBlock().setType(Material.WOOL);
-		((Wool) location.getBlock()).setColor(DyeColor.RED);
+		((Wool) location.getBlock()).setColor(COLOR);
 	}
 	
 	public void hide() {

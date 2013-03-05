@@ -1,5 +1,8 @@
 package net.endercraftbuild.cod.zombies.objects;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import net.endercraftbuild.cod.utils.Utils;
 
 import org.bukkit.DyeColor;
@@ -12,11 +15,20 @@ import org.bukkit.material.Wool;
 
 public class Door extends SerializableGameObject {
 	
+	public static final DyeColor COLOR = DyeColor.BLUE;
+	
 	private Location location;
 	private Integer lowerTypeId;
 	private byte lowerData;
 	private Integer upperTypeId;
 	private byte upperData;
+	
+	private Set<Spawner> spawners;
+	
+	public Door() {
+		super();
+		spawners = new TreeSet<Spawner>();
+	}
 	
 	@Override
 	public ConfigurationSection load(ConfigurationSection config) {
@@ -42,7 +54,7 @@ public class Door extends SerializableGameObject {
 		doorSection.set("lowerData", lowerData);
 		doorSection.set("upperTypeId", upperTypeId);
 		doorSection.set("upperData", upperData);
-		
+
 		return doorSection;
 	}
 
@@ -68,9 +80,9 @@ public class Door extends SerializableGameObject {
 	
 	public void show() {
 		getLowerBlock().setType(Material.WOOL);
-		((Wool) getLowerBlock()).setColor(DyeColor.CYAN);
+		((Wool) getLowerBlock()).setColor(COLOR);
 		getUpperBlock().setType(Material.WOOL);
-		((Wool) getUpperBlock()).setColor(DyeColor.ORANGE);
+		((Wool) getUpperBlock()).setColor(COLOR);
 	}
 	
 	public void hide() {
@@ -87,6 +99,31 @@ public class Door extends SerializableGameObject {
 		getLowerBlock().setData(lowerData);
 		getUpperBlock().setTypeId(upperTypeId);
 		getUpperBlock().setData(upperData);
+	}
+	
+	public Set<Spawner> getSpawners() {
+		return spawners;
+	}
+	
+	public void addSpawner(Spawner spawner) {
+		spawner.setIsLinked(true);
+		spawners.add(spawner);
+	}
+	
+	public void removeSpawner(Spawner spawner) {
+		spawner.setIsLinked(false);
+		spawners.remove(spawner);
+	}
+	
+	public void clearSpawners() {
+		for (Spawner spawner : spawners)
+			spawner.setIsLinked(false);
+		spawners.clear();
+	}
+	
+	public void activateSpawners() {
+		for (Spawner spawner : spawners)
+			spawner.activate();
 	}
 	
 }

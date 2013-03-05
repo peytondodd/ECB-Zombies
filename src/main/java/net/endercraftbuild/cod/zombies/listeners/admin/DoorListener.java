@@ -1,26 +1,24 @@
-package net.endercraftbuild.cod.zombies.listeners;
+package net.endercraftbuild.cod.zombies.listeners.admin;
 
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.objects.Door;
 
 import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.Wool;
 
-public class DoorAdminListener implements Listener {
+public class DoorListener implements Listener {
 	
 	private final ZombieGame game;
 	private final Player player;
 
-	public DoorAdminListener(ZombieGame game, Player player) {
+	public DoorListener(ZombieGame game, Player player) {
 		this.game = game;
 		this.player = player;
+		game.showDoors();
 	}
 	
 	@EventHandler
@@ -29,12 +27,11 @@ public class DoorAdminListener implements Listener {
 			return;
 		
 		Block block = event.getClickedBlock();
-		Door door = null;
+		Door door = game.findDoor(block.getLocation());
 		
 		switch (event.getAction()) {
 		case LEFT_CLICK_BLOCK:
-			if (block.getType() == Material.WOOL &&
-					(((Wool) block).getColor() == DyeColor.CYAN || ((Wool) block).getColor() == DyeColor.ORANGE)) {
+			if (door != null) {
 				player.sendMessage(ChatColor.RED + "That is already a door.");
 				return;
 			}
@@ -48,15 +45,8 @@ public class DoorAdminListener implements Listener {
 			break;
 			
 		case RIGHT_CLICK_BLOCK:
-			if (block.getType() != Material.WOOL || ((Wool) block).getColor() != DyeColor.CYAN) {
-				player.sendMessage(ChatColor.RED + "That is not a door.");
-				return;
-			}
-			
-			door = game.findDoor(block.getLocation());
-			
 			if (door == null) {
-				player.sendMessage(ChatColor.RED + "That is not a door, just a piece of cyan wool you left laying around.");
+				player.sendMessage(ChatColor.RED + "That is not a door.");
 				return;
 			}
 			

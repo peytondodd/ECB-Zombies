@@ -2,18 +2,19 @@ package net.endercraftbuild.cod.zombies.commands;
 
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.zombies.ZombieGame;
-import net.endercraftbuild.cod.zombies.listeners.BarrierAdminListener;
+import net.endercraftbuild.cod.zombies.listeners.admin.BarrierListener;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class BarrierAdminCommand implements CommandExecutor{
+public class BarrierCommand implements CommandExecutor{
 
 	private CoDMain plugin;
 
-	public BarrierAdminCommand(CoDMain plugin) {
+	public BarrierCommand(CoDMain plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -29,8 +30,7 @@ public class BarrierAdminCommand implements CommandExecutor{
 		
 		try {
 			ZombieGame game = (ZombieGame) plugin.getGameManager().get(args[0]);
-			game.showBarriers();
-			game.registerListener(new BarrierAdminListener(game, player));
+			game.registerListener(new BarrierListener(game, player));
 			
 		} catch (IllegalArgumentException e) {
 			player.sendMessage(ChatColor.RED + e.getLocalizedMessage());

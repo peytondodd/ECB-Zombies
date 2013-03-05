@@ -1,26 +1,24 @@
-package net.endercraftbuild.cod.zombies.listeners;
+package net.endercraftbuild.cod.zombies.listeners.admin;
 
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.objects.Barrier;
 
 import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.Wool;
 
-public class BarrierAdminListener implements Listener {
+public class BarrierListener implements Listener {
 	
 	private final ZombieGame game;
 	private final Player player;
 
-	public BarrierAdminListener(ZombieGame game, Player player) {
+	public BarrierListener(ZombieGame game, Player player) {
 		this.game = game;
 		this.player = player;
+		game.showBarriers();
 	}
 	
 	@EventHandler
@@ -29,12 +27,11 @@ public class BarrierAdminListener implements Listener {
 			return;
 		
 		Block block = event.getClickedBlock();
-		Barrier barrier = null;
+		Barrier barrier = game.findBarrier(block.getLocation());
 		
 		switch (event.getAction()) {
 		case LEFT_CLICK_BLOCK:
-			if (block.getType() == Material.WOOL &&
-					(((Wool) block).getColor() == DyeColor.PINK || ((Wool) block).getColor() == DyeColor.PURPLE)) {
+			if (barrier != null) {
 				player.sendMessage(ChatColor.RED + "That is already a barrier.");
 				return;
 			}
@@ -48,15 +45,8 @@ public class BarrierAdminListener implements Listener {
 			break;
 			
 		case RIGHT_CLICK_BLOCK:
-			if (block.getType() != Material.WOOL || ((Wool) block).getColor() != DyeColor.PINK) {
-				player.sendMessage(ChatColor.RED + "That is not a barrier.");
-				return;
-			}
-			
-			barrier = game.findBarrier(block.getLocation());
-			
 			if (barrier == null) {
-				player.sendMessage(ChatColor.RED + "That is not a barrier, just a piece of pink wool you left laying around.");
+				player.sendMessage(ChatColor.RED + "That is not a barrier.");
 				return;
 			}
 			

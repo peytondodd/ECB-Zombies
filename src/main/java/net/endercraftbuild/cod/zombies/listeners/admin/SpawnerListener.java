@@ -1,10 +1,9 @@
-package net.endercraftbuild.cod.zombies.listeners;
+package net.endercraftbuild.cod.zombies.listeners.admin;
 
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.objects.Spawner;
 
 import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -12,16 +11,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.Wool;
 
-public class SpawnerAdminListener implements Listener {
+public class SpawnerListener implements Listener {
 	
 	private final ZombieGame game;
 	private final Player player;
 
-	public SpawnerAdminListener(ZombieGame game, Player player) {
+	public SpawnerListener(ZombieGame game, Player player) {
 		this.game = game;
 		this.player = player;
+		game.showSpawners();
 	}
 	
 	@EventHandler
@@ -30,11 +29,11 @@ public class SpawnerAdminListener implements Listener {
 			return;
 		
 		Block block = event.getClickedBlock();
-		Spawner spawner = null;
+		Spawner spawner = game.findSpawner(block.getLocation());
 		
 		switch (event.getAction()) {
 		case LEFT_CLICK_BLOCK:
-			if (block.getType() == Material.WOOL && ((Wool) block).getColor() == DyeColor.RED) {
+			if (spawner != null) {
 				player.sendMessage(ChatColor.RED + "That is already a spawner.");
 				return;
 			}
@@ -55,15 +54,8 @@ public class SpawnerAdminListener implements Listener {
 			break;
 			
 		case RIGHT_CLICK_BLOCK:
-			if (block.getType() != Material.WOOL || ((Wool) block).getColor() != DyeColor.RED) {
-				player.sendMessage(ChatColor.RED + "That is not a spawner.");
-				return;
-			}
-			
-			spawner = game.findSpawner(block.getLocation());
-			
 			if (spawner == null) {
-				player.sendMessage(ChatColor.RED + "That is not a spawner, just a piece of red wool you left laying around.");
+				player.sendMessage(ChatColor.RED + "That is not a spawner.");
 				return;
 			}
 			

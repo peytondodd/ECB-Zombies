@@ -9,6 +9,7 @@ import java.util.Map;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.pvp.CoDGame;
+import net.endercraftbuild.cod.tasks.GameTickTask;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.CoDMain;
 
@@ -20,11 +21,14 @@ import org.bukkit.event.Listener;
 public class GameManager implements Listener {
 	
 	private final CoDMain plugin;
+	private final GameTickTask gameTickTask;
 	private final Map<String, Game> games;
+	
 	private final List<Game> activeGames;
 	
 	public GameManager(CoDMain plugin) {
 		this.plugin = plugin;
+		this.gameTickTask = new GameTickTask(plugin);
 		this.games = new HashMap<String, Game>();
 		this.activeGames = new ArrayList<Game>();
 	}
@@ -107,11 +111,15 @@ public class GameManager implements Listener {
 	@EventHandler
 	public void onGameStart(GameStartEvent event) {
 		activeGames.add(event.getGame());
+		if (activeGames.size() == 1)
+			gameTickTask.start();
 	}
 	
 	@EventHandler
 	public void onGameEnd(GameEndEvent event) {
 		activeGames.remove(event.getGame());
+		if (activeGames.isEmpty())
+			gameTickTask.stop();
 	}
 	
 }
