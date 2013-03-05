@@ -38,8 +38,8 @@ public class BarrierAdminCommand implements CommandExecutor{
 		}
 
 		player.sendMessage(ChatColor.GREEN + "Barrier edit mode activated.");
-		player.sendMessage(ChatColor.GREEN + "Left click a block to add a barrier.");
-		player.sendMessage(ChatColor.GREEN + "Right click a barrier to remove it.");
+		player.sendMessage(ChatColor.GREEN + "Left click the LOWER block of the barrier to add it as a barrier.");
+		player.sendMessage(ChatColor.GREEN + "Right click the LOWER block of the barrier to remove it.");
 		player.sendMessage(ChatColor.GREEN + "Right click the air to exit barrier edit mode.");
 
 		return true;

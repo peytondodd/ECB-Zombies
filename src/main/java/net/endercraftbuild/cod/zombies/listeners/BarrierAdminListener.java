@@ -33,7 +33,8 @@ public class BarrierAdminListener implements Listener {
 		
 		switch (event.getAction()) {
 		case LEFT_CLICK_BLOCK:
-			if (block.getType() == Material.WOOL && ((Wool) block).getColor() == DyeColor.PINK) {
+			if (block.getType() == Material.WOOL &&
+					(((Wool) block).getColor() == DyeColor.PINK || ((Wool) block).getColor() == DyeColor.PURPLE)) {
 				player.sendMessage(ChatColor.RED + "That is already a barrier.");
 				return;
 			}

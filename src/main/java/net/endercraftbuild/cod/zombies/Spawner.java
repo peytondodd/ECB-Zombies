@@ -15,7 +15,7 @@ public class Spawner {
 	private boolean isActive;
 	
 	public ConfigurationSection load(ConfigurationSection config) {
-		setLocation(Utils.loadLocation(config));
+		location = Utils.loadLocation(config);
 		
 		return config;
 	}
@@ -23,7 +23,7 @@ public class Spawner {
 	public ConfigurationSection save(ConfigurationSection parent) {
 		ConfigurationSection spawnerSection = parent.createSection(String.valueOf(this.hashCode()));
 		
-		Utils.saveLocation(getLocation(), spawnerSection);
+		Utils.saveLocation(location, spawnerSection);
 		
 		return spawnerSection;
 	}
