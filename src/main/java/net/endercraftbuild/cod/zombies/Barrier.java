@@ -11,6 +11,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.material.Wool;
 
 public class Barrier {
+	private static final int DURABILITY = 8;
+	private static final int DAMAGE = 1;
 	
 	private Location location;
 	private Integer lowerTypeId;
@@ -18,12 +20,16 @@ public class Barrier {
 	private Integer upperTypeId;
 	private byte upperData;
 	
+	private int durability;
+	
 	public ConfigurationSection load(ConfigurationSection config) {
 		location = Utils.loadLocation(config);
 		lowerTypeId = config.getInt("lowerTypeId");
 		lowerData = config.getByteList("lowerData").get(0);
 		upperTypeId = config.getInt("upperTypeId");
 		upperData = config.getByteList("upperData").get(0);
+		
+		rebuild();
 		
 		return config;
 	}
@@ -71,7 +77,20 @@ public class Barrier {
 		rebuild();
 	}
 	
+	public void damage() {
+		if (durability == 0)
+			return;
+		
+		durability -= DAMAGE;
+		
+		if (durability == 0)
+			getLowerBlock().setType(Material.AIR);
+		else if (durability <= (DURABILITY * 0.75))
+			getUpperBlock().setType(Material.AIR);
+	}
+	
 	public void rebuild() {
+		durability = DURABILITY;
 		getLowerBlock().setTypeId(lowerTypeId);
 		getLowerBlock().setData(lowerData);
 		getUpperBlock().setTypeId(upperTypeId);

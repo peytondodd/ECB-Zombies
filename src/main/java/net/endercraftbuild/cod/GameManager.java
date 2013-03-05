@@ -1,29 +1,36 @@
 package net.endercraftbuild.cod;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.endercraftbuild.cod.events.GameEndEvent;
+import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.pvp.CoDGame;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.CoDMain;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
-public class GameManager {
+public class GameManager implements Listener {
 	
 	private final CoDMain plugin;
 	private final Map<String, Game> games;
+	private final List<Game> activeGames;
 	
 	public GameManager(CoDMain plugin) {
 		this.plugin = plugin;
 		this.games = new HashMap<String, Game>();
+		this.activeGames = new ArrayList<Game>();
 	}
 	
 	public void load() {
-		for (Game game : getGames())
+		for (Game game : getActiveGames())
 			game.stop();
 		games.clear();
 		
@@ -89,8 +96,22 @@ public class GameManager {
 		return games.values();
 	}
 	
+	public Collection<Game> getActiveGames() {
+		return activeGames;
+	}
+	
 	public boolean isInGame(Player player) {
 		return get(player) != null;
+	}
+	
+	@EventHandler
+	public void onGameStart(GameStartEvent event) {
+		activeGames.add(event.getGame());
+	}
+	
+	@EventHandler
+	public void onGameEnd(GameEndEvent event) {
+		activeGames.remove(event.getGame());
 	}
 	
 }

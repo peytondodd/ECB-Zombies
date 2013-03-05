@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import net.endercraftbuild.cod.CoDMain;
-import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
@@ -20,7 +19,8 @@ public class GameStartEndListener implements Listener {
 	
 	@EventHandler
 	public void onGameStart(GameStartEvent event) {
-		Game game = event.getGame();
+		ZombieGame game = (ZombieGame) event.getGame();
+		game.rebuildBarriers();
 		for (Player player : game.getPlayers())
 			plugin.getServer().getPluginManager().callEvent(new PlayerJoinEvent(player, game));
 	}
@@ -28,9 +28,9 @@ public class GameStartEndListener implements Listener {
 	@EventHandler
 	public void onGameEnd(GameEndEvent event) {
 		ZombieGame game = (ZombieGame) event.getGame();
+		game.rebuildBarriers();
 		for (Player player : game.getPlayers())
 			game.removePlayer(player);
-		game.rebuildBarriers();
 	}
 	
 }

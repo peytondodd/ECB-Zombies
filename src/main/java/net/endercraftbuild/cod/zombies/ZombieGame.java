@@ -5,10 +5,14 @@ import java.util.List;
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.utils.Utils;
+import net.endercraftbuild.cod.zombies.entities.GameEntity;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
+import net.endercraftbuild.cod.zombies.listeners.EntityBarrierDamageListener;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 
 public class ZombieGame extends Game {
 	
@@ -20,6 +24,7 @@ public class ZombieGame extends Game {
 	private List<Barrier> barriers;
 
 	private Long currentWave;
+	private List<GameEntity> gameEntities;
 
 	public ZombieGame(CoDMain plugin) {
 		super(plugin);
@@ -71,6 +76,20 @@ public class ZombieGame extends Game {
 			barrier.save(barriersSection);
 		
 		return gameSection;
+	}
+	
+	@Override
+	public void start() {
+		registerListener(new EntityBarrierDamageListener(getPlugin()));
+		// TODO(mortu): register sign update handler
+		// TODO(mortu): register spawn handler 
+		super.start();
+	}
+	
+	@Override
+	public void stop() {
+		super.stop();
+		clearListeners();
 	}
 
 	public Double getZombieMultiplier() {
@@ -172,6 +191,25 @@ public class ZombieGame extends Game {
 	public void rebuildBarriers() {
 		for (Barrier barrier : barriers)
 			barrier.rebuild();
+	}
+	
+	public List<GameEntity> getGameEntities() {
+		return gameEntities;
+	}
+	
+	public void addGameEntity(GameEntity gameEntity) {
+		gameEntities.add(gameEntity);
+	}
+	
+	public void removeGameEntity(GameEntity gameEntity) {
+		gameEntities.remove(gameEntity);
+	}
+	
+	public GameEntity findGameEntity(Entity entity) {
+		for (GameEntity gameEntity : gameEntities)
+			if (gameEntity.getEntity() == entity)
+				return gameEntity;
+		return null;
 	}
 
 }

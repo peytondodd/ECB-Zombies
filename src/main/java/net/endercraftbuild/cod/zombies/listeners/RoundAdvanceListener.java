@@ -6,12 +6,12 @@ import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 
-public class RoundListener implements Listener {
+public class RoundAdvanceListener implements Listener {
 	
 	@SuppressWarnings("unused")
 	private final CoDMain plugin;
 
-	public RoundListener(CoDMain plugin) {
+	public RoundAdvanceListener(CoDMain plugin) {
 		this.plugin = plugin;
 	}
 	
