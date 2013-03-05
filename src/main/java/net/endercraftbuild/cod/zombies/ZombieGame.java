@@ -110,7 +110,7 @@ public class ZombieGame extends Game {
 	
 	@Override
 	public void start() {
-		registerListener(new EntityBarrierDamageListener(getPlugin()));
+		registerListener(new EntityBarrierDamageListener(getPlugin(), this));
 		// TODO(mortu): register sign update handler
 		// TODO(mortu): register spawn handler 
 		super.start();
@@ -156,8 +156,7 @@ public class ZombieGame extends Game {
 	
 	public void advanceWave() {
 		this.setCurrentWave(getCurrentWave() + 1);
-		RoundAdvanceEvent roundevent = new RoundAdvanceEvent(this);
-		Bukkit.getServer().getPluginManager().callEvent(roundevent);
+		Bukkit.getServer().getPluginManager().callEvent(new RoundAdvanceEvent(this));
 	}
 
 	public List<Spawner> getSpawners() {

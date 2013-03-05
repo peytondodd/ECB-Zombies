@@ -13,14 +13,18 @@ public class EntityBarrierDamageListener implements Listener {
 
 	@SuppressWarnings("unused")
 	private final CoDMain plugin;
+	private final ZombieGame game;
 
-	public EntityBarrierDamageListener(CoDMain plugin) {
+	public EntityBarrierDamageListener(CoDMain plugin, ZombieGame game) {
 		this.plugin = plugin;
+		this.game = game;
 	}
 	
 	@EventHandler
 	public void onGameTick(GameTickEvent event) {
-		ZombieGame game = (ZombieGame) event.getGame();
+		if (event.getGame() != game)
+			return;
+		
 		for (Barrier barrier : game.getBarriers())
 			for (GameEntity gameEntity : game.getGameEntities())
 				if (gameEntity.near(barrier.getLocation())) {

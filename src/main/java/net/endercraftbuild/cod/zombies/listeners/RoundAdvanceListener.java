@@ -10,14 +10,19 @@ public class RoundAdvanceListener implements Listener {
 	
 	@SuppressWarnings("unused")
 	private final CoDMain plugin;
+	private final ZombieGame game;
 
-	public RoundAdvanceListener(CoDMain plugin) {
+	public RoundAdvanceListener(CoDMain plugin, ZombieGame game) {
 		this.plugin = plugin;
+		this.game = game;
 	}
 	
 	@EventHandler
 	public void onRoundAdvance(RoundAdvanceEvent event) {
-		((ZombieGame) event.getGame()).rebuildBarriers();
+		if (event.getGame() != game)
+			return;
+		
+		game.rebuildBarriers();
 	}
 	
 }
