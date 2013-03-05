@@ -1,4 +1,4 @@
-package net.endercraftbuild.cod.zombies;
+package net.endercraftbuild.cod.zombies.objects;
 
 import net.endercraftbuild.cod.utils.Utils;
 
@@ -10,7 +10,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.material.Wool;
 
-public class Barrier {
+public class Barrier extends SerializableGameObject {
+	
 	private static final int DURABILITY = 8;
 	private static final int DAMAGE = 1;
 	
@@ -23,6 +24,8 @@ public class Barrier {
 	private int durability;
 	
 	public ConfigurationSection load(ConfigurationSection config) {
+		super.load(config);
+		
 		location = Utils.loadLocation(config);
 		lowerTypeId = config.getInt("lowerTypeId");
 		lowerData = config.getByteList("lowerData").get(0);
@@ -35,7 +38,7 @@ public class Barrier {
 	}
 	
 	public ConfigurationSection save(ConfigurationSection parent) {
-		ConfigurationSection barrierSection = parent.createSection(String.valueOf(this.hashCode()));
+		ConfigurationSection barrierSection = super.save(parent);
 		
 		Utils.saveLocation(location, barrierSection);
 		barrierSection.set("lowerTypeId", lowerTypeId);

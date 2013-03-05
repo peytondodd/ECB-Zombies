@@ -1,4 +1,4 @@
-package net.endercraftbuild.cod.zombies;
+package net.endercraftbuild.cod.zombies.objects;
 
 import net.endercraftbuild.cod.utils.Utils;
 
@@ -8,20 +8,22 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.material.Wool;
 
-public class Spawner {
+public class Spawner extends SerializableGameObject {
 	
 	private Location location;
 	
 	private boolean isActive;
 	
 	public ConfigurationSection load(ConfigurationSection config) {
+		super.load(config);
+		
 		location = Utils.loadLocation(config);
 		
 		return config;
 	}
 	
 	public ConfigurationSection save(ConfigurationSection parent) {
-		ConfigurationSection spawnerSection = parent.createSection(String.valueOf(this.hashCode()));
+		ConfigurationSection spawnerSection = super.save(parent);
 		
 		Utils.saveLocation(location, spawnerSection);
 		

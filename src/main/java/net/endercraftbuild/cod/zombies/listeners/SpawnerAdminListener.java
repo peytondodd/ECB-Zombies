@@ -1,7 +1,7 @@
 package net.endercraftbuild.cod.zombies.listeners;
 
-import net.endercraftbuild.cod.zombies.Spawner;
 import net.endercraftbuild.cod.zombies.ZombieGame;
+import net.endercraftbuild.cod.zombies.objects.Spawner;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;

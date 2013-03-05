@@ -1,4 +1,4 @@
-package net.endercraftbuild.cod.zombies;
+package net.endercraftbuild.cod.zombies.objects;
 
 import net.endercraftbuild.cod.utils.Utils;
 
@@ -10,7 +10,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.material.Wool;
 
-public class Door {
+public class Door extends SerializableGameObject {
 	
 	private Location location;
 	private Integer lowerTypeId;
@@ -18,7 +18,10 @@ public class Door {
 	private Integer upperTypeId;
 	private byte upperData;
 	
+	@Override
 	public ConfigurationSection load(ConfigurationSection config) {
+		super.load(config);
+		
 		location = Utils.loadLocation(config);
 		lowerTypeId = config.getInt("lowerTypeId");
 		lowerData = config.getByteList("lowerData").get(0);
@@ -30,8 +33,9 @@ public class Door {
 		return config;
 	}
 	
+	@Override
 	public ConfigurationSection save(ConfigurationSection parent) {
-		ConfigurationSection doorSection = parent.createSection(String.valueOf(this.hashCode()));
+		ConfigurationSection doorSection = super.save(parent);
 		
 		Utils.saveLocation(location, doorSection);
 		doorSection.set("lowerTypeId", lowerTypeId);

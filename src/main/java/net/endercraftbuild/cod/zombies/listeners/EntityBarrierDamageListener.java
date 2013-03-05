@@ -2,9 +2,9 @@ package net.endercraftbuild.cod.zombies.listeners;
 
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.GameTickEvent;
-import net.endercraftbuild.cod.zombies.Barrier;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.entities.GameEntity;
+import net.endercraftbuild.cod.zombies.objects.Barrier;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

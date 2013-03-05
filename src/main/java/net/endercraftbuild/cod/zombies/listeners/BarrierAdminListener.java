@@ -1,7 +1,7 @@
 package net.endercraftbuild.cod.zombies.listeners;
 
-import net.endercraftbuild.cod.zombies.Barrier;
 import net.endercraftbuild.cod.zombies.ZombieGame;
+import net.endercraftbuild.cod.zombies.objects.Barrier;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;

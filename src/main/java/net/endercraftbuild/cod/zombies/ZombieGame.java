@@ -8,6 +8,9 @@ import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.entities.GameEntity;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 import net.endercraftbuild.cod.zombies.listeners.EntityBarrierDamageListener;
+import net.endercraftbuild.cod.zombies.objects.Barrier;
+import net.endercraftbuild.cod.zombies.objects.Door;
+import net.endercraftbuild.cod.zombies.objects.Spawner;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
