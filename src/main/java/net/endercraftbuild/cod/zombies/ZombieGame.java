@@ -22,6 +22,7 @@ public class ZombieGame extends Game {
 	
 	private List<Spawner> spawners;
 	private List<Barrier> barriers;
+	private List<Door> doors;
 
 	private Long currentWave;
 	private List<GameEntity> gameEntities;
@@ -55,6 +56,14 @@ public class ZombieGame extends Game {
 			barriers.add(barrier);
 		}
 		
+		@SuppressWarnings("unchecked")
+		List<ConfigurationSection> doorList = (List<ConfigurationSection>) config.getList("doors");
+		for (ConfigurationSection doorSection : doorList) {
+			Door door = new Door();
+			door.load(doorSection);
+			doors.add(door);
+		}
+		
 		return config;
 	}
 	
@@ -74,6 +83,10 @@ public class ZombieGame extends Game {
 		ConfigurationSection barriersSection = gameSection.createSection("barriers");
 		for (Barrier barrier : getBarriers())
 			barrier.save(barriersSection);
+		
+		ConfigurationSection doorsSection = gameSection.createSection("doors");
+		for (Door door : getDoors())
+			door.save(doorsSection);
 		
 		return gameSection;
 	}
@@ -191,6 +204,40 @@ public class ZombieGame extends Game {
 	public void rebuildBarriers() {
 		for (Barrier barrier : barriers)
 			barrier.rebuild();
+	}
+	
+	public List<Door> getDoors() {
+		return doors;
+	}
+	
+	public void addDoor(Door door) {
+		doors.add(door);
+	}
+	
+	public void removeDoor(Door door) {
+		doors.remove(door);
+	}
+	
+	public Door findDoor(Location location) {
+		for (Door door : doors)
+			if (door.getLocation().equals(location))
+				return door;
+		return null;
+	}
+	
+	public void showDoors() {
+		for (Door door : doors)
+			door.show();
+	}
+	
+	public void hideDoors() {
+		for (Door door : doors)
+			door.hide();
+	}
+	
+	public void closeDoors() {
+		for (Door door : doors)
+			door.close();
 	}
 	
 	public List<GameEntity> getGameEntities() {

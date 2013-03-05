@@ -102,6 +102,7 @@ private void registerCommands() {
 	getCommand("zedit").setExecutor(new EditCommand(this));
 	getCommand("zspawn").setExecutor(new SpawnerAdminCommand(this));
 	getCommand("zsbarrier").setExecutor(new BarrierAdminCommand(this));
+	getCommand("zsdoor").setExecutor(new DoorAdminCommand(this));
 }
 
 private boolean setupEconomy() {
