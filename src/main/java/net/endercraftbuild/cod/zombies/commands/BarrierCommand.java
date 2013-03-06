@@ -10,7 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class BarrierCommand implements CommandExecutor{
+public class BarrierCommand implements CommandExecutor {
 
 	private CoDMain plugin;
 
@@ -37,10 +37,10 @@ public class BarrierCommand implements CommandExecutor{
 			return true;
 		}
 
-		player.sendMessage(ChatColor.GREEN + "Barrier edit mode activated.");
+		player.sendMessage(ChatColor.GOLD + "Barrier edit mode activated.");
 		player.sendMessage(ChatColor.GREEN + "Left click the LOWER block of the barrier to add it as a barrier.");
 		player.sendMessage(ChatColor.GREEN + "Right click the LOWER block of the barrier to remove it.");
-		player.sendMessage(ChatColor.GREEN + "Right click the air to exit barrier edit mode.");
+		player.sendMessage(ChatColor.GRAY + "Left click anywhere with a stick to exit barrier edit mode.");
 
 		return true;
 	}

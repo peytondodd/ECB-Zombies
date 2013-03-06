@@ -7,17 +7,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class DoorListener implements Listener {
+public class DoorListener extends AdminListener {
 	
-	private final ZombieGame game;
-	private final Player player;
-
 	public DoorListener(ZombieGame game, Player player) {
-		this.game = game;
-		this.player = player;
+		super(game, player);
 		game.showDoors();
 	}
 	
@@ -25,6 +20,13 @@ public class DoorListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (event.getPlayer() != player)
 			return;
+		
+		if (isExitEvent(event)) {
+			game.hideDoors();
+			game.unregisterListener(this);
+			player.sendMessage(ChatColor.GOLD + "Back to normal mode.");
+			return;
+		}
 		
 		Block block = event.getClickedBlock();
 		Door door = block != null ? game.findDoor(block.getLocation()) : null;
@@ -54,12 +56,6 @@ public class DoorListener implements Listener {
 			game.removeDoor(door);
 			player.sendMessage(ChatColor.GREEN + "Door removed.");
 			
-			break;
-			
-		case LEFT_CLICK_AIR:
-			game.hideDoors();
-			game.unregisterListener(this);
-			player.sendMessage(ChatColor.GOLD + "Back to normal mode.");
 			break;
 			
 		default:

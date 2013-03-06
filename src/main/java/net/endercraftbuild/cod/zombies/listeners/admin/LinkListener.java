@@ -11,20 +11,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class LinkListener implements Listener {
-	
-	private final ZombieGame game;
-	private final Player player;
+public class LinkListener extends AdminListener {
 	
 	private Set<Door> doors;
 	private Set<Spawner> spawners;
 
 	public LinkListener(ZombieGame game, Player player) {
-		this.game = game;
-		this.player = player;
+		super(game, player);
 		this.doors = new TreeSet<Door>();
 		this.spawners = new TreeSet<Spawner>();
 		game.openBarriers();
@@ -36,6 +31,21 @@ public class LinkListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (event.getPlayer() != player)
 			return;
+		
+		if (isExitEvent(event)) {
+			game.rebuildBarriers();
+			game.hideDoors();
+			game.hideSpawners();
+			game.unregisterListener(this);
+			
+			for (Door linkDoor : doors)
+				for (Spawner linkSpawner : spawners)
+					linkDoor.addSpawner(linkSpawner);
+			player.sendMessage(ChatColor.GREEN + "Linked " + doors.size() + " door(s) to " + spawners.size() + " spawner(s).");
+			
+			player.sendMessage(ChatColor.GOLD + "Back to normal mode.");
+			return;
+		}
 		
 		Block block = event.getClickedBlock();
 		Door door = block != null ? game.findDoor(block.getLocation()) : null;
@@ -54,20 +64,6 @@ public class LinkListener implements Listener {
 			} else {
 				player.sendMessage(ChatColor.RED + "That is not a door or a spawner.");
 			}
-			break;
-			
-		case LEFT_CLICK_AIR:
-			game.rebuildBarriers();
-			game.hideDoors();
-			game.hideSpawners();
-			game.unregisterListener(this);
-			
-			for (Door linkDoor : doors)
-				for (Spawner linkSpawner : spawners)
-					linkDoor.addSpawner(linkSpawner);
-			player.sendMessage(ChatColor.GREEN + "Linked " + doors.size() + " door(s) to " + spawners.size() + " spawner(s).");
-			
-			player.sendMessage(ChatColor.GOLD + "Back to normal mode.");
 			break;
 			
 		default:

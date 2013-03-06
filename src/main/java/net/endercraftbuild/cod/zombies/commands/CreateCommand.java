@@ -9,7 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CreateCommand implements CommandExecutor{
+public class CreateCommand implements CommandExecutor {
 
 	private CoDMain plugin;
 

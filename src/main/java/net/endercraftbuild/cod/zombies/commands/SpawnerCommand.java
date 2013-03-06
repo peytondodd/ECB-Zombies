@@ -10,7 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class SpawnerCommand implements CommandExecutor{
+public class SpawnerCommand implements CommandExecutor {
 
 	private CoDMain plugin;
 
@@ -37,10 +37,10 @@ public class SpawnerCommand implements CommandExecutor{
 			return true;
 		}
 
-		player.sendMessage(ChatColor.GREEN + "Spawn edit mode activated.");
+		player.sendMessage(ChatColor.GOLD + "Spawn edit mode activated.");
 		player.sendMessage(ChatColor.GREEN + "Left click a block to add a spawner.");
 		player.sendMessage(ChatColor.GREEN + "Right click a spawner to remove it.");
-		player.sendMessage(ChatColor.GREEN + "Right click the air to exit spawn edit mode.");
+		player.sendMessage(ChatColor.GRAY + "Left click anywhere with a stick to exit spawn edit mode.");
 
 		return true;
 	}

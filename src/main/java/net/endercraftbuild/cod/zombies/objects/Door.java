@@ -92,6 +92,7 @@ public class Door extends SerializableGameObject {
 	public void open() {
 		getLowerBlock().setType(Material.AIR);
 		getUpperBlock().setType(Material.AIR);
+		activateSpawners();
 	}
 	
 	public void close() {

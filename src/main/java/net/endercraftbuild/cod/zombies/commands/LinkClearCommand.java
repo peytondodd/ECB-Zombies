@@ -10,7 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class LinkClearCommand implements CommandExecutor{
+public class LinkClearCommand implements CommandExecutor {
 
 	private CoDMain plugin;
 

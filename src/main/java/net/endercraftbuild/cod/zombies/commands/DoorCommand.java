@@ -10,7 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class DoorCommand implements CommandExecutor{
+public class DoorCommand implements CommandExecutor {
 
 	private CoDMain plugin;
 
@@ -37,10 +37,10 @@ public class DoorCommand implements CommandExecutor{
 			return true;
 		}
 
-		player.sendMessage(ChatColor.GREEN + "Door edit mode activated.");
+		player.sendMessage(ChatColor.GOLD + "Door edit mode activated.");
 		player.sendMessage(ChatColor.GREEN + "Left click the LOWER block of the door to add it as a door.");
 		player.sendMessage(ChatColor.GREEN + "Right click the LOWER block of the door to remove it.");
-		player.sendMessage(ChatColor.GREEN + "Right click the air to exit door edit mode.");
+		player.sendMessage(ChatColor.GRAY + "Left click anywhere with a stick to exit door edit mode.");
 
 		return true;
 	}

@@ -10,7 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class LinkCommand implements CommandExecutor{
+public class LinkCommand implements CommandExecutor {
 
 	private CoDMain plugin;
 
@@ -37,10 +37,10 @@ public class LinkCommand implements CommandExecutor{
 			return true;
 		}
 
-		player.sendMessage(ChatColor.GREEN + "Link edit mode activated.");
+		player.sendMessage(ChatColor.GOLD + "Link mode activated.");
 		player.sendMessage(ChatColor.GREEN + "Left click the LOWER block of the door to link it. Link all door blocks from wide doors.");
 		player.sendMessage(ChatColor.GREEN + "Left click all spawners to link to selected doors.");
-		player.sendMessage(ChatColor.GREEN + "Right click the air to exit barrier edit mode.");
+		player.sendMessage(ChatColor.GRAY + "Left click anywhere with a stick to exit link mode.");
 		player.sendMessage(ChatColor.AQUA + "Hiding barriers to make it easer to walk around.");
 
 		return true;

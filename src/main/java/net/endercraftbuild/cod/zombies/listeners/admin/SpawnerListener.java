@@ -9,17 +9,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class SpawnerListener implements Listener {
+public class SpawnerListener extends AdminListener {
 	
-	private final ZombieGame game;
-	private final Player player;
-
 	public SpawnerListener(ZombieGame game, Player player) {
-		this.game = game;
-		this.player = player;
+		super(game, player);
 		game.showSpawners();
 	}
 	
@@ -27,6 +22,13 @@ public class SpawnerListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (event.getPlayer() != player)
 			return;
+		
+		if (isExitEvent(event)) {
+			game.hideSpawners();
+			game.unregisterListener(this);
+			player.sendMessage(ChatColor.GOLD + "Back to normal mode.");
+			return;
+		}
 		
 		Block block = event.getClickedBlock();
 		Spawner spawner = block != null ? game.findSpawner(block.getLocation()) : null;
@@ -63,12 +65,6 @@ public class SpawnerListener implements Listener {
 			game.removeSpawner(spawner);
 			player.sendMessage(ChatColor.GREEN + "Spawner removed.");
 			
-			break;
-			
-		case LEFT_CLICK_AIR:
-			game.hideSpawners();
-			game.unregisterListener(this);
-			player.sendMessage(ChatColor.GOLD + "Back to normal mode.");
 			break;
 			
 		default:
