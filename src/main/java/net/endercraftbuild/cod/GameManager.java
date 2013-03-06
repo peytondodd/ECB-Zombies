@@ -1,11 +1,12 @@
 package net.endercraftbuild.cod;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.pvp.CoDGame;
@@ -38,12 +39,12 @@ public class GameManager implements Listener {
 			game.stop();
 		games.clear();
 		
-		@SuppressWarnings("unchecked")
-		List<ConfigurationSection> gamesList = (List<ConfigurationSection>) plugin.getConfig().getList("games");
-		
-		for (ConfigurationSection gameSection : gamesList) {
-			Game game = null;
+		ConfigurationSection gamesSection = plugin.getConfig().getConfigurationSection("games");
+		for (String name : gamesSection.getKeys(false)) {
+			ConfigurationSection gameSection = gamesSection.getConfigurationSection(name);
 			
+			Game game = null;
+
 			switch (gameSection.getString("type")) {
 			case "ZombieGame":
 				game = new ZombieGame(plugin);
@@ -61,14 +62,16 @@ public class GameManager implements Listener {
 				add(game);
 			}
 		}
+		
 	}
 	
-	public void save() {
+	public void save() throws IOException {
 		ConfigurationSection gamesSection = plugin.getConfig().createSection("games");
 		for (Game game : getGames()) {
 			ConfigurationSection gameSection = game.save(gamesSection);
 			gameSection.set("type", game.getType());
 		}
+		plugin.getConfig().save(plugin.getDataFolder().getPath() + File.separatorChar + "config.yml");
 	}
 	
 	public Game get(String name) {
@@ -98,6 +101,10 @@ public class GameManager implements Listener {
 	
 	public Collection<Game> getGames() {
 		return games.values();
+	}
+	
+	public Collection<String> getGameNames() {
+		return games.keySet();
 	}
 	
 	public Collection<Game> getActiveGames() {

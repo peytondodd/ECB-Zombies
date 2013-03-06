@@ -27,7 +27,7 @@ public class BarrierListener implements Listener {
 			return;
 		
 		Block block = event.getClickedBlock();
-		Barrier barrier = game.findBarrier(block.getLocation());
+		Barrier barrier = block != null ? game.findBarrier(block.getLocation()) : null;
 		
 		switch (event.getAction()) {
 		case LEFT_CLICK_BLOCK:
@@ -56,7 +56,7 @@ public class BarrierListener implements Listener {
 			
 			break;
 			
-		case RIGHT_CLICK_AIR:
+		case LEFT_CLICK_AIR:
 			game.hideBarriers();
 			game.unregisterListener(this);
 			player.sendMessage(ChatColor.GOLD + "Back to normal mode.");

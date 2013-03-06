@@ -21,15 +21,17 @@ public class JoinCommand implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
 			return true;
-		if (args.length < 1)
+		if (args.length < 1) {
+			sender.sendMessage(ChatColor.GREEN + "Available games: " + ChatColor.WHITE + plugin.getGameManager().getGameNames().toString());
 			return false;
+		}
 		
 		Player player = (Player) sender;
 		
 		try {
 			Game game = plugin.getGameManager().get(args[0]);
 			game.addPlayer(player);
-			player.getServer().broadcastMessage(ChatColor.GREEN + player.getName() + " just joined " + game.getName() + ".");
+			player.getServer().broadcastMessage(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");
 		} catch (RuntimeException e) {
 			player.sendMessage(ChatColor.RED + e.getLocalizedMessage());
 		}

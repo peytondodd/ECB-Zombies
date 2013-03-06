@@ -8,6 +8,7 @@ import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -92,11 +93,13 @@ public abstract class Game {
 	public void start() {
 		this.setActive(true);
 		plugin.getServer().getPluginManager().callEvent(new GameStartEvent(this));
+		plugin.getServer().broadcastMessage(ChatColor.YELLOW + getName() + " has started!");
 	}
 	
 	public void stop() {
 		this.setActive(false);
 		plugin.getServer().getPluginManager().callEvent(new GameEndEvent(this));
+		plugin.getServer().broadcastMessage(ChatColor.YELLOW + getName() + " has ended!");
 	}
 	
 	public void registerListener(Listener listener) {
@@ -111,7 +114,8 @@ public abstract class Game {
 	
 	public void clearListeners() {
 		for (Listener listener : listeners)
-			unregisterListener(listener);
+			HandlerList.unregisterAll(listener);
+		listeners.clear();
 	}
 	
 	public boolean isInGame(Player player) {

@@ -24,15 +24,19 @@ public class ZombieGame extends Game {
 	private Long maxWaves;
 	private Location spawnLocation;
 	
-	private List<Spawner> spawners;
-	private List<Barrier> barriers;
-	private List<Door> doors;
+	private final List<Spawner> spawners;
+	private final List<Barrier> barriers;
+	private final List<Door> doors;
 
 	private Long currentWave;
-	private List<GameEntity> gameEntities;
+	private final List<GameEntity> gameEntities;
 
 	public ZombieGame(CoDMain plugin) {
 		super(plugin);
+		spawners = new ArrayList<Spawner>();
+		barriers = new ArrayList<Barrier>();
+		doors = new ArrayList<Door>();
+		gameEntities = new ArrayList<GameEntity>();
 	}
 	
 	@Override
@@ -44,25 +48,25 @@ public class ZombieGame extends Game {
 		
 		setSpawnLocation(Utils.loadLocation(config));
 		
-		@SuppressWarnings("unchecked")
-		List<ConfigurationSection> spawnerList = (List<ConfigurationSection>) config.getList("spawners");
-		for (ConfigurationSection spawnerSection : spawnerList) {
+		ConfigurationSection spawnersSection = config.getConfigurationSection("spawners");
+		for (String name : spawnersSection.getKeys(false)) {
+			ConfigurationSection spawnerSection = spawnersSection.getConfigurationSection(name);
 			Spawner spawner = new Spawner();
 			spawner.load(spawnerSection);
 			spawners.add(spawner);
 		}
 		
-		@SuppressWarnings("unchecked")
-		List<ConfigurationSection> barrierList = (List<ConfigurationSection>) config.getList("barriers");
-		for (ConfigurationSection barrierSection : barrierList) {
+		ConfigurationSection barriersSection = config.getConfigurationSection("barriers");
+		for (String name : barriersSection.getKeys(false)) {
+			ConfigurationSection barrierSection = barriersSection.getConfigurationSection(name);
 			Barrier barrier = new Barrier();
 			barrier.load(barrierSection);
 			barriers.add(barrier);
 		}
 		
-		@SuppressWarnings("unchecked")
-		List<ConfigurationSection> doorList = (List<ConfigurationSection>) config.getList("doors");
-		for (ConfigurationSection doorSection : doorList) {
+		ConfigurationSection doorsSection = config.getConfigurationSection("doors");
+		for (String name : doorsSection.getKeys(false)) {
+			ConfigurationSection doorSection = doorsSection.getConfigurationSection(name);
 			Door door = new Door();
 			
 			door.load(doorSection);

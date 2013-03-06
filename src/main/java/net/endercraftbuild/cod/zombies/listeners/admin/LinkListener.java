@@ -38,8 +38,8 @@ public class LinkListener implements Listener {
 			return;
 		
 		Block block = event.getClickedBlock();
-		Door door = game.findDoor(block.getLocation());
-		Spawner spawner = game.findSpawner(block.getLocation());
+		Door door = block != null ? game.findDoor(block.getLocation()) : null;
+		Spawner spawner = block != null ? game.findSpawner(block.getLocation()) : null;
 		
 		switch (event.getAction()) {
 		case LEFT_CLICK_BLOCK:
@@ -56,7 +56,7 @@ public class LinkListener implements Listener {
 			}
 			break;
 			
-		case RIGHT_CLICK_AIR:
+		case LEFT_CLICK_AIR:
 			game.rebuildBarriers();
 			game.hideDoors();
 			game.hideSpawners();

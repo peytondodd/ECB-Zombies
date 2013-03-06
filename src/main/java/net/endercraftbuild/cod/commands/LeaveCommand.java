@@ -29,7 +29,7 @@ public class LeaveCommand implements CommandExecutor{
 			if (game == null)
 				throw new RuntimeException("You are not in a game.");
 			game.removePlayer(player);
-			player.getServer().broadcastMessage(ChatColor.GREEN + player.getName() + " just left " + game.getName() + ".");
+			player.getServer().broadcastMessage(ChatColor.AQUA + player.getName() + " just left " + game.getName() + ".");
 		} catch (RuntimeException e) {
 			player.sendMessage(ChatColor.RED + e.getLocalizedMessage());
 		}

@@ -10,8 +10,6 @@ import org.bukkit.material.Wool;
 
 public class Spawner extends SerializableGameObject {
 	
-	public static final DyeColor COLOR = DyeColor.RED; 
-	
 	private Location location;
 	
 	private boolean isLinked;
@@ -62,8 +60,10 @@ public class Spawner extends SerializableGameObject {
 	}
 	
 	public void show() {
-		location.getBlock().setType(Material.WOOL);
-		((Wool) location.getBlock()).setColor(COLOR);
+		Wool wool = new Wool();
+		wool.setColor(DyeColor.RED);
+		location.getBlock().setType(wool.getItemType());
+		location.getBlock().setData(wool.getData());
 	}
 	
 	public void hide() {

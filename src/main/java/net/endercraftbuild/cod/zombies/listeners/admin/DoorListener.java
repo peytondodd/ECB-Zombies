@@ -27,7 +27,7 @@ public class DoorListener implements Listener {
 			return;
 		
 		Block block = event.getClickedBlock();
-		Door door = game.findDoor(block.getLocation());
+		Door door = block != null ? game.findDoor(block.getLocation()) : null;
 		
 		switch (event.getAction()) {
 		case LEFT_CLICK_BLOCK:
@@ -56,7 +56,7 @@ public class DoorListener implements Listener {
 			
 			break;
 			
-		case RIGHT_CLICK_AIR:
+		case LEFT_CLICK_AIR:
 			game.hideDoors();
 			game.unregisterListener(this);
 			player.sendMessage(ChatColor.GOLD + "Back to normal mode.");

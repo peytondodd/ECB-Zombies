@@ -1,5 +1,8 @@
 package net.endercraftbuild.cod.commands;
 
+import java.io.IOException;
+import java.util.logging.Level;
+
 import net.endercraftbuild.cod.CoDMain;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -21,8 +24,13 @@ public class SaveCommand implements CommandExecutor{
 		if (!(sender instanceof Player))
 			return true;
 		
-		plugin.getGameManager().save();
-		sender.sendMessage(ChatColor.GREEN + "Current game setups saved.");
+		try {
+			plugin.getGameManager().save();
+			sender.sendMessage(ChatColor.GREEN + "Current game setups saved.");
+		} catch (IOException e) {
+			sender.sendMessage(ChatColor.RED + "Failed to save game setup.");
+			plugin.getLogger().log(Level.SEVERE, "Failed to save game setup: ", e);
+		}
 		return true;
 	}
 	

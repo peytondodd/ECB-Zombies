@@ -12,8 +12,6 @@ import org.bukkit.material.Wool;
 
 public class Barrier extends SerializableGameObject {
 	
-	public static final DyeColor COLOR = DyeColor.ORANGE;
-	
 	private static final int DURABILITY = 8;
 	private static final int DAMAGE = 1;
 	
@@ -30,9 +28,9 @@ public class Barrier extends SerializableGameObject {
 		
 		location = Utils.loadLocation(config);
 		lowerTypeId = config.getInt("lowerTypeId");
-		lowerData = config.getByteList("lowerData").get(0);
+		lowerData = (byte) config.getInt("lowerData");
 		upperTypeId = config.getInt("upperTypeId");
-		upperData = config.getByteList("upperData").get(0);
+		upperData = (byte) config.getInt("upperData");
 		
 		rebuild();
 		
@@ -44,9 +42,9 @@ public class Barrier extends SerializableGameObject {
 		
 		Utils.saveLocation(location, barrierSection);
 		barrierSection.set("lowerTypeId", lowerTypeId);
-		barrierSection.set("lowerData", lowerData);
+		barrierSection.set("lowerData", new Integer(lowerData));
 		barrierSection.set("upperTypeId", upperTypeId);
-		barrierSection.set("upperData", upperData);
+		barrierSection.set("upperData", new Integer(upperData));
 		
 		return barrierSection;
 	}
@@ -72,10 +70,12 @@ public class Barrier extends SerializableGameObject {
 	}
 	
 	public void show() {
-		getLowerBlock().setType(Material.WOOL);
-		((Wool) getLowerBlock()).setColor(COLOR);
-		getUpperBlock().setType(Material.WOOL);
-		((Wool) getUpperBlock()).setColor(COLOR);
+		Wool wool = new Wool();
+		wool.setColor(DyeColor.ORANGE);
+		getLowerBlock().setType(wool.getItemType());
+		getLowerBlock().setData(wool.getData());
+		getUpperBlock().setType(wool.getItemType());
+		getUpperBlock().setData(wool.getData());
 	}
 	
 	public void hide() {

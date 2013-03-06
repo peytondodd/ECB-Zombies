@@ -29,7 +29,7 @@ public class SpawnerListener implements Listener {
 			return;
 		
 		Block block = event.getClickedBlock();
-		Spawner spawner = game.findSpawner(block.getLocation());
+		Spawner spawner = block != null ? game.findSpawner(block.getLocation()) : null;
 		
 		switch (event.getAction()) {
 		case LEFT_CLICK_BLOCK:
@@ -65,7 +65,7 @@ public class SpawnerListener implements Listener {
 			
 			break;
 			
-		case RIGHT_CLICK_AIR:
+		case LEFT_CLICK_AIR:
 			game.hideSpawners();
 			game.unregisterListener(this);
 			player.sendMessage(ChatColor.GOLD + "Back to normal mode.");

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class SerializableGameObject {
+public class SerializableGameObject implements Comparable<SerializableGameObject> {
 	
 	private UUID id;
 	
@@ -24,5 +24,10 @@ public class SerializableGameObject {
 	public ConfigurationSection save(ConfigurationSection parent) {
 		return parent.createSection(id.toString());
 	}
-
+	
+	@Override
+	public int compareTo(SerializableGameObject o) {
+		return getId().compareTo(o.getId());
+	}
+	
 }

@@ -15,8 +15,6 @@ import org.bukkit.material.Wool;
 
 public class Door extends SerializableGameObject {
 	
-	public static final DyeColor COLOR = DyeColor.BLUE;
-	
 	private Location location;
 	private Integer lowerTypeId;
 	private byte lowerData;
@@ -36,9 +34,9 @@ public class Door extends SerializableGameObject {
 		
 		location = Utils.loadLocation(config);
 		lowerTypeId = config.getInt("lowerTypeId");
-		lowerData = config.getByteList("lowerData").get(0);
+		lowerData = (byte) config.getInt("lowerData");
 		upperTypeId = config.getInt("upperTypeId");
-		upperData = config.getByteList("upperData").get(0);
+		upperData = (byte) config.getInt("upperData");
 		
 		close();
 		
@@ -51,9 +49,9 @@ public class Door extends SerializableGameObject {
 		
 		Utils.saveLocation(location, doorSection);
 		doorSection.set("lowerTypeId", lowerTypeId);
-		doorSection.set("lowerData", lowerData);
+		doorSection.set("lowerData", new Integer(lowerData));
 		doorSection.set("upperTypeId", upperTypeId);
-		doorSection.set("upperData", upperData);
+		doorSection.set("upperData", new Integer(upperData));
 
 		return doorSection;
 	}
@@ -79,10 +77,12 @@ public class Door extends SerializableGameObject {
 	}
 	
 	public void show() {
-		getLowerBlock().setType(Material.WOOL);
-		((Wool) getLowerBlock()).setColor(COLOR);
-		getUpperBlock().setType(Material.WOOL);
-		((Wool) getUpperBlock()).setColor(COLOR);
+		Wool wool = new Wool();
+		wool.setColor(DyeColor.BLUE);
+		getLowerBlock().setType(wool.getItemType());
+		getLowerBlock().setData(wool.getData());
+		getUpperBlock().setType(wool.getItemType());
+		getUpperBlock().setData(wool.getData());
 	}
 	
 	public void hide() {
