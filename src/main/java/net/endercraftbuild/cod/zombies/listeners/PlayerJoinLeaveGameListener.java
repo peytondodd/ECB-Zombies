@@ -68,4 +68,5 @@ public class PlayerJoinLeaveGameListener implements Listener {
 		player.getInventory().clear();
 		plugin.getEconomy().withdrawPlayer(player.getName(), plugin.getEconomy().getBalance(player.getName()));
 	}
+	
 }

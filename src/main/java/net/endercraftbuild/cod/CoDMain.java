@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import net.endercraftbuild.cod.commands.*;
+import net.endercraftbuild.cod.listeners.*;
 import net.endercraftbuild.cod.zombies.commands.*;
 import net.endercraftbuild.cod.zombies.listeners.*;
 import net.endercraftbuild.cod.GameManager;
 import net.endercraftbuild.cod.guns.Shoot;
-import net.endercraftbuild.cod.listeners.PlayerJoinLeaveSignInteractListener;
-import net.endercraftbuild.cod.listeners.PlayerJoinQuitServerListener;
-import net.endercraftbuild.cod.listeners.SignAdminListener;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
@@ -75,9 +73,11 @@ public void onDisable() {
 
 private void registerListeners() {
 	getServer().getPluginManager().registerEvents(new SignAdminListener(this), this);
+	getServer().getPluginManager().registerEvents(new PlayerSignListener(this), this);
 	getServer().getPluginManager().registerEvents(new PlayerJoinQuitServerListener(this), this);
 	getServer().getPluginManager().registerEvents(new PlayerJoinLeaveGameListener(this), this);
-	getServer().getPluginManager().registerEvents(new PlayerJoinLeaveSignInteractListener(this), this);
+	getServer().getPluginManager().registerEvents(new JoinSignListener(this), this);
+	getServer().getPluginManager().registerEvents(new DoorSignListener(this), this);
 	getServer().getPluginManager().registerEvents(new GameStartEndListener(this), this);
 	
 	getServer().getPluginManager().registerEvents(new PlayerListener(this), this);

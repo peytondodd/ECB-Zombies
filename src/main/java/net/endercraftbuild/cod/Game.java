@@ -130,7 +130,7 @@ public abstract class Game {
 		if (isInGame(player))
 			throw new IllegalArgumentException(player.getName() + " is already in this game.");
 		if (players.size() == maximumPlayers)
-			throw new RuntimeException(getName() + " is currently full");
+			throw new RuntimeException(getName() + " is currently full.");
 		players.add(player);
 		if (isActive())
 			plugin.getServer().getPluginManager().callEvent(new PlayerJoinEvent(player, this));

@@ -27,9 +27,15 @@ public class JoinCommand implements CommandExecutor{
 		}
 		
 		Player player = (Player) sender;
+		Game game = plugin.getGameManager().get(player);
 		
+		if (game != null) {
+			player.sendMessage(ChatColor.RED + "You are already in a game!");
+			return true;
+		}
+
 		try {
-			Game game = plugin.getGameManager().get(args[0]);
+			game = plugin.getGameManager().get(args[0]);
 			game.addPlayer(player);
 			player.getServer().broadcastMessage(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");
 		} catch (RuntimeException e) {

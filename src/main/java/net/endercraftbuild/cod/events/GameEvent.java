@@ -3,12 +3,9 @@ package net.endercraftbuild.cod.events;
 import net.endercraftbuild.cod.Game;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
  
 public abstract class GameEvent extends Event {
 	
-    private static final HandlerList handlers = new HandlerList();
-    
     private final Game game;
     
     public GameEvent(Game game) {
@@ -21,14 +18,6 @@ public abstract class GameEvent extends Event {
     
     public Game getGame() {
     	return game;
-    }
-    
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-    
-    public static HandlerList getHandlerList() {
-    	return handlers;
     }
     
 }

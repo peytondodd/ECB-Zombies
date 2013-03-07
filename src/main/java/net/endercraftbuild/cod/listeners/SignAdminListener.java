@@ -19,13 +19,13 @@ public class SignAdminListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event) {
-		if (!ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase("ECB Zombies"))
+		if (!ChatColor.stripColor(event.getLine(0)).toLowerCase().startsWith("ecb"))
 			return;
 
 		Player player = event.getPlayer();
 
 		if (player.hasPermission("cod.admin.signs")) {
-			event.setLine(0, ChatColor.BLUE + "ECB Zombies");
+			event.setLine(0, ChatColor.BLUE + event.getLine(0));
 			player.sendMessage(ChatColor.GREEN + "Sign created!");
 			
 			// TODO(mortu): register sign if it's a join/status sign

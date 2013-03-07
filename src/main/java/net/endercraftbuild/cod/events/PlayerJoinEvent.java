@@ -5,20 +5,13 @@ import net.endercraftbuild.cod.Game;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
  
-public class PlayerJoinEvent extends GameEvent {
+public class PlayerJoinEvent extends PlayerGameEvent {
 	
-    private static final HandlerList handlers = new HandlerList();
-    
-    private final Player player;
+	private static final HandlerList handlers = new HandlerList();
     
     public PlayerJoinEvent(Player player, Game game) {
-    	super(game);
-    	this.player = player;
-    }
-    
-    public Player getPlayer() {
-    	return player;
-    }
+		super(player, game);
+	}
     
 	public HandlerList getHandlers() {
 		return handlers;

@@ -89,20 +89,23 @@ commands:
 
 permissions:
   cod.*:
-    description: Gives access to all commands.
+    description: Gives access to all commands/permissions.
     children:
       cod.player.*: true
       cod.admin.*: true
   cod.player.*:
-    description: Gives access to all player commands.
+    description: Gives access to all player commands/permissions.
     children:
       cod.player.join: true
       cod.player.leave: true
+      cod.player.signs: true
     default: true
   cod.player.join:
     description: Allows you to join a game.
   cod.player.leave:
     description: Allows you to leave a game.
+  cod.player.signs:
+    description: Allows you to use various game signs.
   cod.admin.*:
     description: Gives access to all CoD functionality.
     children:
