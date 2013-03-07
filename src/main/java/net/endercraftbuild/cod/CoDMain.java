@@ -13,7 +13,10 @@ import net.endercraftbuild.cod.guns.Shoot;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -62,6 +65,8 @@ public void onEnable() {
 	
 	if (!setupWorldGuard())
 		getLogger().warning("WorldGuard not found!");
+	
+	registerDynamicPermissions();
 	registerListeners();
 	registerCommands();
 	setupGameManager();
@@ -71,11 +76,24 @@ public void onDisable() {
 	getLogger().info("ECB Zombies disabled");
 }
 
+private void registerDynamicPermissions() {
+	ConfigurationSection allKits = getConfig().getConfigurationSection("kits");
+	for (String gameType : allKits.getKeys(false)) {
+		ConfigurationSection gameTypeKits = allKits.getConfigurationSection(gameType);
+		for (String kitName : gameTypeKits.getKeys(false)) {
+			ConfigurationSection kit = gameTypeKits.getConfigurationSection(kitName);
+			Permission permission = new Permission("cod." + kit.getCurrentPath(), PermissionDefault.FALSE);
+			getServer().getPluginManager().addPermission(permission);
+		}
+	}
+}
+
 private void registerListeners() {
 	getServer().getPluginManager().registerEvents(new SignAdminListener(this), this);
 	getServer().getPluginManager().registerEvents(new PlayerSignListener(this), this);
 	getServer().getPluginManager().registerEvents(new PlayerJoinQuitServerListener(this), this);
-	getServer().getPluginManager().registerEvents(new PlayerJoinLeaveGameListener(this), this);
+	getServer().getPluginManager().registerEvents(new JoinLeaveTeleportListener(this), this);
+	getServer().getPluginManager().registerEvents(new InventorySpawnListener(this), this);
 	getServer().getPluginManager().registerEvents(new JoinSignListener(this), this);
 	getServer().getPluginManager().registerEvents(new DoorSignListener(this), this);
 	getServer().getPluginManager().registerEvents(new GameStartEndListener(this), this);

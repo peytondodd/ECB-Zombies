@@ -103,6 +103,7 @@ public class Utils {
 		float pitch = (float) config.getDouble("pitch");
 		return new Location(world, xPos, yPos, zPos, yaw, pitch);
 	}
+	
 }
 
 
