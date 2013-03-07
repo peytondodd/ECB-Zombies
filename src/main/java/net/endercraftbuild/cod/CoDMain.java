@@ -4,12 +4,28 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import net.endercraftbuild.cod.commands.*;
-import net.endercraftbuild.cod.listeners.*;
-import net.endercraftbuild.cod.zombies.commands.*;
-import net.endercraftbuild.cod.zombies.listeners.*;
 import net.endercraftbuild.cod.GameManager;
+import net.endercraftbuild.cod.commands.JoinCommand;
+import net.endercraftbuild.cod.commands.LeaveCommand;
+import net.endercraftbuild.cod.commands.SaveCommand;
 import net.endercraftbuild.cod.guns.Shoot;
+import net.endercraftbuild.cod.listeners.JoinSignListener;
+import net.endercraftbuild.cod.listeners.PlayerJoinQuitServerListener;
+import net.endercraftbuild.cod.listeners.PlayerSignListener;
+import net.endercraftbuild.cod.listeners.SignAdminListener;
+import net.endercraftbuild.cod.zombies.commands.BarrierCommand;
+import net.endercraftbuild.cod.zombies.commands.CreateCommand;
+import net.endercraftbuild.cod.zombies.commands.DoorCommand;
+import net.endercraftbuild.cod.zombies.commands.EditCommand;
+import net.endercraftbuild.cod.zombies.commands.LinkClearCommand;
+import net.endercraftbuild.cod.zombies.commands.LinkCommand;
+import net.endercraftbuild.cod.zombies.commands.SpawnerCommand;
+import net.endercraftbuild.cod.zombies.listeners.BlockListener;
+import net.endercraftbuild.cod.zombies.listeners.DoorSignListener;
+import net.endercraftbuild.cod.zombies.listeners.EntityListener;
+import net.endercraftbuild.cod.zombies.listeners.InventorySpawnListener;
+import net.endercraftbuild.cod.zombies.listeners.JoinLeaveTeleportListener;
+import net.endercraftbuild.cod.zombies.listeners.PlayerListener;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
@@ -73,6 +89,7 @@ public void onEnable() {
 }
 
 public void onDisable() {
+	getGameManager().disable();
 	getLogger().info("ECB Zombies disabled");
 }
 
@@ -96,11 +113,9 @@ private void registerListeners() {
 	getServer().getPluginManager().registerEvents(new InventorySpawnListener(this), this);
 	getServer().getPluginManager().registerEvents(new JoinSignListener(this), this);
 	getServer().getPluginManager().registerEvents(new DoorSignListener(this), this);
-	getServer().getPluginManager().registerEvents(new GameStartEndListener(this), this);
 	
 	getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 	getServer().getPluginManager().registerEvents(new BlockListener(this), this);
-	getServer().getPluginManager().registerEvents(new PointsListener(this), this);
 	getServer().getPluginManager().registerEvents(new Shoot(this), this);  // FIXME: should be called ShootListener
 	getServer().getPluginManager().registerEvents(new EntityListener(this), this);
 }
@@ -110,7 +125,7 @@ private void registerCommands() {
 	getCommand("leave").setExecutor(new LeaveCommand(this));
 	
 	// generic admin commands
-	getCommand("save").setExecutor(new SaveCommand(this));
+	getCommand("csave").setExecutor(new SaveCommand(this));
 	
 	// zombie admin commands
 	getCommand("zcreate").setExecutor(new CreateCommand(this));

@@ -17,7 +17,7 @@ public class GameTickTask extends BukkitRunnable {
 	@Override
 	public void run() {
 		for (Game game : plugin.getGameManager().getActiveGames())
-			plugin.getServer().getPluginManager().callEvent(new GameTickEvent(game));
+			game.callEvent(new GameTickEvent(game));
 	}
 	
 	public void start() {

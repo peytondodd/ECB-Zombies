@@ -23,7 +23,7 @@ commands:
     permission-message: You do not have permission to run that command.
     
 # generic admin commands
-  save:
+  csave:
     description: Saves the current games setup.
     usage: /<command> - saves the current games setup
     permissions: cod.admin.save

@@ -79,10 +79,10 @@ public class Door extends SerializableGameObject {
 	public void show() {
 		Wool wool = new Wool();
 		wool.setColor(DyeColor.BLUE);
-		getLowerBlock().setType(wool.getItemType());
-		getLowerBlock().setData(wool.getData());
 		getUpperBlock().setType(wool.getItemType());
 		getUpperBlock().setData(wool.getData());
+		getLowerBlock().setType(wool.getItemType());
+		getLowerBlock().setData(wool.getData());
 	}
 	
 	public void hide() {
@@ -90,8 +90,8 @@ public class Door extends SerializableGameObject {
 	}
 	
 	public void open() {
-		getLowerBlock().setType(Material.AIR);
 		getUpperBlock().setType(Material.AIR);
+		getLowerBlock().setType(Material.AIR);
 		activateSpawners();
 	}
 	

@@ -22,7 +22,8 @@ public class SignListener implements Listener {
 	public SignListener(CoDMain plugin) {
 		this.plugin = plugin;
 	}
-		
+	
+	// TODO(mortu): cleanup implementation
 	@EventHandler(ignoreCancelled = true)//Walll gunzzzz
 	public void WallWeapons(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -65,8 +66,8 @@ public class SignListener implements Listener {
 			}
 		}
 	}
-
-
+	
+	// TODO(mortu): cleanup implementation
 	@EventHandler(ignoreCancelled = true)//Walll gunzzzz
 	public void pap(PlayerInteractEvent event) {
 		Player player = event.getPlayer();

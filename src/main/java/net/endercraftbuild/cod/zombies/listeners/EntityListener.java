@@ -20,7 +20,8 @@ public class EntityListener implements Listener {
 	public EntityListener(CoDMain plugin) {
 		this.plugin = plugin;
 	}
-
+	
+	// TODO(mortu): move to mechanics listener
 	@EventHandler
 	public void BurningWolf(EntityDamageEvent event) {
 		if (event.getEntity() instanceof Wolf) {
@@ -39,7 +40,8 @@ public class EntityListener implements Listener {
 			}
 		}
 	}
-
+	
+	// TODO(mortu): move to mechanics listener
 	@EventHandler(ignoreCancelled = true)
 	public void hellhound(CreatureSpawnEvent event) {
 		Entity ent = event.getEntity();

@@ -32,6 +32,14 @@ public class GameManager implements Listener {
 		this.gameTickTask = new GameTickTask(plugin);
 		this.games = new HashMap<String, Game>();
 		this.activeGames = new ArrayList<Game>();
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		gameTickTask.start();
+	}
+	
+	public void disable() {
+		for (Game game : getActiveGames())
+			game.stop();
+		gameTickTask.stop();
 	}
 	
 	public void load() {
@@ -118,15 +126,11 @@ public class GameManager implements Listener {
 	@EventHandler
 	public void onGameStart(GameStartEvent event) {
 		activeGames.add(event.getGame());
-		if (activeGames.size() == 1)
-			gameTickTask.start();
 	}
 	
 	@EventHandler
 	public void onGameEnd(GameEndEvent event) {
 		activeGames.remove(event.getGame());
-		if (activeGames.isEmpty())
-			gameTickTask.stop();
 	}
 	
 }

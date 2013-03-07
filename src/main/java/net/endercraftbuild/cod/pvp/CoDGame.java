@@ -9,4 +9,8 @@ public class CoDGame extends Game {
 		super(plugin);
 	}
 
+	@Override
+	public void registerListeners() {
+	}
+
 }

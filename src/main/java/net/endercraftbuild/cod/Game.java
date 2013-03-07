@@ -2,15 +2,16 @@ package net.endercraftbuild.cod;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
@@ -20,6 +21,7 @@ public abstract class Game {
 	
 	private final List<Listener> listeners;
 	private final List<Player> players;
+	private final Random random;
 	
 	private String name;
 	private Long minimumPlayers;
@@ -31,6 +33,7 @@ public abstract class Game {
 		this.plugin = plugin;
 		this.listeners = new ArrayList<Listener>();
 		this.players = new ArrayList<Player>();
+		this.random = new Random();
 	}
 	
 	public CoDMain getPlugin() {
@@ -92,20 +95,22 @@ public abstract class Game {
 	
 	public void start() {
 		this.setActive(true);
+		registerListeners();
 		plugin.getServer().getPluginManager().callEvent(new GameStartEvent(this));
-		plugin.getServer().broadcastMessage(ChatColor.YELLOW + getName() + " has started!");
 	}
 	
 	public void stop() {
-		this.setActive(false);
 		plugin.getServer().getPluginManager().callEvent(new GameEndEvent(this));
-		plugin.getServer().broadcastMessage(ChatColor.YELLOW + getName() + " has ended!");
+		clearListeners();
+		this.setActive(false);
 	}
 	
 	public void registerListener(Listener listener) {
 		plugin.getServer().getPluginManager().registerEvents(listener, plugin);
 		listeners.add(listener);
 	}
+	
+	public abstract void registerListeners();
 	
 	public void unregisterListener(Listener listener) {
 		HandlerList.unregisterAll(listener);
@@ -116,6 +121,10 @@ public abstract class Game {
 		for (Listener listener : listeners)
 			HandlerList.unregisterAll(listener);
 		listeners.clear();
+	}
+	
+	public void callEvent(Event event) {
+		plugin.getServer().getPluginManager().callEvent(event);
 	}
 	
 	public boolean isInGame(Player player) {
@@ -141,10 +150,23 @@ public abstract class Game {
 	public void removePlayer(Player player) {
 		if (!isInGame(player))
 			throw new IllegalArgumentException(player.getName() + " is not in this game.");
-		players.remove(player);
 		plugin.getServer().getPluginManager().callEvent(new PlayerLeaveEvent(player, this));
+		players.remove(player);
 		if (isActive() && players.size() < minimumPlayers)
 			stop();
+	}
+	
+	public int getRandom(int max) {
+		return random.nextInt(max);
+	}
+	
+	public void broadcast(String message) {
+		for (Player player : players)
+			player.sendMessage(message);
+	}
+	
+	public void broadcastToAll(String message) {
+		plugin.getServer().broadcastMessage(message);
 	}
 	
 }

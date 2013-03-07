@@ -16,7 +16,6 @@ public abstract class AdminListener implements Listener {
 	public AdminListener(ZombieGame game, Player player) {
 		this.game = game;
 		this.player = player;
-		game.showBarriers();
 	}
 
 	public ZombieGame getGame() {

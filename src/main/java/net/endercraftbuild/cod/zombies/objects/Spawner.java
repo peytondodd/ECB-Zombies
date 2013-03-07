@@ -15,6 +15,11 @@ public class Spawner extends SerializableGameObject {
 	private boolean isLinked;
 	private boolean isActive;
 	
+	public Spawner() {
+		this.isLinked = false;
+		this.isActive = false;
+	}
+	
 	public ConfigurationSection load(ConfigurationSection config) {
 		super.load(config);
 		

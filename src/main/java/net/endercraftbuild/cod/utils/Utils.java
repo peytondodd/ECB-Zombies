@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class Utils {
@@ -103,12 +104,22 @@ public class Utils {
 		float pitch = (float) config.getDouble("pitch");
 		return new Location(world, xPos, yPos, zPos, yaw, pitch);
 	}
+
+	public static void giveKit(Player player, ConfigurationSection config) {
+		PlayerInventory inventory = player.getInventory();
+		
+		for (String kitName : config.getConfigurationSection("kits.zombies").getKeys(false)) {
+			ConfigurationSection kit = config.getConfigurationSection("kits.zombies." + kitName);
+			if (player.hasPermission("cod." + kit.getCurrentPath())) {
+				for (String itemId : kit.getKeys(false)) {
+					ConfigurationSection kitItem = kit.getConfigurationSection(itemId);
+					ItemStack item = new ItemStack(Integer.parseInt(itemId), kitItem.getInt("quantity", 1));
+					if (kitItem.contains("name"))
+						Utils.setItemName(item, kitItem.getString("name"));
+					inventory.addItem(item);
+				}
+			}
+		}
+	}
 	
 }
-
-
-
-
-
-
-

@@ -1,4 +1,6 @@
-package net.endercraftbuild.cod.zombies.entities;
+package net.endercraftbuild.cod.zombies.objects;
+
+import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -6,10 +8,16 @@ import org.bukkit.entity.Entity;
 public class GameEntity {
 	private static final int NEAR = 3;
 	
+	private final ZombieGame game;
 	private final Entity entity;
 	
-	public GameEntity(Entity entity) {
+	public GameEntity(ZombieGame game, Entity entity) {
+		this.game = game;
 		this.entity = entity;
+	}
+	
+	public ZombieGame getGame() {
+		return game;
 	}
 	
 	public Entity getEntity() {
@@ -27,4 +35,9 @@ public class GameEntity {
 		
 		return true;
 	}
+	
+	public void despawn() {
+		entity.remove();
+	}
+	
 }

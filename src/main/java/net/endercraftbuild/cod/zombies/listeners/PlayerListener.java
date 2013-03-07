@@ -12,7 +12,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlayerListener implements Listener {
@@ -22,15 +21,8 @@ public class PlayerListener implements Listener {
 	public PlayerListener(CoDMain plugin) {
 		this.plugin = plugin;
 	}
-
-	@EventHandler(ignoreCancelled = true) //Join Signs
-	public void udiedbruh(PlayerDeathEvent event)
-	{
-		event.setDroppedExp(0);
-		//save inv if revived
-	}
-
-
+	
+	// TODO(mortu): clean up implementation
 	@EventHandler
 	public void MysteryBox(PlayerInteractEvent event)
 	{

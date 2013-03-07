@@ -1,22 +1,27 @@
 package net.endercraftbuild.cod.zombies;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.utils.Utils;
-import net.endercraftbuild.cod.zombies.entities.GameEntity;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
-import net.endercraftbuild.cod.zombies.listeners.EntityBarrierDamageListener;
+import net.endercraftbuild.cod.zombies.events.SpawnGameEntityEvent;
+import net.endercraftbuild.cod.zombies.listeners.GameProgressListener;
+import net.endercraftbuild.cod.zombies.listeners.PlayerDeathListener;
 import net.endercraftbuild.cod.zombies.objects.Barrier;
 import net.endercraftbuild.cod.zombies.objects.Door;
+import net.endercraftbuild.cod.zombies.objects.GameEntity;
 import net.endercraftbuild.cod.zombies.objects.Spawner;
+import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 public class ZombieGame extends Game {
 	
@@ -30,13 +35,23 @@ public class ZombieGame extends Game {
 
 	private Long currentWave;
 	private final List<GameEntity> gameEntities;
+	private Long waveKills;
+	private Long waveDelayUntil;
 
 	public ZombieGame(CoDMain plugin) {
 		super(plugin);
 		spawners = new ArrayList<Spawner>();
 		barriers = new ArrayList<Barrier>();
 		doors = new ArrayList<Door>();
+		
+		setCurrentWave(0L);
 		gameEntities = new ArrayList<GameEntity>();
+	}
+	
+	@Override
+	public void registerListeners() {
+		registerListener(new GameProgressListener(getPlugin(), this));
+		registerListener(new PlayerDeathListener(getPlugin(), this));
 	}
 	
 	@Override
@@ -112,20 +127,6 @@ public class ZombieGame extends Game {
 		return gameSection;
 	}
 	
-	@Override
-	public void start() {
-		registerListener(new EntityBarrierDamageListener(getPlugin(), this));
-		// TODO(mortu): register sign update handler
-		// TODO(mortu): register spawn handler 
-		super.start();
-	}
-	
-	@Override
-	public void stop() {
-		super.stop();
-		clearListeners();
-	}
-
 	public Double getZombieMultiplier() {
 		return zombieMultiplier;
 	}
@@ -149,6 +150,10 @@ public class ZombieGame extends Game {
 	public void setSpawnLocation(Location spawnLocation) {
 		this.spawnLocation = spawnLocation;
 	}
+	
+	private void setWaveDelay() {
+		this.waveDelayUntil = new Date().getTime() + 20 * 1000;
+	}
 
 	public Long getCurrentWave() {
 		return currentWave;
@@ -158,9 +163,25 @@ public class ZombieGame extends Game {
 		this.currentWave = currentWave;
 	}
 	
+	public Long getWaveKills() {
+		return waveKills;
+	}
+	
+	public void setWaveKills(Long waveKills) {
+		this.waveKills = waveKills;
+	}
+	
+	public void incrementWaveKills() {
+		waveKills++;
+		if (waveKills == getMaxEntityCount())
+			advanceWave();
+	}
+	
 	public void advanceWave() {
-		this.setCurrentWave(getCurrentWave() + 1);
-		Bukkit.getServer().getPluginManager().callEvent(new RoundAdvanceEvent(this));
+		setCurrentWave(getCurrentWave() + 1);
+		setWaveKills(0L);
+		setWaveDelay();
+		callEvent(new RoundAdvanceEvent(this));
 	}
 
 	public List<Spawner> getSpawners() {
@@ -172,6 +193,8 @@ public class ZombieGame extends Game {
 	}
 	
 	public void removeSpawner(Spawner spawner) {
+		for (Door door : doors)
+			door.removeSpawner(spawner);
 		spawners.remove(spawner);
 	}
 	
@@ -249,6 +272,16 @@ public class ZombieGame extends Game {
 			barrier.open();
 	}
 	
+	public void damageBarriers() {
+		for (Barrier barrier : barriers)
+			for (GameEntity gameEntity : gameEntities)
+				if (gameEntity.near(barrier.getLocation())) {
+					barrier.damage();
+					break;
+				}
+	}
+	
+	
 	public List<Door> getDoors() {
 		return doors;
 	}
@@ -300,6 +333,58 @@ public class ZombieGame extends Game {
 			if (gameEntity.getEntity() == entity)
 				return gameEntity;
 		return null;
+	}
+	
+	public void giveKit(Player player) {
+		Utils.giveKit(player, getPlugin().getConfig());
+	}
+	
+	public Long getMaxEntityCount() {
+		return getMaxLivingEntityCount() * getCurrentWave();
+	}
+	
+	public Long getMaxLivingEntityCount() {
+		Long base = Math.max(getCurrentWave(), 4);
+		Double multiplier = (getPlayers().size() - 1) * getZombieMultiplier();
+		Double extra = base * multiplier;
+		return base + extra.longValue();
+	}
+	
+	public int getLivingEntityCount() {
+		return getGameEntities().size();
+	}
+	
+	public long getRemainingEntityCount() {
+		return getMaxEntityCount() - getWaveKills();
+	}
+	
+	private boolean shouldSpawn() {
+		return (new Date()).getTime() > this.waveDelayUntil && getRemainingEntityCount() > 0; 
+	}
+	
+	public void spawnEntities() {
+		if (!shouldSpawn())
+			return;
+		
+		int spawnerCount = getSpawners().size();
+		long spawnCount = Math.min(getMaxLivingEntityCount(), getRemainingEntityCount()) - getLivingEntityCount();
+		while (spawnCount > 0) {
+			Spawner spawner = getSpawners().get(getRandom(spawnerCount));
+			if (spawner.isActive()) {
+				spawnCount--;
+				callEvent(new SpawnGameEntityEvent(this, spawner));
+			}
+		}
+	}
+	
+	public void payPlayer(Player player, int amount) {
+		Economy economy = getPlugin().getEconomy();
+		
+		if (economy.depositPlayer(player.getName(), amount).transactionSuccess()) {
+			String balance = economy.format(economy.getBalance(player.getName()));
+			String deposit = economy.format(amount);
+			player.sendMessage(getPlugin().prefix + ChatColor.GREEN + "You have " + ChatColor.DARK_GREEN + balance + ChatColor.GREEN + "! Gained: " + ChatColor.DARK_GREEN + deposit + "!");
+		}
 	}
 	
 }
