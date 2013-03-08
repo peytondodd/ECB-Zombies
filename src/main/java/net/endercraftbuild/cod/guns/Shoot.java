@@ -23,105 +23,126 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class Shoot implements Listener {
-	private CoDMain plugin;
+	
+	private final CoDMain plugin;
 
 	public Shoot(CoDMain plugin) {
 		this.plugin = plugin;
 	}
 	
-  @SuppressWarnings("deprecation")
-  @EventHandler
-  public void onPlayerInteract(PlayerInteractEvent event) {
-    Action action = event.getAction();
-    final Player player = event.getPlayer();
-    ItemStack hand = player.getItemInHand();
-    if ((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK))
-      if (hand.getType() == Material.IRON_HOE)//AK
-      {
-    	  if (!player.getInventory().contains(337, 2)) {
-          	plugin.reload(player);
-            return;
-          }
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		Action action = event.getAction();
+		final Player player = event.getPlayer();
+		ItemStack hand = player.getItemInHand();
+		
+		if ((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK)) {
+			int ammoSlot = player.getInventory().first(Material.CLAY_BALL);
+			ItemStack ammo = ammoSlot > -1 ? player.getInventory().getItem(ammoSlot) : null;
+			
+			if (hand.getType() == Material.IRON_HOE) { // AK-47
+				if (ammo != null && ammo.getAmount() >= 2) {
+					if (ammo.getAmount() == 2)
+						player.getInventory().remove(ammo);
+					else
+						ammo.setAmount(ammo.getAmount() - 2);
+					player.updateInventory();
+				} else {
+					plugin.reload(player);
+					return;
+				}
+				
+				player.launchProjectile(Snowball.class);
+				Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+				smokepase(player, loc);
+				player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
+			
+			} else if (hand.getType() == Material.STONE_HOE) { // Shotgun 
+				if (this.plugin.reloaders.contains(player.getName())) {
+					return;
+				}
+			
+				if (ammo != null && ammo.getAmount() >= 5) {
+					if (ammo.getAmount() == 5)
+						player.getInventory().remove(ammo);
+					else
+						ammo.setAmount(ammo.getAmount() - 5);
+					player.updateInventory();
+				} else {
+					plugin.reload(player);
+					return;
+				}
 
-        player.getInventory().removeItem(new ItemStack[] { new ItemStack(337, 2) });
-        player.updateInventory();
-        player.launchProjectile(Snowball.class);
-        Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
-        smokepase(player, loc);
-        player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
-      }
-      else if (hand.getType() == Material.STONE_HOE) {//SHOT
-        if (this.plugin.reloaders.contains(player.getName())) {
-          return;
-        }
-        if (!player.getInventory().contains(337, 5)) {
-        	plugin.reload(player);
-          return;
-        }
-        player.getInventory().removeItem(new ItemStack[] { new ItemStack(337, 5) });
-        player.updateInventory();
-        this.plugin.reloaders.add(player.getName());
-        player.launchProjectile(Snowball.class);
-        player.launchProjectile(Snowball.class);
-        player.launchProjectile(Snowball.class);
-        player.launchProjectile(Snowball.class);
-        player.launchProjectile(Snowball.class);
-        player.launchProjectile(Snowball.class);
-        Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
-        smokepase(player, loc);
-        player.playSound(player.getLocation(), Sound.EXPLODE, 70.0F, 70.0F);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
-        {
-          public void run() {
-            Shoot.this.plugin.reloaders.remove(player.getName());
-          }
-        }
-        , 40L);
-      }
-      else //Better machine gun, uses less ammo + shoots double the shots. 
-    	  if ((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK))
-          if (hand.getType() == Material.DIAMOND_HOE)//MINI GUN
-          {
-            if (!player.getInventory().contains(337, 1)) {
-            	plugin.reload(player);
-              return;
-            }
+				this.plugin.reloaders.add(player.getName());
+				player.launchProjectile(Snowball.class);
+				player.launchProjectile(Snowball.class);
+				player.launchProjectile(Snowball.class);
+				player.launchProjectile(Snowball.class);
+				player.launchProjectile(Snowball.class);
+				player.launchProjectile(Snowball.class);
+				Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+				smokepase(player, loc);
+				player.playSound(player.getLocation(), Sound.EXPLODE, 70.0F, 70.0F);
+				
+				final Shoot self = this;
+				Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+					public void run() {
+						self.plugin.reloaders.remove(player.getName());
+					}
+				}, 40L);
+				
+			} else if (hand.getType() == Material.DIAMOND_HOE) { // Mini-gun
+				if (ammo != null && ammo.getAmount() >= 1) {
+					if (ammo.getAmount() == 1)
+						player.getInventory().remove(ammo);
+					else
+						ammo.setAmount(ammo.getAmount() - 1);
+					player.updateInventory();
+				} else {
+					plugin.reload(player);
+					return;
+				}
 
-            player.getInventory().removeItem(new ItemStack[] { new ItemStack(337, 1) });
-            player.updateInventory();
-            player.launchProjectile(Snowball.class);
-            player.launchProjectile(Snowball.class);
-            Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
-            smokepase(player, loc);
-            player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
-          }
-      else if (hand.getType() == Material.WOOD_HOE) {//PISt
-        if (this.plugin.pistol.contains(player.getName())) {
-          return;
-        }
-        if (!player.getInventory().contains(337, 1)) {
-        	plugin.reload(player);
-          return;
-        }
-        player.getInventory().removeItem(new ItemStack[] { new ItemStack(337, 1) });
-        player.updateInventory();
-        this.plugin.pistol.add(player.getName());
-        player.launchProjectile(Snowball.class);
-        Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
-        smokepase(player, loc);
-        player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable()
-        
-        {
-          public void run() {
-            Shoot.this.plugin.pistol.remove(player.getName());
-          }
-        }
-        , 12L);
-      }
-  }
-  @EventHandler
-  public void onPlayerDamageArrow(EntityDamageByEntityEvent ev)
+				player.launchProjectile(Snowball.class);
+				player.launchProjectile(Snowball.class);
+				Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+				smokepase(player, loc);
+				player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
+			} else if (hand.getType() == Material.WOOD_HOE) { // Pistol
+		        if (this.plugin.pistol.contains(player.getName())) {
+		        	return;
+		        }
+		        
+				if (ammo != null && ammo.getAmount() >= 1) {
+					if (ammo.getAmount() == 1)
+						player.getInventory().remove(ammo);
+					else
+						ammo.setAmount(ammo.getAmount() - 1);
+					player.updateInventory();
+				} else {
+					plugin.reload(player);
+					return;
+				}
+
+				this.plugin.pistol.add(player.getName());
+				player.launchProjectile(Snowball.class);
+				Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+				smokepase(player, loc);
+				player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
+				
+				final Shoot self = this;
+				Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+					public void run() {
+						self.plugin.pistol.remove(player.getName());
+					}
+				}, 12L);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerDamageArrow(EntityDamageByEntityEvent ev)
   {
     Entity damager = ev.getDamager();
     if ((damager instanceof Snowball)) {
