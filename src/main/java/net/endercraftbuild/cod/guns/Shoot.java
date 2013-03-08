@@ -36,15 +36,12 @@ public class Shoot implements Listener {
     final Player player = event.getPlayer();
     ItemStack hand = player.getItemInHand();
     if ((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK))
-      if (hand.getType() == Material.IRON_HOE)
+      if (hand.getType() == Material.IRON_HOE)//AK
       {
-        if (!player.getInventory().contains(Material.CLAY_BALL, 2)) {
-          if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
-            this.plugin.reloading.add(player.getName().toLowerCase());
-            this.plugin.reload(player);
+    	  if (!player.getInventory().contains(Material.CLAY_BALL, 2)) {
+          	plugin.reload(player);
+            return;
           }
-          return;
-        }
 
         player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 2) });
         player.updateInventory();
@@ -53,15 +50,12 @@ public class Shoot implements Listener {
         smokepase(player, loc);
         player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
       }
-      else if (hand.getType() == Material.STONE_HOE) {
+      else if (hand.getType() == Material.STONE_HOE) {//SHOT
         if (this.plugin.reloaders.contains(player.getName())) {
           return;
         }
         if (!player.getInventory().contains(Material.CLAY_BALL, 5)) {
-          if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
-            this.plugin.reloading.add(player.getName().toLowerCase());
-            this.plugin.reload(player);
-          }
+        	plugin.reload(player);
           return;
         }
         player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 5) });
@@ -86,13 +80,10 @@ public class Shoot implements Listener {
       }
       else //Better machine gun, uses less ammo + shoots double the shots. 
     	  if ((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK))
-          if (hand.getType() == Material.DIAMOND_HOE)
+          if (hand.getType() == Material.DIAMOND_HOE)//MINI GUN
           {
             if (!player.getInventory().contains(Material.CLAY_BALL, 1)) {
-              if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
-                this.plugin.reloading.add(player.getName().toLowerCase());
-                this.plugin.reload(player);
-              }
+            	plugin.reload(player);
               return;
             }
 
@@ -104,15 +95,12 @@ public class Shoot implements Listener {
             smokepase(player, loc);
             player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
           }
-      else if (hand.getType() == Material.WOOD_HOE) {
+      else if (hand.getType() == Material.WOOD_HOE) {//PISt
         if (this.plugin.pistol.contains(player.getName())) {
           return;
         }
         if (!player.getInventory().contains(Material.CLAY_BALL, 1)) {
-          if (!this.plugin.reloading.contains(player.getName().toLowerCase())) {
-            this.plugin.reloading.add(player.getName().toLowerCase());
-            this.plugin.reload(player);
-          }
+        	plugin.reload(player);
           return;
         }
         player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 1) });
