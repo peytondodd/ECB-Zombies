@@ -38,12 +38,12 @@ public class Shoot implements Listener {
     if ((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK))
       if (hand.getType() == Material.IRON_HOE)//AK
       {
-    	  if (!player.getInventory().contains(Material.CLAY_BALL, 2)) {
+    	  if (!player.getInventory().contains(337, 2)) {
           	plugin.reload(player);
             return;
           }
 
-        player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 2) });
+        player.getInventory().removeItem(new ItemStack[] { new ItemStack(337, 2) });
         player.updateInventory();
         player.launchProjectile(Snowball.class);
         Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
@@ -54,11 +54,11 @@ public class Shoot implements Listener {
         if (this.plugin.reloaders.contains(player.getName())) {
           return;
         }
-        if (!player.getInventory().contains(Material.CLAY_BALL, 5)) {
+        if (!player.getInventory().contains(337, 5)) {
         	plugin.reload(player);
           return;
         }
-        player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 5) });
+        player.getInventory().removeItem(new ItemStack[] { new ItemStack(337, 5) });
         player.updateInventory();
         this.plugin.reloaders.add(player.getName());
         player.launchProjectile(Snowball.class);
@@ -82,12 +82,12 @@ public class Shoot implements Listener {
     	  if ((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK))
           if (hand.getType() == Material.DIAMOND_HOE)//MINI GUN
           {
-            if (!player.getInventory().contains(Material.CLAY_BALL, 1)) {
+            if (!player.getInventory().contains(337, 1)) {
             	plugin.reload(player);
               return;
             }
 
-            player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 1) });
+            player.getInventory().removeItem(new ItemStack[] { new ItemStack(337, 1) });
             player.updateInventory();
             player.launchProjectile(Snowball.class);
             player.launchProjectile(Snowball.class);
@@ -99,11 +99,11 @@ public class Shoot implements Listener {
         if (this.plugin.pistol.contains(player.getName())) {
           return;
         }
-        if (!player.getInventory().contains(Material.CLAY_BALL, 1)) {
+        if (!player.getInventory().contains(337, 1)) {
         	plugin.reload(player);
           return;
         }
-        player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.CLAY_BALL, 1) });
+        player.getInventory().removeItem(new ItemStack[] { new ItemStack(337, 1) });
         player.updateInventory();
         this.plugin.pistol.add(player.getName());
         player.launchProjectile(Snowball.class);
@@ -127,7 +127,7 @@ public class Shoot implements Listener {
     if ((damager instanceof Snowball)) {
       damager = ((Snowball)damager).getShooter();
       ((HumanEntity)damager).getItemInHand();
-      ev.setDamage(10);
+      ev.setDamage(12);
       }
   }
   @EventHandler
