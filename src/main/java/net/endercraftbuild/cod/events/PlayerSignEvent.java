@@ -31,7 +31,14 @@ public class PlayerSignEvent extends PlayerEvent {
 	public boolean isJoinSign() {
 		return getLine(0).toLowerCase().endsWith("join");
 	}
-    
+	
+	public boolean isWeaponSign() {
+		return getLine(0).toLowerCase().endsWith("weapon");
+	}
+	
+	public boolean isAmmoSign() {
+		return getLine(0).toLowerCase().endsWith("ammo");
+	}
 	public boolean isDoorSign() {
 		return getLine(0).toLowerCase().endsWith("door");
 	}

@@ -21,42 +21,40 @@ public class PlayerListener implements Listener {
 	public PlayerListener(CoDMain plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	// TODO(mortu): clean up implementation
 	@EventHandler
 	public void MysteryBox(PlayerInteractEvent event)
 	{
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		if(Utils.isInGameZ(player))
+		if(block.getType() == Material.CHEST)
 		{
-			if(block.getType() == Material.CHEST)
+			Sign sign = (Sign)block.getRelative(BlockFace.UP, 1).getState();
+			if(sign.getType() == Material.WALL_SIGN)
 			{
-				Sign sign = (Sign)block.getRelative(BlockFace.UP, 1).getState();
-				if(sign.getType() == Material.WALL_SIGN)
+				if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("ECB Zombies"))
 				{
-					if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("ECB Zombies"))
-					{
-						double amount = 0;
-						try {
-							amount = Double.parseDouble(sign.getLine(1));
-						} catch (NumberFormatException ex) {
-							player.sendMessage(ChatColor.RED + ex.toString());
-							EconomyResponse r = plugin.getEconomy().withdrawPlayer(player.getName(), amount);
-							if(r.transactionSuccess())
-							{
-							}
-							//Open the chest with 1 of the random items
-							else
-								player.sendMessage(plugin.prefix + ChatColor.RED + "You need " + amount + " to use the Mystery Box!");
-								event.setCancelled(true);
+					double amount = 0;
+					try {
+						amount = Double.parseDouble(sign.getLine(1));
+					} catch (NumberFormatException ex) {
+						player.sendMessage(ChatColor.RED + ex.toString());
+						EconomyResponse r = plugin.getEconomy().withdrawPlayer(player.getName(), amount);
+						if(r.transactionSuccess())
+						{
 						}
+						//Open the chest with 1 of the random items
+						else
+							player.sendMessage(plugin.prefix + ChatColor.RED + "You need " + amount + " to use the Mystery Box!");
+						event.setCancelled(true);
 					}
 				}
-				{
-				}
-
 			}
+			{
+			}
+
 		}
 	}
 }
+

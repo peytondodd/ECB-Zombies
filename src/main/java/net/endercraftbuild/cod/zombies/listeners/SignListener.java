@@ -1,17 +1,16 @@
 package net.endercraftbuild.cod.zombies.listeners;
 
 import net.endercraftbuild.cod.CoDMain;
+import net.endercraftbuild.cod.events.PlayerSignEvent;
 import net.endercraftbuild.cod.utils.Utils;
+import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -22,92 +21,68 @@ public class SignListener implements Listener {
 	public SignListener(CoDMain plugin) {
 		this.plugin = plugin;
 	}
-	
-	// TODO(mortu): cleanup implementation
-	@EventHandler(ignoreCancelled = true)//Walll gunzzzz
-	public void WallWeapons(PlayerInteractEvent event) {
-		Player player = event.getPlayer();
-		if(Utils.isInGameZ(player))
-		{
-			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
-			{
-				if (event.getClickedBlock().getType().equals(Material.SIGN_POST) || event.getClickedBlock().getType().equals(Material.WALL_SIGN))
-				{
-					Sign sign = (Sign)event.getClickedBlock().getState();
-					if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("ECB Zombies"))
-					{
-						if (player.hasPermission("zombies.user"))
-						{
-							//Line 1 can be the name EX: "Grenades"
-							double amount = 0;
-							try {
-								amount = Double.parseDouble(sign.getLine(3));
-							} catch (NumberFormatException ex) {
-								player.sendMessage(ChatColor.RED + ex.toString());
 
-							}
-							EconomyResponse r = plugin.getEconomy().withdrawPlayer(player.getName(), amount);
-							if(r.transactionSuccess())
-							{
-								PlayerInventory inv = player.getInventory();
-								int id = Integer.parseInt(sign.getLine(2));
-								ItemStack weapon = new ItemStack(id, 1);
-								weapon = Utils.setItemName(weapon, sign.getLine(1));
-								inv.addItem(weapon);
-								player.sendMessage(plugin.prefix + ChatColor.GREEN + "You have purchased " + sign.getLine(1));
-							}
-							else {
-								player.sendMessage(plugin.prefix + ChatColor.GREEN + "You need " + ChatColor.DARK_GREEN + amount
-										+ ChatColor.GREEN + " to buy " + ChatColor.DARK_GREEN + sign.getLine(1));
-							}
-						}
-					}
-				}
+	@EventHandler
+	public void onGunPurchase(PlayerSignEvent event) {
+		if (!event.isWeaponSign())
+			return;
+
+		Player player = event.getPlayer();
+		ZombieGame game = (ZombieGame) plugin.getGameManager().get(player);
+
+		if (game == null) {
+			player.sendMessage(ChatColor.RED + "Could not find your game!");
+			return;
+		}
+
+		Sign sign = event.getSign();
+		Double cost = event.getDouble(3);
+		String name = sign.getLine(1);
+		int id = Integer.parseInt(sign.getLine(2));
+		EconomyResponse r = plugin.getEconomy().withdrawPlayer(player.getName(), cost);
+		if(r.transactionSuccess())
+		{
+			PlayerInventory inv = player.getInventory();
+			ItemStack weapon = new ItemStack(id, 1);
+			weapon = Utils.setItemName(weapon, name);
+			inv.addItem(weapon);
+			if (!plugin.getEconomy().has(player.getName(), cost)) {
+				player.sendMessage(ChatColor.RED + "You do not have enough money!");
+				return;
+			} else if (!plugin.getEconomy().withdrawPlayer(player.getName(), cost).transactionSuccess()) {
+				player.sendMessage(ChatColor.RED + "Failed to buy weapon!");
+				return;
 			}
 		}
 	}
-	
-	// TODO(mortu): cleanup implementation
-	@EventHandler(ignoreCancelled = true)//Walll gunzzzz
-	public void pap(PlayerInteractEvent event) {
-		Player player = event.getPlayer();
-		if(Utils.isInGameZ(player))
-		{
-			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
-			{
-				if (event.getClickedBlock().getType().equals(Material.SIGN_POST) || event.getClickedBlock().getType().equals(Material.WALL_SIGN))
-				{
-					Sign sign = (Sign)event.getClickedBlock().getState();
-					if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("ECB Zombies"))
-					{
-						if (player.hasPermission("zombies.user"))
-						{
-							if (ChatColor.stripColor(sign.getLine(1)).equalsIgnoreCase("Pack-a-Punch"))
-							{
-								double amount = 0;
-								try {
-									amount = Double.parseDouble(sign.getLine(3));
-								} catch (NumberFormatException ex) {
-									player.sendMessage(ChatColor.RED + ex.toString());
+	@EventHandler
+	public void onAmmoPurchase(PlayerSignEvent event) {
+		if (!event.isAmmoSign())
+			return;
 
-								}
-								EconomyResponse r = plugin.getEconomy().withdrawPlayer(player.getName(), amount);
-								if(r.transactionSuccess())
-								{
-									//make pack a punched
-									player.sendMessage(plugin.prefix + ChatColor.GREEN + "You have purchased " + sign.getLine(1));
-								}
-								else {
-									player.sendMessage(plugin.prefix + ChatColor.GREEN + "You need " + ChatColor.DARK_GREEN + amount
-											+ ChatColor.GREEN + " to buy " + ChatColor.DARK_GREEN + sign.getLine(1));
-								}
-							}
-						}
-					}
-				}
+		Player player = event.getPlayer();
+		ZombieGame game = (ZombieGame) plugin.getGameManager().get(player);
+
+		if (game == null) {
+			player.sendMessage(ChatColor.RED + "Could not find your game!");
+			return;
+		}
+
+		Double cost = event.getDouble(1);
+		EconomyResponse r = plugin.getEconomy().withdrawPlayer(player.getName(), cost);
+		if(r.transactionSuccess())
+		{
+			PlayerInventory inv = player.getInventory();
+			ItemStack bullet = new ItemStack(337, 64);
+			bullet = Utils.setItemName(bullet, "Ammo");
+			inv.addItem(bullet);
+			if (!plugin.getEconomy().has(player.getName(), cost)) {
+				player.sendMessage(ChatColor.RED + "You do not have enough money!");
+				return;
+			} else if (!plugin.getEconomy().withdrawPlayer(player.getName(), cost).transactionSuccess()) {
+				player.sendMessage(ChatColor.RED + "Failed to buy ammo!");
+				return;
 			}
 		}
 	}
 }
-
-

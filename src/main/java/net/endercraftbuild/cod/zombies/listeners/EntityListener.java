@@ -13,14 +13,14 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class EntityListener implements Listener {
-	
+
 	@SuppressWarnings("unused")
 	private CoDMain plugin;
 
 	public EntityListener(CoDMain plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	// TODO(mortu): move to mechanics listener
 	@EventHandler
 	public void BurningWolf(EntityDamageEvent event) {
@@ -32,20 +32,18 @@ public class EntityListener implements Listener {
 			else if (event.getEntity() instanceof Player) {
 				Player player = (Player) event.getEntity();
 
-				if (Utils.isInGameZ(player) == true) {
-					if (event.getCause().equals(DamageCause.ENTITY_EXPLOSION) || event.getCause().equals(DamageCause.BLOCK_EXPLOSION)) {
-						event.setCancelled(true);
-					}
+				if (event.getCause().equals(DamageCause.ENTITY_EXPLOSION) || event.getCause().equals(DamageCause.BLOCK_EXPLOSION)) {
+					event.setCancelled(true);
 				}
 			}
 		}
 	}
-	
+
 	// TODO(mortu): move to mechanics listener
 	@EventHandler(ignoreCancelled = true)
 	public void hellhound(CreatureSpawnEvent event) {
 		Entity ent = event.getEntity();
-		
+
 		if (ent instanceof Wolf) {
 			Wolf w = (Wolf) ent;
 			w.setFireTicks(1000000000); //Keep him on fire for a long time...

@@ -26,7 +26,6 @@ public void onPlayerDeath(PlayerDeathEvent event) {
 		this.plugin.kills.remove(event.getEntity().getName());
 	if ((event.getEntity().getKiller() instanceof Player)) {
 		Player killer = event.getEntity().getKiller();
-		if(Utils.isInGamePvP(killer)) 
 		{	
 		Integer totalkill = (Integer)this.plugin.kills.get(killer.getName());
 		if (totalkill == null)
@@ -46,10 +45,6 @@ public void onPlayerDeath(PlayerDeathEvent event) {
 @EventHandler(ignoreCancelled = true) //Join for pvpSigns
 public void Join(PlayerInteractEvent event) 
 {
-	Player player = event.getPlayer();
-	if(Utils.isInGamePvP(player) )
-		player.sendMessage(plugin.prefix + ChatColor.RED + "You are already in the game!");
-	else
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 		{
 		if (event.getClickedBlock().getType().equals(Material.SIGN_POST) || event.getClickedBlock().getType().equals(Material.WALL_SIGN))
@@ -62,11 +57,12 @@ public void Join(PlayerInteractEvent event)
 			//if(ChatColor.stripColor(sign.getLine(2)).equalsIgnoreCase(mapname)) {
 			
 			if(Utils.ISA.size() > Utils.Mercs.size())
+			{
 				//teleport to game locations
-				//Give starter items
-				Utils.setInGamePvP(player, true, Utils.Mercs);
-				else {
-					Utils.setInGamePvP(player, true, Utils.ISA);
+				//Give starter items);
+				//set ingame
+				//else {
+					//stuff
 					}
 					
 				}
@@ -75,7 +71,8 @@ public void Join(PlayerInteractEvent event)
 	}
 }
 }
-					
+
+				
 					
 					
 					
