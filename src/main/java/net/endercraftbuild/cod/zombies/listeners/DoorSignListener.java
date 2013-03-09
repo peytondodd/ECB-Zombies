@@ -36,15 +36,23 @@ public class DoorSignListener implements Listener {
 		Sign sign = event.getSign();
 		Double cost = event.getDouble(1);
 		
-		if (!plugin.getEconomy().withdrawPlayer(player.getName(), cost).transactionSuccess()) {
+		if (!plugin.getEconomy().has(player.getName(), cost)) {
 			player.sendMessage(ChatColor.RED + "You do not have enough to open that door!");
 			return;
 		}
 		
+		boolean foundDoor = false;
 		Location location = sign.getLocation();
 		for (Door door : game.getDoors())
-			if (door.getLocation().distance(location) < 6)
+			if (door.getLocation().distance(location) < 6) {
+				if (door.isOpen())
+					continue;
 				door.open();
+				foundDoor = true;
+			}
+		
+		if (foundDoor)
+			plugin.getEconomy().withdrawPlayer(player.getName(), cost);
 	}
 	
 }

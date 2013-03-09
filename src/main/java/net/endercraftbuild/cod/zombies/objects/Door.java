@@ -23,6 +23,8 @@ public class Door extends SerializableGameObject {
 	
 	private Set<Spawner> spawners;
 	
+	private boolean isOpen;
+	
 	public Door() {
 		super();
 		spawners = new TreeSet<Spawner>();
@@ -90,12 +92,14 @@ public class Door extends SerializableGameObject {
 	}
 	
 	public void open() {
+		setOpen(true);
 		getUpperBlock().setType(Material.AIR);
 		getLowerBlock().setType(Material.AIR);
 		activateSpawners();
 	}
 	
 	public void close() {
+		setOpen(false);
 		getLowerBlock().setTypeId(lowerTypeId);
 		getLowerBlock().setData(lowerData);
 		getUpperBlock().setTypeId(upperTypeId);
@@ -125,6 +129,14 @@ public class Door extends SerializableGameObject {
 	public void activateSpawners() {
 		for (Spawner spawner : spawners)
 			spawner.activate();
+	}
+
+	public boolean isOpen() {
+		return isOpen;
+	}
+
+	public void setOpen(boolean isOpen) {
+		this.isOpen = isOpen;
 	}
 	
 }

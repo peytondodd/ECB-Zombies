@@ -387,4 +387,8 @@ public class ZombieGame extends Game {
 		}
 	}
 	
+	public boolean isWolfRound() {
+		return (currentWave % 5) == 0;
+	}
+	
 }

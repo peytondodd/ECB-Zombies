@@ -18,6 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -76,7 +77,7 @@ public class GameProgressListener implements Listener {
 		
 		game.rebuildBarriers();
 		game.broadcast(ChatColor.GRAY + "Round " + ChatColor.RED + game.getCurrentWave() + ChatColor.GRAY + " will begin shortly!");
-		game.broadcast(ChatColor.GRAY + "There are " + ChatColor.RED + game.getMaxEntityCount() + ChatColor.GRAY + " zombies in this round!");
+		game.broadcast(ChatColor.GRAY + "There are " + ChatColor.RED + game.getMaxEntityCount() + ChatColor.GRAY + " " + (game.isWolfRound() ? "wolves": "zombies") + " in this round!");
 	}
 	
 	@EventHandler
@@ -91,10 +92,18 @@ public class GameProgressListener implements Listener {
 	@EventHandler
 	public void onSpawnGameEntity(SpawnGameEntityEvent event) {
 		World world = game.getSpawnLocation().getWorld();
-		Zombie zombie = (Zombie) world.spawnEntity(event.getSpawner().getLocation(), EntityType.ZOMBIE);
-		zombie.setMaxHealth(zombie.getMaxHealth() + game.getCurrentWave().intValue() - 1);
-		zombie.setHealth(zombie.getMaxHealth());
-		game.addGameEntity(new GameEntity(game, zombie));
+		if (game.isWolfRound()) {
+			Wolf wolf = (Wolf) world.spawnEntity(event.getSpawner().getLocation(), EntityType.WOLF);
+			wolf.setMaxHealth(wolf.getMaxHealth() + game.getCurrentWave().intValue() - 1);
+			wolf.setHealth(wolf.getMaxHealth());
+			wolf.setAngry(true);
+			game.addGameEntity(new GameEntity(game, wolf));
+		} else {
+			Zombie zombie = (Zombie) world.spawnEntity(event.getSpawner().getLocation(), EntityType.ZOMBIE);
+			zombie.setMaxHealth(zombie.getMaxHealth() + game.getCurrentWave().intValue() - 1);
+			zombie.setHealth(zombie.getMaxHealth());
+			game.addGameEntity(new GameEntity(game, zombie));
+		}
 	}
 	
 	@EventHandler

@@ -14,6 +14,7 @@ import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.pvp.CoDGame;
 import net.endercraftbuild.cod.tasks.GameTickTask;
+import net.endercraftbuild.cod.tasks.PerpetualNightTask;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.CoDMain;
 
@@ -28,6 +29,7 @@ public class GameManager implements Listener {
 	
 	private final CoDMain plugin;
 	private final GameTickTask gameTickTask;
+	private final PerpetualNightTask perpetualNightTask;
 	private final Map<String, Game> games;
 	
 	private final List<Game> activeGames;
@@ -35,16 +37,19 @@ public class GameManager implements Listener {
 	public GameManager(CoDMain plugin) {
 		this.plugin = plugin;
 		this.gameTickTask = new GameTickTask(plugin);
+		this.perpetualNightTask = new PerpetualNightTask(plugin);
 		this.games = new HashMap<String, Game>();
 		this.activeGames = new ArrayList<Game>();
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		gameTickTask.start();
+		perpetualNightTask.start();
 	}
 	
 	public void disable() {
 		for (Game game : getActiveGames())
 			game.stop();
 		gameTickTask.stop();
+		perpetualNightTask.stop();
 	}
 	
 	public void load() throws IOException, InvalidConfigurationException {

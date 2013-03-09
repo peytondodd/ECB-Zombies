@@ -15,6 +15,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -24,6 +25,12 @@ public class GameMechanicsListener implements Listener {
 
 	public GameMechanicsListener(CoDMain plugin) {
 		this.plugin = plugin;
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onEntitySpawn(CreatureSpawnEvent event) { // don't let anything spawn that we didnt' spawn
+		if (event.getSpawnReason() != SpawnReason.CUSTOM)
+			event.setCancelled(true);
 	}
 	
 	@EventHandler(ignoreCancelled = true)
