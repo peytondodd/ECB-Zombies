@@ -16,9 +16,9 @@ import net.endercraftbuild.cod.zombies.events.SpawnGameEntityEvent;
 import net.endercraftbuild.cod.zombies.objects.GameEntity;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -64,8 +64,6 @@ public class GameProgressListener implements Listener {
 		game.deactivateSpawners();
 		game.rebuildBarriers();
 		game.closeDoors();
-		for (Player player : game.getPlayers())
-			game.removePlayer(player);
 		
 		game.setCurrentWave(0L);
 		game.broadcastToAll(ChatColor.AQUA + game.getName() + " has ended!"); 
@@ -93,8 +91,10 @@ public class GameProgressListener implements Listener {
 	@EventHandler
 	public void onSpawnGameEntity(SpawnGameEntityEvent event) {
 		World world = game.getSpawnLocation().getWorld();
-		Entity entity = world.spawnEntity(event.getSpawner().getLocation(), EntityType.ZOMBIE);
-		game.addGameEntity(new GameEntity(game, entity));
+		Zombie zombie = (Zombie) world.spawnEntity(event.getSpawner().getLocation(), EntityType.ZOMBIE);
+		zombie.setMaxHealth(zombie.getMaxHealth() + game.getCurrentWave().intValue() - 1);
+		zombie.setHealth(zombie.getMaxHealth());
+		game.addGameEntity(new GameEntity(game, zombie));
 	}
 	
 	@EventHandler

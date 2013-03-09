@@ -27,7 +27,11 @@ public class PlayerSignEvent extends PlayerEvent {
 	public Double getDouble(int index) {
 		return Double.parseDouble(getLine(index).replaceAll("[^\\d\\.-]", ""));
 	}
-	
+
+	public Integer getInteger(int index) {
+		return Integer.parseInt(getLine(index).replaceAll("[^\\d\\.-]", ""));
+	}
+
 	public boolean isJoinSign() {
 		return getLine(0).toLowerCase().endsWith("join");
 	}

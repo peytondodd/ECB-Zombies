@@ -36,11 +36,8 @@ public class DoorSignListener implements Listener {
 		Sign sign = event.getSign();
 		Double cost = event.getDouble(1);
 		
-		if (!plugin.getEconomy().has(player.getName(), cost)) {
+		if (!plugin.getEconomy().withdrawPlayer(player.getName(), cost).transactionSuccess()) {
 			player.sendMessage(ChatColor.RED + "You do not have enough to open that door!");
-			return;
-		} else if (!plugin.getEconomy().withdrawPlayer(player.getName(), cost).transactionSuccess()) {
-			player.sendMessage(ChatColor.RED + "Failed to open the door!");
 			return;
 		}
 		

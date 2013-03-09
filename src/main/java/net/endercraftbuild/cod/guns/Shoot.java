@@ -49,7 +49,7 @@ public class Shoot implements Listener {
 						ammo.setAmount(ammo.getAmount() - 2);
 					player.updateInventory();
 				} else {
-					plugin.reload(player);
+					plugin.reloadGun(player);
 					return;
 				}
 				
@@ -70,7 +70,7 @@ public class Shoot implements Listener {
 						ammo.setAmount(ammo.getAmount() - 5);
 					player.updateInventory();
 				} else {
-					plugin.reload(player);
+					plugin.reloadGun(player);
 					return;
 				}
 
@@ -100,7 +100,7 @@ public class Shoot implements Listener {
 						ammo.setAmount(ammo.getAmount() - 1);
 					player.updateInventory();
 				} else {
-					plugin.reload(player);
+					plugin.reloadGun(player);
 					return;
 				}
 
@@ -121,7 +121,7 @@ public class Shoot implements Listener {
 						ammo.setAmount(ammo.getAmount() - 1);
 					player.updateInventory();
 				} else {
-					plugin.reload(player);
+					plugin.reloadGun(player);
 					return;
 				}
 
@@ -142,69 +142,69 @@ public class Shoot implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerDamageArrow(EntityDamageByEntityEvent ev)
-  {
-    Entity damager = ev.getDamager();
-    if ((damager instanceof Snowball)) {
-      damager = ((Snowball)damager).getShooter();
-      ((HumanEntity)damager).getItemInHand();
-      ev.setDamage(12);
-      }
-  }
-  @EventHandler
-  public void shootArrow(ProjectileLaunchEvent e)
-  {
-    if ((e.getEntity() instanceof Snowball)) {
-      double x = 3.0D;
-      Vector v = e.getEntity().getVelocity();
-      v.multiply(new Vector(x, x, x));
-      e.getEntity().setVelocity(v);
-    }
-    else if ((e.getEntity() instanceof Arrow)) {
-      double x = 1.0D;
-      Vector v = e.getEntity().getVelocity();
-      v.multiply(new Vector(x, x, x));
-      e.getEntity().setVelocity(v);
-    }
-  }
-
-  @EventHandler
-  public void onEntityExplode(EntityExplodeEvent event) {
-    event.setCancelled(true);
-    Location loc = event.getLocation();
-    event.getLocation().getWorld().createExplosion(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 4.0F, false, false);
-  }
-
-  public void smokepase(Player player, Location loc) {
-    double rotation = (player.getLocation().getYaw() - 90.0F) % 360.0F;
-    if (rotation < 0.0D) {
-      rotation += 360.0D;
-    }
-    if ((0.0D <= rotation) && (rotation < 22.5D)) {
-      player.getWorld().playEffect(loc, Effect.SMOKE, 3);
-    }
-    else if ((22.5D <= rotation) && (rotation < 67.5D)) {
-      player.getWorld().playEffect(loc, Effect.SMOKE, 9);
-    }
-    else if ((67.5D <= rotation) && (rotation < 112.5D)) {
-      player.getWorld().playEffect(loc, Effect.SMOKE, 1);
-    }
-    else if ((112.5D <= rotation) && (rotation < 157.5D)) {
-      player.getWorld().playEffect(loc, Effect.SMOKE, 2);
-    }
-    else if ((157.5D <= rotation) && (rotation < 202.5D)) {
-      player.getWorld().playEffect(loc, Effect.SMOKE, 5);
-    }
-    else if ((202.5D <= rotation) && (rotation < 247.5D)) {
-      player.getWorld().playEffect(loc, Effect.SMOKE, 8);
-    }
-    else if ((247.5D <= rotation) && (rotation < 292.5D)) {
-      player.getWorld().playEffect(loc, Effect.SMOKE, 7);
-    }
-    else if ((292.5D <= rotation) && (rotation < 337.5D)) {
-      player.getWorld().playEffect(loc, Effect.SMOKE, 6);
-    }
-    else if ((337.5D <= rotation) && (rotation < 360.0D))
-      player.getWorld().playEffect(loc, Effect.SMOKE, 3);
-  }
+	public void onPlayerDamageArrow(EntityDamageByEntityEvent event) {
+		Entity damager = event.getDamager();
+		
+		if ((damager instanceof Snowball)) {
+			damager = ((Snowball) damager).getShooter();
+			((HumanEntity)damager).getItemInHand();
+			event.setDamage(12);
+		}
+	}
+	
+	@EventHandler
+	public void shootArrow(ProjectileLaunchEvent event) {
+		if ((event.getEntity() instanceof Snowball)) {
+			double x = 3.0D;
+			Vector v = event.getEntity().getVelocity();
+			v.multiply(new Vector(x, x, x));
+			event.getEntity().setVelocity(v);
+		} else if ((event.getEntity() instanceof Arrow)) {
+			double x = 1.0D;
+			Vector v = event.getEntity().getVelocity();
+			v.multiply(new Vector(x, x, x));
+			event.getEntity().setVelocity(v);
+		}
+	}
+	
+	@EventHandler
+	public void onEntityExplode(EntityExplodeEvent event) {
+		event.setCancelled(true);
+		Location loc = event.getLocation();
+		event.getLocation().getWorld().createExplosion(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 4.0F, false, false);
+	}
+	
+	public void smokepase(Player player, Location loc) {
+		double rotation = (player.getLocation().getYaw() - 90.0F) % 360.0F;
+	    if (rotation < 0.0D) {
+	      rotation += 360.0D;
+	    }
+	    if ((0.0D <= rotation) && (rotation < 22.5D)) {
+	      player.getWorld().playEffect(loc, Effect.SMOKE, 3);
+	    }
+	    else if ((22.5D <= rotation) && (rotation < 67.5D)) {
+	      player.getWorld().playEffect(loc, Effect.SMOKE, 9);
+	    }
+	    else if ((67.5D <= rotation) && (rotation < 112.5D)) {
+	      player.getWorld().playEffect(loc, Effect.SMOKE, 1);
+	    }
+	    else if ((112.5D <= rotation) && (rotation < 157.5D)) {
+	      player.getWorld().playEffect(loc, Effect.SMOKE, 2);
+	    }
+	    else if ((157.5D <= rotation) && (rotation < 202.5D)) {
+	      player.getWorld().playEffect(loc, Effect.SMOKE, 5);
+	    }
+	    else if ((202.5D <= rotation) && (rotation < 247.5D)) {
+	      player.getWorld().playEffect(loc, Effect.SMOKE, 8);
+	    }
+	    else if ((247.5D <= rotation) && (rotation < 292.5D)) {
+	      player.getWorld().playEffect(loc, Effect.SMOKE, 7);
+	    }
+	    else if ((292.5D <= rotation) && (rotation < 337.5D)) {
+	      player.getWorld().playEffect(loc, Effect.SMOKE, 6);
+	    }
+	    else if ((337.5D <= rotation) && (rotation < 360.0D))
+	      player.getWorld().playEffect(loc, Effect.SMOKE, 3);
+	}
+	
 }

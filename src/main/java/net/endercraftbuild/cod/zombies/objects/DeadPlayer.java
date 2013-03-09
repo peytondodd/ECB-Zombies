@@ -60,10 +60,15 @@ public class DeadPlayer {
 	}
 	
 	public void removeSign() {
+		if (sign == null)
+			return;
 		sign.getLocation().getBlock().setType(Material.AIR);
 	}
 
 	public void updateSign() {
+		if (sign == null)
+			return;
+		
 		Long remaining = 30 - ((new Date()).getTime() - diedAt) / 1000;
 		ChatColor color = ChatColor.GREEN;
 		
@@ -79,8 +84,10 @@ public class DeadPlayer {
 	private Sign placeSign() {
 		Block block = player.getLocation().getBlock();
 		
-		if (block.getType() != Material.AIR)
-			throw new RuntimeException("Can't place revival sign!");
+		if (block.getType() != Material.AIR) {
+			player.sendMessage(ChatColor.RED + "Can't place revival sign!");
+			return null;
+		}
 		
 		block.setType(Material.SIGN_POST);
 		Sign sign = (Sign) block.getState();

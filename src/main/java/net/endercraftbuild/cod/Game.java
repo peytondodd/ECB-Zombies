@@ -1,6 +1,7 @@
 package net.endercraftbuild.cod;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -96,13 +97,17 @@ public abstract class Game {
 	public void start() {
 		this.setActive(true);
 		registerListeners();
-		plugin.getServer().getPluginManager().callEvent(new GameStartEvent(this));
+		callEvent(new GameStartEvent(this));
 	}
 	
 	public void stop() {
-		plugin.getServer().getPluginManager().callEvent(new GameEndEvent(this));
-		clearListeners();
+		if (!isActive())
+			return;
+		
+		callEvent(new GameEndEvent(this));
 		this.setActive(false);
+		removePlayers();
+		clearListeners();
 	}
 	
 	public void registerListener(Listener listener) {
@@ -142,7 +147,7 @@ public abstract class Game {
 			throw new RuntimeException(getName() + " is currently full.");
 		players.add(player);
 		if (isActive())
-			plugin.getServer().getPluginManager().callEvent(new PlayerJoinEvent(player, this));
+			callEvent(new PlayerJoinEvent(player, this));
 		else if (players.size() >= minimumPlayers)
 			start();
 	}
@@ -150,9 +155,20 @@ public abstract class Game {
 	public void removePlayer(Player player) {
 		if (!isInGame(player))
 			throw new IllegalArgumentException(player.getName() + " is not in this game.");
-		plugin.getServer().getPluginManager().callEvent(new PlayerLeaveEvent(player, this));
+		callEvent(new PlayerLeaveEvent(player, this));
 		players.remove(player);
 		if (isActive() && players.size() < minimumPlayers)
+			stop();
+	}
+	
+	public void removePlayers() {
+		Iterator<Player> iterator = players.iterator();
+		while (iterator.hasNext()) {
+			Player player = iterator.next();
+			callEvent(new PlayerLeaveEvent(player, this));
+			iterator.remove();
+		}
+		if (isActive())
 			stop();
 	}
 	

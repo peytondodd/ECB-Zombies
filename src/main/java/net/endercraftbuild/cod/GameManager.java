@@ -1,12 +1,15 @@
 package net.endercraftbuild.cod;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.pvp.CoDGame;
@@ -15,6 +18,8 @@ import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.CoDMain;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,12 +47,20 @@ public class GameManager implements Listener {
 		gameTickTask.stop();
 	}
 	
-	public void load() {
+	public void load() throws IOException, InvalidConfigurationException {
 		for (Game game : getActiveGames())
 			game.stop();
 		games.clear();
 		
-		ConfigurationSection gamesSection = plugin.getConfig().getConfigurationSection("games");
+		YamlConfiguration config = new YamlConfiguration();
+		try {
+			config.load(plugin.getDataFolder().getPath() + File.separatorChar + "games.yml");
+		} catch (FileNotFoundException e) {
+			plugin.getLogger().log(Level.WARNING, "Missing game configuration, have you setup any and saved them?");
+			return;
+		}
+		
+		ConfigurationSection gamesSection = config.getConfigurationSection("games");
 		for (String name : gamesSection.getKeys(false)) {
 			ConfigurationSection gameSection = gamesSection.getConfigurationSection(name);
 			
@@ -70,16 +83,18 @@ public class GameManager implements Listener {
 				add(game);
 			}
 		}
-		
 	}
 	
 	public void save() throws IOException {
-		ConfigurationSection gamesSection = plugin.getConfig().createSection("games");
+		YamlConfiguration config = new YamlConfiguration();
+		
+		ConfigurationSection gamesSection = config.createSection("games");
 		for (Game game : getGames()) {
 			ConfigurationSection gameSection = game.save(gamesSection);
 			gameSection.set("type", game.getType());
 		}
-		plugin.getConfig().save(plugin.getDataFolder().getPath() + File.separatorChar + "config.yml");
+		
+		config.save(plugin.getDataFolder().getPath() + File.separatorChar + "games.yml");
 	}
 	
 	public Game get(String name) {

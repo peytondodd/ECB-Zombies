@@ -28,6 +28,27 @@ commands:
     usage: /<command> - saves the current games setup
     permissions: cod.admin.save
     permission-message: You do not have permission to run that command.
+  creload:
+    description: Reloads the plugin configuration.
+    usage: /<command>
+    permissions: cod.admin.reload
+    permission-message: You do not have permission to run that command.
+  cstart:
+    description: Starts the specified game.
+    usage: |
+      /<command> <name>
+      Example: /<command> nacht
+      Example: /<command> nuketown
+    permissions: cod.admin.start
+    permission-message: You do not have permission to run that command.
+  cstop:
+    description: Stops the specified game.
+    usage: |
+      /<command> <name>
+      Example: /<command> nacht
+      Example: /<command> nuketown
+    permissions: cod.admin.stop
+    permission-message: You do not have permission to run that command.
 
 # zombies admin commands
   zcreate:
@@ -110,6 +131,9 @@ permissions:
     description: Gives access to all CoD functionality.
     children:
       cod.admin.save: true
+      cod.admin.reload: true
+      cod.admin.start: true
+      cod.admin.stop: true
       cod.admin.zcreate: true
       cod.admin.zedit: true
       cod.admin.zspawn: true
@@ -120,6 +144,12 @@ permissions:
       cod.admin.signs: true
   cod.admin.save:
     description: Allows you to save the existing games setup.
+  cod.admin.reload:
+    description: Allows you to reload the plugin configuration.
+  cod.admin.start:
+    description: Allows you to start a specific game.
+  cod.admin.stop:
+    description: Allows you to stop a specific game.
   cod.admin.zcreate:
     description: Allows you to create a CoD Zombies game.
   cod.admin.zedit:

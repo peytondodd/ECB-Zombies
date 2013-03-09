@@ -29,10 +29,13 @@ public class InventorySpawnListener implements Listener {
 		reset(event.getPlayer());
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void reset(Player player) {
 		player.setExp(0);
 		player.setLevel(0);
+		player.getInventory().setArmorContents(null);
 		player.getInventory().clear();
+		player.updateInventory();
 		plugin.getEconomy().withdrawPlayer(player.getName(), plugin.getEconomy().getBalance(player.getName()));
 	}
 		

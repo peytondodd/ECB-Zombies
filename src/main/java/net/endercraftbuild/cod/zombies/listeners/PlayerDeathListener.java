@@ -1,8 +1,8 @@
 package net.endercraftbuild.cod.zombies.listeners;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.GameTickEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
@@ -25,16 +25,12 @@ public class PlayerDeathListener implements Listener {
 
 	private final CoDMain plugin;
 	private final ZombieGame game;
-	private int deadPlayers;
-	private final Map<Player, DeadPlayer> inventories;
-	private final Map<Sign, DeadPlayer> signs;
+	private final Map<Player, DeadPlayer> deadPlayers;
 	
 	public PlayerDeathListener(CoDMain plugin, ZombieGame game) {
 		this.plugin = plugin;
 		this.game = game;
-		this.deadPlayers = 0;
-		this.inventories = new ConcurrentHashMap<Player, DeadPlayer>();
-		this.signs = new ConcurrentHashMap<Sign, DeadPlayer>(); 
+		this.deadPlayers = new HashMap<Player, DeadPlayer>();
 	}
 	
 	@EventHandler
@@ -44,10 +40,8 @@ public class PlayerDeathListener implements Listener {
 		
 		Player player = event.getPlayer();
 		
-		if (inventories.containsKey(player)) {
-			signs.remove(inventories.remove(player).getSign()).removeSign();
-			deadPlayers--;
-		}
+		if (deadPlayers.containsKey(player))
+			deadPlayers.remove(player).removeSign();
 	}
 	
 	@EventHandler
@@ -55,12 +49,12 @@ public class PlayerDeathListener implements Listener {
 		if (event.getGame() != game)
 			return;
 		
-		for (DeadPlayer deadPlayer : inventories.values()) {
-			if (deadPlayer.isExpired()) {
-				inventories.remove(deadPlayer);
-				signs.remove(deadPlayer.getSign());
+		Iterator<DeadPlayer> iterator = deadPlayers.values().iterator();
+		while (iterator.hasNext()) {
+			DeadPlayer deadPlayer = iterator.next();
+			if (deadPlayer.isExpired())
 				deadPlayer.removeSign();
-			} else
+			else
 				deadPlayer.updateSign();
 		}
 	}
@@ -70,10 +64,9 @@ public class PlayerDeathListener implements Listener {
 		if (event.getGame() != game)
 			return;
 		
-		for (DeadPlayer deadPlayer : signs.values())
+		for (DeadPlayer deadPlayer : deadPlayers.values())
 			deadPlayer.respawn();
-		signs.clear();
-		inventories.clear();
+		deadPlayers.clear();
 	}
 	
 	@EventHandler
@@ -87,19 +80,17 @@ public class PlayerDeathListener implements Listener {
 
 		if (game == null || game != this.game)
 			return;
-		if (inventories.containsKey(player))
+		if (deadPlayers.containsKey(player))
 			return;
 		
 		try {
 			DeadPlayer deadPlayer = new DeadPlayer(player, game);
-			inventories.put(player, deadPlayer);
-			signs.put(deadPlayer.getSign(), deadPlayer);
+			deadPlayers.put(player, deadPlayer);
 		} catch (RuntimeException e) {
 			player.sendMessage(ChatColor.DARK_RED + e.getLocalizedMessage());
 		}
 		
-		deadPlayers++;
-		if (deadPlayers == game.getPlayers().size())
+		if (deadPlayers.size() == game.getPlayers().size())
 			game.stop();
 	}
 	
@@ -113,16 +104,15 @@ public class PlayerDeathListener implements Listener {
 		if (sign.getLine(0) != DeadPlayer.SIGN_HEADER)
 			return;
 		
-		try {
-			DeadPlayer deadPlayer = signs.remove(sign);
-			inventories.remove(deadPlayer.getPlayer());
+		Iterator<DeadPlayer> iterator = deadPlayers.values().iterator();
+		while (iterator.hasNext()) {
+			DeadPlayer deadPlayer = iterator.next();
+			if (!deadPlayer.getPlayer().getName().startsWith(ChatColor.stripColor(sign.getLine(1))))
+				continue;
 			deadPlayer.revive();
+			iterator.remove();
 			game.callEvent(new PlayerReviveEvent(deadPlayer.getPlayer(), event.getPlayer()));
-		} catch (NullPointerException e) {
-			// no-op: expired before player was revived
 		}
-		
-		deadPlayers--;
 	}
 	
 }
