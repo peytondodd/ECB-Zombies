@@ -6,12 +6,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
+import net.endercraftbuild.cod.events.PlayerLeaveEvent;
 import net.endercraftbuild.cod.pvp.CoDGame;
 import net.endercraftbuild.cod.tasks.GameTickTask;
 import net.endercraftbuild.cod.tasks.PerpetualNightTask;
@@ -24,6 +26,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class GameManager implements Listener {
 	
@@ -33,6 +36,7 @@ public class GameManager implements Listener {
 	private final Map<String, Game> games;
 	
 	private final List<Game> activeGames;
+	private final Map<String, Game> recentPlayers;
 	
 	public GameManager(CoDMain plugin) {
 		this.plugin = plugin;
@@ -40,6 +44,7 @@ public class GameManager implements Listener {
 		this.perpetualNightTask = new PerpetualNightTask(plugin);
 		this.games = new HashMap<String, Game>();
 		this.activeGames = new ArrayList<Game>();
+		this.recentPlayers = new HashMap<String, Game>();
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		gameTickTask.start();
 		perpetualNightTask.start();
@@ -143,6 +148,10 @@ public class GameManager implements Listener {
 		return get(player) != null;
 	}
 	
+	public boolean didRecentlyLeave(Player player) {
+		return recentPlayers.containsKey(player.getName());
+	}
+	
 	@EventHandler
 	public void onGameStart(GameStartEvent event) {
 		activeGames.add(event.getGame());
@@ -151,6 +160,28 @@ public class GameManager implements Listener {
 	@EventHandler
 	public void onGameEnd(GameEndEvent event) {
 		activeGames.remove(event.getGame());
+		Iterator<Game> iterator = recentPlayers.values().iterator();
+		while (iterator.hasNext()) {
+			Game game = iterator.next();
+			if (event.getGame() != game)
+				continue;
+			iterator.remove();
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerLeave(PlayerLeaveEvent event) {
+		final String name = event.getPlayer().getName();
+		final Game game = event.getGame();
+		
+		recentPlayers.put(name, game);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (recentPlayers.get(name) == game)
+					recentPlayers.remove(name);
+			}
+		}.runTaskLater(plugin, 20L * 30L);
 	}
 	
 }

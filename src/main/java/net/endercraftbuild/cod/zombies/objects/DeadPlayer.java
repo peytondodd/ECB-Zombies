@@ -1,7 +1,5 @@
 package net.endercraftbuild.cod.zombies.objects;
 
-import java.util.Date;
-
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.ChatColor;
@@ -26,7 +24,7 @@ public class DeadPlayer {
 		this.player = player;
 		this.sign = placeSign();
 		this.game = game;
-		this.diedAt = (new Date()).getTime();
+		this.diedAt = System.currentTimeMillis();
 		this.armor = player.getInventory().getArmorContents();
 		this.inventory = player.getInventory().getContents();
 	}
@@ -40,7 +38,7 @@ public class DeadPlayer {
 	}
 
 	public boolean isExpired() {
-		return ((new Date()).getTime() - diedAt) > 1000 * 30;
+		return (System.currentTimeMillis() - diedAt) > 30 * 1000L;
 	}
 	
 	public void revive() {
@@ -69,7 +67,7 @@ public class DeadPlayer {
 		if (sign == null)
 			return;
 		
-		Long remaining = 30 - ((new Date()).getTime() - diedAt) / 1000;
+		Long remaining = 30 - (System.currentTimeMillis() - diedAt) / 1000L;
 		ChatColor color = ChatColor.GREEN;
 		
 		if (remaining < 16)

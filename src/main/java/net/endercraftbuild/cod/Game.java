@@ -143,6 +143,8 @@ public abstract class Game {
 	public void addPlayer(Player player) {
 		if (isInGame(player))
 			throw new IllegalArgumentException(player.getName() + " is already in this game.");
+		if (plugin.getGameManager().didRecentlyLeave(player))
+			throw new RuntimeException("You must wait 30 seconds before joining a game again.");
 		if (players.size() == maximumPlayers)
 			throw new RuntimeException(getName() + " is currently full.");
 		players.add(player);
