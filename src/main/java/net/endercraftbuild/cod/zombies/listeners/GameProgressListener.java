@@ -46,6 +46,7 @@ public class GameProgressListener implements Listener {
 		for (Player player : game.getPlayers())
 			game.callEvent(new PlayerJoinEvent(player, game));
 		game.activateSpawners();
+		game.healPlayers();
 		
 		game.broadcastToAll(ChatColor.AQUA + game.getName() + " has started!");
 		game.advanceWave();
@@ -66,6 +67,7 @@ public class GameProgressListener implements Listener {
 		game.deactivateSpawners();
 		game.rebuildBarriers();
 		game.closeDoors();
+		game.healPlayers();
 		
 		game.setCurrentWave(0L);
 		game.broadcastToAll(ChatColor.AQUA + game.getName() + " has ended!"); 
@@ -77,6 +79,7 @@ public class GameProgressListener implements Listener {
 			return;
 		
 		game.rebuildBarriers();
+		game.healPlayers();
 		game.broadcast(ChatColor.GRAY + "Round " + ChatColor.RED + game.getCurrentWave() + ChatColor.GRAY + " will begin shortly!");
 		game.broadcast(ChatColor.GRAY + "There are " + ChatColor.RED + game.getMaxEntityCount() + ChatColor.GRAY + " " + (game.isWolfRound() ? "wolves": "zombies") + " in this round!");
 	}

@@ -187,4 +187,9 @@ public abstract class Game {
 		plugin.getServer().broadcastMessage(message);
 	}
 	
+	public void healPlayers() {
+		for (Player player : players)
+			player.setHealth(player.getMaxHealth());
+	}
+	
 }
