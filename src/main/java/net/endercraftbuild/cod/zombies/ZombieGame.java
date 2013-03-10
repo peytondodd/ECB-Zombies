@@ -330,7 +330,7 @@ public class ZombieGame extends Game {
 	
 	public GameEntity findGameEntity(Entity entity) {
 		for (GameEntity gameEntity : gameEntities)
-			if (gameEntity.getEntity() == entity)
+			if (gameEntity.getMob().getEntity() == entity)
 				return gameEntity;
 		return null;
 	}
@@ -389,6 +389,10 @@ public class ZombieGame extends Game {
 	
 	public boolean isWolfRound() {
 		return (currentWave % 5) == 0;
+	}
+	
+	public boolean shouldSpawnRunner() {
+		return getRandom(10) < 5;
 	}
 	
 }

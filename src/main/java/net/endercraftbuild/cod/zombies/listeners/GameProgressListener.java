@@ -14,12 +14,11 @@ import net.endercraftbuild.cod.zombies.events.PlayerReviveEvent;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 import net.endercraftbuild.cod.zombies.events.SpawnGameEntityEvent;
 import net.endercraftbuild.cod.zombies.objects.GameEntity;
+import net.endercraftbuild.cod.zombies.objects.GameWolf;
+import net.endercraftbuild.cod.zombies.objects.GameZombie;
+
 import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
-import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -87,23 +86,17 @@ public class GameProgressListener implements Listener {
 		
 		game.spawnEntities();
 		game.damageBarriers();
+		
+		for (GameEntity gameEntity : game.getGameEntities())
+			if (!gameEntity.getMob().getEntity().isValid())
+				gameEntity.respawn();
 	}
 	
 	@EventHandler
 	public void onSpawnGameEntity(SpawnGameEntityEvent event) {
-		World world = game.getSpawnLocation().getWorld();
-		if (game.isWolfRound()) {
-			Wolf wolf = (Wolf) world.spawnEntity(event.getSpawner().getLocation(), EntityType.WOLF);
-			wolf.setMaxHealth(wolf.getMaxHealth() + game.getCurrentWave().intValue() - 1);
-			wolf.setHealth(wolf.getMaxHealth());
-			wolf.setAngry(true);
-			game.addGameEntity(new GameEntity(game, wolf));
-		} else {
-			Zombie zombie = (Zombie) world.spawnEntity(event.getSpawner().getLocation(), EntityType.ZOMBIE);
-			zombie.setMaxHealth(zombie.getMaxHealth() + game.getCurrentWave().intValue() - 1);
-			zombie.setHealth(zombie.getMaxHealth());
-			game.addGameEntity(new GameEntity(game, zombie));
-		}
+		GameEntity gameEntity = game.isWolfRound() ? new GameWolf(game, event.getSpawner()) : new GameZombie(game, event.getSpawner());
+		gameEntity.spawn();
+		game.addGameEntity(gameEntity);
 	}
 	
 	@EventHandler
@@ -112,20 +105,23 @@ public class GameProgressListener implements Listener {
 		
 		if (gameEntity == null)
 			return;
-
+		
 		event.getDrops().clear();
 		event.setDroppedExp(0);
 
 		try {
 			Player killer = event.getEntity().getKiller();
+			ZombieGame game = (ZombieGame) plugin.getGameManager().get(killer);
 			
-			if (killer == null)
+			if (killer == null || gameEntity.getGame() != game) {
+				gameEntity.respawn();
 				return;
+			}
 			
 			game.callEvent(new GameEntityDeathEvent(game, gameEntity, killer));
-			game.incrementWaveKills();
 		} catch (Exception e) {
 			plugin.getLogger().log(Level.SEVERE, "Failed to determine cause of death: ", e);
+			gameEntity.respawn();
 		}
 		
 	}
@@ -138,6 +134,7 @@ public class GameProgressListener implements Listener {
 		game.removeGameEntity(event.getGameEntity());
 		event.getKiller().giveExp(game.getRandom(25));
 		game.payPlayer(event.getKiller(), game.getRandom(25) + 1);
+		game.incrementWaveKills();
 	}
 	
 	@EventHandler

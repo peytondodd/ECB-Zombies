@@ -27,11 +27,20 @@
         <dependency>
         	<artifactId>Vault</artifactId>
         	<groupId>net.milkbowl.vault</groupId>
-        	<version>1.2.9-SNAPSHOT</version></dependency>
+        	<version>1.2.9-SNAPSHOT</version>
+        </dependency>
         <dependency>
         	<artifactId>worldguard</artifactId>
         	<groupId>com.sk89q</groupId>
-        	<version>5.7.2-SNAPSHOT</version></dependency>
+        	<version>5.7.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+        	<artifactId>controllable-mobs-api</artifactId>
+        	<groupId>org.bukkit</groupId>
+        	<version>3</version>
+        	<scope>system</scope>
+        	<systemPath>${project.basedir}/lib/ControllableMobsAPI-v3.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <repositories>
