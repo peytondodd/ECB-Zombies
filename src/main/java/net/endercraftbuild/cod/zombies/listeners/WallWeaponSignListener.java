@@ -11,11 +11,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-public class SignListener implements Listener {
+public class WallWeaponSignListener implements Listener {
 
 	private CoDMain plugin;
 
-	public SignListener(CoDMain plugin) {
+	public WallWeaponSignListener(CoDMain plugin) {
 		this.plugin = plugin;
 	}
 

@@ -3,6 +3,7 @@ package net.endercraftbuild.cod.guns;
 import net.endercraftbuild.cod.CoDMain;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -49,7 +50,7 @@ public class Shoot implements Listener {
 						ammo.setAmount(ammo.getAmount() - 2);
 					player.updateInventory();
 				} else {
-					plugin.reloadGun(player);
+					player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
 					return;
 				}
 				
@@ -70,7 +71,7 @@ public class Shoot implements Listener {
 						ammo.setAmount(ammo.getAmount() - 5);
 					player.updateInventory();
 				} else {
-					plugin.reloadGun(player);
+					player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
 					return;
 				}
 
@@ -100,7 +101,7 @@ public class Shoot implements Listener {
 						ammo.setAmount(ammo.getAmount() - 1);
 					player.updateInventory();
 				} else {
-					plugin.reloadGun(player);
+					player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
 					return;
 				}
 
@@ -121,7 +122,7 @@ public class Shoot implements Listener {
 						ammo.setAmount(ammo.getAmount() - 1);
 					player.updateInventory();
 				} else {
-					plugin.reloadGun(player);
+					player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
 					return;
 				}
 

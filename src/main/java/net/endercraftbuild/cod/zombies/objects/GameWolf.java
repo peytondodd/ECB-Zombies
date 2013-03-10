@@ -25,6 +25,7 @@ public class GameWolf extends GameEntity {
 	public void spawnMob() {
 		this.wolf = ControllableMobs.assign((Wolf) getGame().getSpawnLocation().getWorld().spawnEntity(getSpawner().getLocation(), EntityType.WOLF));
 		this.wolf.getEntity().setAngry(true);
+		this.wolf.getEntity().setFireTicks(Integer.MAX_VALUE);
 	}
 	
 }

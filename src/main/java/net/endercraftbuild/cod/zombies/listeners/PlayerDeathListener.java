@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import net.endercraftbuild.cod.CoDMain;
+import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.events.GameTickEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
 import net.endercraftbuild.cod.zombies.ZombieGame;
@@ -72,20 +73,20 @@ public class PlayerDeathListener implements Listener {
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
-		ZombieGame game = (ZombieGame) plugin.getGameManager().get(player);
+		Game game = plugin.getGameManager().get(player);
+
+		if (game == null || game != this.game)
+			return;
 
 		event.getDrops().clear();
 		event.setDroppedExp(0);
 		event.setKeepLevel(true);
 
-		if (game == null || game != this.game)
-			return;
 		if (deadPlayers.containsKey(player))
 			return;
 		
 		try {
-			DeadPlayer deadPlayer = new DeadPlayer(player, game);
-			deadPlayers.put(player, deadPlayer);
+			deadPlayers.put(player, new DeadPlayer(player, this.game));
 		} catch (RuntimeException e) {
 			player.sendMessage(ChatColor.DARK_RED + e.getLocalizedMessage());
 		}

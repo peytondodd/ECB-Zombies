@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 import net.endercraftbuild.cod.CoDMain;
+import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.GameTickEvent;
@@ -94,6 +95,9 @@ public class GameProgressListener implements Listener {
 	
 	@EventHandler
 	public void onSpawnGameEntity(SpawnGameEntityEvent event) {
+		if (event.getGame() != game)
+			return;
+		
 		GameEntity gameEntity = game.isWolfRound() ? new GameWolf(game, event.getSpawner()) : new GameZombie(game, event.getSpawner());
 		gameEntity.spawn();
 		game.addGameEntity(gameEntity);
@@ -111,14 +115,14 @@ public class GameProgressListener implements Listener {
 
 		try {
 			Player killer = event.getEntity().getKiller();
-			ZombieGame game = (ZombieGame) plugin.getGameManager().get(killer);
+			Game game = plugin.getGameManager().get(killer);
 			
 			if (killer == null || gameEntity.getGame() != game) {
 				gameEntity.respawn();
 				return;
 			}
 			
-			game.callEvent(new GameEntityDeathEvent(game, gameEntity, killer));
+			game.callEvent(new GameEntityDeathEvent(this.game, gameEntity, killer));
 		} catch (Exception e) {
 			plugin.getLogger().log(Level.SEVERE, "Failed to determine cause of death: ", e);
 			gameEntity.respawn();
@@ -140,9 +144,9 @@ public class GameProgressListener implements Listener {
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
-		ZombieGame game = (ZombieGame) plugin.getGameManager().get(player);
+		Game game = plugin.getGameManager().get(player);
 		
-		if (game == null || game != this.game)
+		if (game != this.game)
 			return;
 		
 		game.broadcast(ChatColor.DARK_RED + event.getDeathMessage());
@@ -153,7 +157,7 @@ public class GameProgressListener implements Listener {
 	public void onPlayerRevive(PlayerReviveEvent event) {
 		Player player = event.getPlayer();
 		Player revivedBy = event.getRevivedBy();
-		ZombieGame game = (ZombieGame) plugin.getGameManager().get(player);
+		Game game = plugin.getGameManager().get(player);
 		
 		if (game == null || game != this.game)
 			return;
