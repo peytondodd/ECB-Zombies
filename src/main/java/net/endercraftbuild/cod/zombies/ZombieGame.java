@@ -1,6 +1,7 @@
 package net.endercraftbuild.cod.zombies;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.Game;
@@ -132,6 +133,7 @@ public class ZombieGame extends Game {
 	public void stop() {
 		cancelRoundStartTask();
 		clearRoundStartTask();
+		setCurrentWave(0L);
 		super.stop();
 	}
 	
@@ -164,6 +166,7 @@ public class ZombieGame extends Game {
 	}
 	
 	private void scheduleRoundStart() {
+		cancelRoundStartTask();
 		final ZombieGame game = this;
 		this.pendingRoundStartTask = new BukkitRunnable() {
 			@Override
@@ -409,6 +412,15 @@ public class ZombieGame extends Game {
 				spawnCount--;
 				callEvent(new SpawnGameEntityEvent(this, spawner));
 			}
+		}
+	}
+	
+	public void despawnEntities() {
+		Iterator<GameEntity> iterator = getGameEntities().iterator();
+		while (iterator.hasNext()) {
+			GameEntity gameEntity = iterator.next();
+			gameEntity.despawn();
+			iterator.remove();
 		}
 	}
 	

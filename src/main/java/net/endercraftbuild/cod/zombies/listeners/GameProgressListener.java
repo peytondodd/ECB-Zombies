@@ -1,6 +1,5 @@
 package net.endercraftbuild.cod.zombies.listeners;
 
-import java.util.Iterator;
 import java.util.logging.Level;
 
 import net.endercraftbuild.cod.CoDMain;
@@ -57,19 +56,12 @@ public class GameProgressListener implements Listener {
 		if (event.getGame() != game)
 			return;
 		
-		Iterator<GameEntity> iterator = game.getGameEntities().iterator();
-		while (iterator.hasNext()) {
-			GameEntity gameEntity = iterator.next();
-			gameEntity.despawn();
-			iterator.remove();
-		}
-		
+		game.despawnEntities();
 		game.deactivateSpawners();
 		game.rebuildBarriers();
 		game.closeDoors();
 		game.healPlayers();
 		
-		game.setCurrentWave(0L);
 		game.broadcastToAll(ChatColor.AQUA + game.getName() + " has ended!"); 
 	}
 

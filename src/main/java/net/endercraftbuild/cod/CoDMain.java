@@ -115,6 +115,7 @@ public class CoDMain extends JavaPlugin {
 		getCommand("zdoor").setExecutor(new DoorCommand(this));
 		getCommand("zlink").setExecutor(new LinkCommand(this));
 		getCommand("zlinkclear").setExecutor(new LinkClearCommand(this));
+		getCommand("zadvance").setExecutor(new AdvanceCommand(this));
 	}
 	
 	private boolean setupEconomy() {

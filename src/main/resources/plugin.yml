@@ -107,6 +107,14 @@ commands:
       Example: /<command> nuketown
     permissions: cod.admin.linkclear
     permission-message: You do not have permission to run that command.
+  zadvance:
+    description: Forces the specified CoD Zombies game to advance to the next round.
+    usage: |
+      /<command> <name>
+      Example: /<command> nacht
+      Example: /<command> nuketown
+    permissions: cod.admin.advance
+    permission-message: You do not have permission to run that command.
 
 permissions:
   cod.*:
@@ -141,6 +149,7 @@ permissions:
       cod.admin.zdoor: true
       cod.admin.zlink: true
       cod.admin.zlinkclear: true
+      cod.admin.zadvance: true
       cod.admin.signs: true
   cod.admin.save:
     description: Allows you to save the existing games setup.
@@ -164,5 +173,7 @@ permissions:
     description: Allows you to add CoD Zombies game door/spawner links.
   cod.admin.zlinkclear:
     description: Allows you to clear CoD Zombies game door/spawner links.
+  cod.admin.zadvance:
+    description: Allows you to advance a CoD Zombies game to the next round.
   cod.admin.signs:
     description: Allows you to create/edit CoD signs.
