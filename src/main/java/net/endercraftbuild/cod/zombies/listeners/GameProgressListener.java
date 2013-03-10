@@ -60,7 +60,6 @@ public class GameProgressListener implements Listener {
 		game.deactivateSpawners();
 		game.rebuildBarriers();
 		game.closeDoors();
-		game.healPlayers();
 		
 		game.broadcastToAll(ChatColor.AQUA + game.getName() + " has ended!"); 
 	}

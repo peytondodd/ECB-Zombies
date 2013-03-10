@@ -21,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerDeathListener implements Listener {
 
@@ -73,7 +74,7 @@ public class PlayerDeathListener implements Listener {
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
-		Game game = plugin.getGameManager().get(player);
+		final Game game = plugin.getGameManager().get(player);
 
 		if (game == null || game != this.game)
 			return;
@@ -91,8 +92,14 @@ public class PlayerDeathListener implements Listener {
 			player.sendMessage(ChatColor.DARK_RED + e.getLocalizedMessage());
 		}
 		
+		// XXX(mortu): the delay is to keep MC and ControllableMobsAPI from fighting over the mob 
 		if (deadPlayers.size() == game.getPlayers().size())
-			game.stop();
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					game.stop();
+				}
+			}.runTask(plugin);
 	}
 	
 	@EventHandler
