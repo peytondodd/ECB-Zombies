@@ -1,13 +1,12 @@
 package net.endercraftbuild.cod.zombies;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
+import net.endercraftbuild.cod.zombies.events.RoundStartEvent;
 import net.endercraftbuild.cod.zombies.events.SpawnGameEntityEvent;
 import net.endercraftbuild.cod.zombies.listeners.GameProgressListener;
 import net.endercraftbuild.cod.zombies.listeners.PlayerDeathListener;
@@ -22,6 +21,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ZombieGame extends Game {
 	
@@ -32,11 +32,11 @@ public class ZombieGame extends Game {
 	private final List<Spawner> spawners;
 	private final List<Barrier> barriers;
 	private final List<Door> doors;
-
+	
+	private BukkitRunnable pendingRoundStartTask;
 	private Long currentWave;
-	private final List<GameEntity> gameEntities;
 	private Long waveKills;
-	private Long waveDelayUntil;
+	private final List<GameEntity> gameEntities;
 
 	public ZombieGame(CoDMain plugin) {
 		super(plugin);
@@ -45,6 +45,7 @@ public class ZombieGame extends Game {
 		doors = new ArrayList<Door>();
 		
 		setCurrentWave(0L);
+		setWaveKills(0L);
 		gameEntities = new ArrayList<GameEntity>();
 	}
 	
@@ -127,6 +128,13 @@ public class ZombieGame extends Game {
 		return gameSection;
 	}
 	
+	@Override
+	public void stop() {
+		cancelRoundStartTask();
+		clearRoundStartTask();
+		super.stop();
+	}
+	
 	public Double getZombieMultiplier() {
 		return zombieMultiplier;
 	}
@@ -151,10 +159,36 @@ public class ZombieGame extends Game {
 		this.spawnLocation = spawnLocation;
 	}
 	
-	private void setWaveDelay() {
-		this.waveDelayUntil = new Date().getTime() + 20 * 1000;
+	public boolean isSpawningPaused() {
+		return pendingRoundStartTask != null;
 	}
-
+	
+	private void scheduleRoundStart() {
+		final ZombieGame game = this;
+		this.pendingRoundStartTask = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (game.isActive()) {
+					game.clearRoundStartTask();
+					game.callEvent(new RoundStartEvent(game));
+				}
+			}
+		};
+		this.pendingRoundStartTask.runTaskLater(getPlugin(), 20L * 20L);
+	}
+	
+	private void cancelRoundStartTask() {
+		try {
+			this.pendingRoundStartTask.cancel();
+		} catch (NullPointerException | IllegalStateException e) {
+			// no-op: wasn't scheduled
+		}
+	}
+	
+	private void clearRoundStartTask() {
+		this.pendingRoundStartTask = null;
+	}
+	
 	public Long getCurrentWave() {
 		return currentWave;
 	}
@@ -173,14 +207,15 @@ public class ZombieGame extends Game {
 	
 	public void incrementWaveKills() {
 		waveKills++;
-		if (waveKills == getMaxEntityCount())
+		if (waveKills >= getMaxEntityCount() && getLivingEntityCount() == 0)
 			advanceWave();
 	}
 	
 	public void advanceWave() {
 		setCurrentWave(getCurrentWave() + 1);
 		setWaveKills(0L);
-		setWaveDelay();
+		
+		scheduleRoundStart();
 		callEvent(new RoundAdvanceEvent(this));
 	}
 
@@ -359,7 +394,7 @@ public class ZombieGame extends Game {
 	}
 	
 	private boolean shouldSpawn() {
-		return (new Date()).getTime() > this.waveDelayUntil && getRemainingEntityCount() > 0; 
+		return !isSpawningPaused() && getRemainingEntityCount() > 0; 
 	}
 	
 	public void spawnEntities() {

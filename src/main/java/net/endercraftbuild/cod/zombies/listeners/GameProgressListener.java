@@ -13,6 +13,7 @@ import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.events.GameEntityDeathEvent;
 import net.endercraftbuild.cod.zombies.events.PlayerReviveEvent;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
+import net.endercraftbuild.cod.zombies.events.RoundStartEvent;
 import net.endercraftbuild.cod.zombies.events.SpawnGameEntityEvent;
 import net.endercraftbuild.cod.zombies.objects.GameEntity;
 import net.endercraftbuild.cod.zombies.objects.GameWolf;
@@ -78,6 +79,14 @@ public class GameProgressListener implements Listener {
 		game.rebuildBarriers();
 		game.broadcast(ChatColor.GRAY + "Round " + ChatColor.RED + game.getCurrentWave() + ChatColor.GRAY + " will begin shortly!");
 		game.broadcast(ChatColor.GRAY + "There are " + ChatColor.RED + game.getMaxEntityCount() + ChatColor.GRAY + " " + (game.isWolfRound() ? "wolves": "zombies") + " in this round!");
+	}
+	
+	@EventHandler
+	public void onRoundStart(RoundStartEvent event) {
+		if (event.getGame() != game)
+			return;
+		
+		game.broadcast(ChatColor.GRAY + "The round has begun!");
 	}
 	
 	@EventHandler
