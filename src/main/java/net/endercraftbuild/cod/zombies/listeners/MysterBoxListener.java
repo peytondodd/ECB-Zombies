@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.endercraftbuild.cod.CoDMain;
+import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.utils.Utils;
-import net.endercraftbuild.cod.zombies.ZombieGame;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,18 +19,18 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class PlayerListener implements Listener {
+public class MysterBoxListener implements Listener {
 
 	private CoDMain plugin;
 
-	public PlayerListener(CoDMain plugin) {
+	public MysterBoxListener(CoDMain plugin) {
 		this.plugin = plugin;
 	}
 	
 	@EventHandler
 	public void onMysteryBoxUse(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		ZombieGame game = (ZombieGame) plugin.getGameManager().get(player);
+		Game game = plugin.getGameManager().get(player);
 		
 		if (game == null)
 			return;

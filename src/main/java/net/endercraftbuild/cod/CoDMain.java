@@ -92,7 +92,7 @@ public class CoDMain extends JavaPlugin {
 		
 		getServer().getPluginManager().registerEvents(new GlobalMechanicsListener(this), this);
 		getServer().getPluginManager().registerEvents(new ZombieGameMechanicsListener(this), this);
-		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+		getServer().getPluginManager().registerEvents(new MysterBoxListener(this), this);
 		getServer().getPluginManager().registerEvents(new Shoot(this), this);  // FIXME: should be called ShootListener
 		getServer().getPluginManager().registerEvents(new WallWeaponSignListener(this), this);
 	}
