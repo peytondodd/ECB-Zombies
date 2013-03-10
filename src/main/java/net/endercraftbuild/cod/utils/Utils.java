@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -106,6 +107,10 @@ public class Utils {
 			return ((Projectile) entity).getShooter();
 		else
 			return entity;
+	}
+	
+	public static String formatMessage(String message, Object... args) {
+		return ChatColor.translateAlternateColorCodes('&', String.format(message, args));
 	}
 	
 }

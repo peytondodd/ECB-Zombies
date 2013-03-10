@@ -21,7 +21,16 @@ commands:
     usage: /<command>
     permissions: cod.player.leave
     permission-message: You do not have permission to run that command.
-    
+  stats:
+    description: Displays stats for the game you are in or a specified game.
+    usage: |
+      /<command> [name]
+      Example: /<command> - shows the stats for the game you are currently in
+      Example: /<command> nacht - shows the stats for the current nacht game
+      Example: /<command> nuketown - shows the stats for the current nuketown game
+    permissions: cod.player.stats
+    permission-message: You do not have permission to run that command.
+
 # generic admin commands
   csave:
     description: Saves the current games setup.
@@ -128,11 +137,14 @@ permissions:
       cod.player.join: true
       cod.player.leave: true
       cod.player.signs: true
+      cod.player.stats: true
     default: true
   cod.player.join:
     description: Allows you to join a game.
   cod.player.leave:
     description: Allows you to leave a game.
+  cod.player.stats:
+    description: Allows you to view stats for a game.
   cod.player.signs:
     description: Allows you to use various game signs.
   cod.admin.*:

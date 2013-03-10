@@ -100,6 +100,7 @@ public class CoDMain extends JavaPlugin {
 	private void registerCommands() {
 		getCommand("join").setExecutor(new JoinCommand(this));
 		getCommand("leave").setExecutor(new LeaveCommand(this));
+		getCommand("stats").setExecutor(new StatsCommand(this));
 		
 		// generic admin commands
 		getCommand("csave").setExecutor(new SaveCommand(this));
