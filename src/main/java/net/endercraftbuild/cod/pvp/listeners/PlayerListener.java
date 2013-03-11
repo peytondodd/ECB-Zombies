@@ -41,7 +41,7 @@ public void onPlayerDeath(PlayerDeathEvent event) {
 	}
 }
 
-
+//TODO use our sign event
 @EventHandler(ignoreCancelled = true) //Join for pvpSigns
 public void Join(PlayerInteractEvent event) 
 {

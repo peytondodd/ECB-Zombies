@@ -4,6 +4,9 @@ import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -11,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class ZombieGameMechanicsListener implements Listener {
 
@@ -62,4 +67,14 @@ public class ZombieGameMechanicsListener implements Listener {
 		event.setCancelled(true);
 	}
 		
+	@EventHandler(ignoreCancelled = true)
+	public void onAKShare(PlayerPickupItemEvent event) { //Prevent AK sharing
+		Player player = event.getPlayer();
+		if(!player.hasPermission("cod.kits.zombies.donor"))
+			
+		if(event.getItem().getItemStack().getType() == Material.IRON_HOE);
+				
+		event.setCancelled(true);
+		player.sendMessage(plugin.prefix + ChatColor.GREEN + "You cannot pickup the AK-47! Donate to use it @ bit.ly/ECBDonate !");
+	}
 }
