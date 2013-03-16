@@ -4,8 +4,8 @@ import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.CaveSpider;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -56,8 +56,17 @@ public class ZombieGameMechanicsListener implements Listener {
 	}
 	
 	@EventHandler(ignoreCancelled = true)
-	public void onWolfBurning(EntityDamageEvent event) { // make sure they're immune to fire
+	public void onWolfBurning(EntityDamageEvent event) { // make sure they're immune to fire (wolfie)
 		if (!(event.getEntity() instanceof Wolf))
+			return;
+		if (!event.getCause().equals(DamageCause.FIRE) && !event.getCause().equals(DamageCause.FIRE_TICK))
+			return;
+		
+		event.setCancelled(true);
+	}
+	@EventHandler(ignoreCancelled = true)
+	public void onCaveSpiderBurning(EntityDamageEvent event) { // make sure they're immune to fire (cave spider)
+		if (!(event.getEntity() instanceof CaveSpider))
 			return;
 		if (!event.getCause().equals(DamageCause.FIRE) && !event.getCause().equals(DamageCause.FIRE_TICK))
 			return;
