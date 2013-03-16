@@ -64,6 +64,7 @@ public class ZombieGameMechanicsListener implements Listener {
 		
 		event.setCancelled(true);
 	}
+	
 	@EventHandler(ignoreCancelled = true)
 	public void onCaveSpiderBurning(EntityDamageEvent event) { // make sure they're immune to fire (cave spider)
 		if (!(event.getEntity() instanceof CaveSpider))
@@ -77,13 +78,11 @@ public class ZombieGameMechanicsListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onAKShare(PlayerPickupItemEvent event) { //Prevent AK sharing
 		Player player = event.getPlayer();
-		if(!player.hasPermission("cod.kits.zombies.donor"))
-		{
-			
-		if(event.getItem().getItemStack().getType() == Material.IRON_HOE) 
-		{			
-		event.setCancelled(true);
+		if (!player.hasPermission("cod.kits.zombies.donor")) {
+			if (event.getItem().getItemStack().getType() == Material.IRON_HOE) {
+				event.setCancelled(true);
+			}
 		}
 	}
-	}
+	
 }

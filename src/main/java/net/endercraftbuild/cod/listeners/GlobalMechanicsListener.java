@@ -2,6 +2,8 @@ package net.endercraftbuild.cod.listeners;
 
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.Game;
+
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -52,6 +54,12 @@ public class GlobalMechanicsListener implements Listener {
 			return;
 		if (player.getItemInHand() == null)
 			return;
+		
+		Material inHand = player.getItemInHand().getType();
+		if (inHand != Material.WOOD_HOE && inHand != Material.STONE_HOE && inHand != Material.IRON_HOE && inHand != Material.DIAMOND_HOE)
+			return;
+		if (event.getClickedBlock().getType() == Material.DIRT || event.getClickedBlock().getType() == Material.GRASS)
+			event.setCancelled(true);
 		
 		player.getItemInHand().setDurability((short) 0);
 	}
