@@ -7,17 +7,21 @@ import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -93,23 +97,34 @@ public class Shoot implements Listener {
 					}
 				}, 40L);
 				
-			} else if (hand.getType() == Material.DIAMOND_HOE) { // Mini-gun
-				if (ammo != null && ammo.getAmount() >= 1) {
-					if (ammo.getAmount() == 1)
-						player.getInventory().remove(ammo);
-					else
-						ammo.setAmount(ammo.getAmount() - 1);
-					player.updateInventory();
-				} else {
-					player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
-					return;
-				}
-
-				player.launchProjectile(Snowball.class);
-				player.launchProjectile(Snowball.class);
-				Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
-				smokepase(player, loc);
-				player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
+			} else if (hand.getType() == Material.DIAMOND_HOE) { //RAY GUN
+				  if (this.plugin.pistol.contains(player.getName())) {
+			        	return;
+			        }
+			        
+					if (ammo != null && ammo.getAmount() >= 1) {
+						if (ammo.getAmount() == 1)
+							player.getInventory().remove(ammo);
+						else
+							ammo.setAmount(ammo.getAmount() - 1);
+						player.updateInventory();
+					} else {
+						player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
+						return;
+					}
+					//Pistol fire rate
+					this.plugin.pistol.add(player.getName());
+					player.launchProjectile(Snowball.class);
+					Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+					smokepase(player, loc);
+					player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 160.0F, 0.0F);
+					
+					final Shoot self = this;
+					Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+						public void run() {
+							self.plugin.pistol.remove(player.getName());
+						}
+					}, 12L);
 			} else if (hand.getType() == Material.WOOD_HOE) { // Pistol
 		        if (this.plugin.pistol.contains(player.getName())) {
 		        	return;
@@ -208,4 +223,22 @@ public class Shoot implements Listener {
 	      player.getWorld().playEffect(loc, Effect.SMOKE, 3);
 	}
 	
+//Make ray gun explode
+
+@EventHandler
+public void RayGunShot(ProjectileHitEvent event) {
+	{
+	if(event.getEntity().getType() == EntityType.SNOWBALL) 
+	{
+	Location l = event.getEntity().getLocation();	
+	Player player = ((Player) event).getPlayer();
+	
+		if (event.getEntityType() == EntityType.PLAYER) 
+		
+		if(player.getPlayer().getItemInHand().getType() == Material.DIAMOND_HOE) 
+		
+			player.getWorld().createExplosion(l, 1F); 
+			}
+		}
+	}
 }
