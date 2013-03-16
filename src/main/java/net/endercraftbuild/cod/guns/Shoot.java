@@ -7,14 +7,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -115,9 +114,10 @@ public class Shoot implements Listener {
 					//Pistol fire rate
 					this.plugin.pistol.add(player.getName());
 					player.launchProjectile(Snowball.class);
+					player.launchProjectile(Snowball.class);
 					Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
 					smokepase(player, loc);
-					player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 160.0F, 0.0F);
+					player.playSound(player.getLocation(), Sound.FIZZ, 160.0F, 0.0F);
 					
 					final Shoot self = this;
 					Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
@@ -231,13 +231,11 @@ public void RayGunShot(ProjectileHitEvent event) {
 	if(event.getEntity().getType() == EntityType.SNOWBALL) 
 	{
 	Location l = event.getEntity().getLocation();	
-	Player player = ((Player) event).getPlayer();
-	
-		if (event.getEntityType() == EntityType.PLAYER) 
-		
-		if(player.getPlayer().getItemInHand().getType() == Material.DIAMOND_HOE) 
-		
-			player.getWorld().createExplosion(l, 1F); 
+	LivingEntity player = event.getEntity().getShooter();
+	Float power = 1F;
+
+		if(((Player) player).getItemInHand().getType() == Material.DIAMOND_HOE) 
+			player.getWorld().createExplosion(l, power); 
 			}
 		}
 	}
