@@ -3,6 +3,7 @@ package net.endercraftbuild.cod.zombies.objects;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -48,7 +49,18 @@ public class DeadPlayer {
 		removeSign();
 		player.getInventory().setArmorContents(armor);
 		player.getInventory().setContents(inventory);
-		player.teleport(sign.getLocation());
+		Location loc = sign.getLocation();
+		Location loc0 = loc;
+		loc0.setY(loc0.getY()+1);
+		Location loc1 = loc;
+		loc1.setY(loc1.getY()+2);
+		if(loc0.getBlock().getType() == Material.AIR && loc1.getBlock().getType() == Material.AIR)
+		{
+			player.teleport(loc0);
+		}else
+		{
+			player.teleport(loc);
+		}
 	}
 	
 	public void respawn() {
