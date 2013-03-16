@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import net.endercraftbuild.cod.CoDMain;
-import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.events.GameTickEvent;
+import net.endercraftbuild.cod.events.PlayerDiedEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.events.PlayerReviveEvent;
@@ -20,7 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerDeathListener implements Listener {
@@ -72,25 +71,18 @@ public class PlayerDeathListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent event) {
-		Player player = event.getEntity();
-		final Game game = plugin.getGameManager().get(player);
-
-		if (game == null || game != this.game)
+	public void onPlayerDeath(PlayerDiedEvent event) {
+		if (event.getGame() != this.game)
 			return;
-
-		event.getDrops().clear();
-		event.setDroppedExp(0);
-		event.setKeepLevel(true);
+		
+		Player player = event.getPlayer();
 
 		if (deadPlayers.containsKey(player))
 			return;
 		
-		try {
-			deadPlayers.put(player, new DeadPlayer(player, this.game));
-		} catch (RuntimeException e) {
-			player.sendMessage(ChatColor.DARK_RED + e.getLocalizedMessage());
-		}
+		DeadPlayer deadPlayer = new DeadPlayer(player, this.game);
+		deadPlayers.put(player, deadPlayer);
+		deadPlayer.spawn();
 		
 		// XXX(mortu): the delay is to keep MC and ControllableMobsAPI from fighting over the mob 
 		if (deadPlayers.size() == game.getPlayers().size())

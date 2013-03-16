@@ -42,6 +42,16 @@ public class DeadPlayer {
 		return (System.currentTimeMillis() - diedAt) > 30 * 1000L;
 	}
 	
+	public void spawn() {
+		player.getInventory().setArmorContents(null);
+		player.getInventory().clear();
+		
+		player.teleport(game.getSpawnLocation().getWorld().getSpawnLocation());
+		
+		player.setHealth(player.getMaxHealth());
+		player.setFireTicks(0);
+	}
+	
 	public void revive() {
 		if (isExpired())
 			return;
@@ -49,18 +59,16 @@ public class DeadPlayer {
 		removeSign();
 		player.getInventory().setArmorContents(armor);
 		player.getInventory().setContents(inventory);
+		
 		Location loc = sign.getLocation();
 		Location loc0 = loc;
 		loc0.setY(loc0.getY()+1);
 		Location loc1 = loc;
 		loc1.setY(loc1.getY()+2);
-		if(loc0.getBlock().getType() == Material.AIR && loc1.getBlock().getType() == Material.AIR)
-		{
+		if (loc0.getBlock().getType() == Material.AIR && loc1.getBlock().getType() == Material.AIR)
 			player.teleport(loc0);
-		}else
-		{
+		else
 			player.teleport(loc);
-		}
 	}
 	
 	public void respawn() {

@@ -7,6 +7,7 @@ import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.GameTickEvent;
+import net.endercraftbuild.cod.events.PlayerDiedEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.events.GameEntityDeathEvent;
@@ -23,7 +24,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class GameProgressListener implements Listener {
 
@@ -145,15 +145,11 @@ public class GameProgressListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent event) {
-		Player player = event.getEntity();
-		Game game = plugin.getGameManager().get(player);
-		
-		if (game != this.game)
+	public void onPlayerDeath(PlayerDiedEvent event) {
+		if (event.getGame() != game)
 			return;
 		
 		game.broadcast(ChatColor.DARK_RED + event.getDeathMessage());
-		event.setDeathMessage(null);
 	}
 	
 	@EventHandler

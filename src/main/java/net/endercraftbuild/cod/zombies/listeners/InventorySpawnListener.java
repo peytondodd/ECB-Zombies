@@ -5,7 +5,6 @@ import net.endercraftbuild.cod.events.PlayerJoinEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,12 +21,8 @@ public class InventorySpawnListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		
-		// TODO(mortu): move to a different listener ... mechanics?
-		player.setGameMode(GameMode.SURVIVAL);
-		player.setAllowFlight(false);
-		player.setFlying(false);
-		
 		reset(player);
+		
 		((ZombieGame) plugin.getGameManager().get(player)).giveKit(player);
 	}
 	
