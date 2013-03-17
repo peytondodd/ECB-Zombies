@@ -76,10 +76,10 @@ public class ZombieGameMechanicsListener implements Listener {
 	}
 		
 	@EventHandler(ignoreCancelled = true)
-	public void onAKShare(PlayerPickupItemEvent event) { //Prevent AK sharing
+	public void onRayShare(PlayerPickupItemEvent event) { //Prevent Ray Gun sharing
 		Player player = event.getPlayer();
 		if (!player.hasPermission("cod.kits.zombies.donor")) {
-			if (event.getItem().getItemStack().getType() == Material.IRON_HOE) {
+			if (event.getItem().getItemStack().getType() == Material.DIAMOND_HOE) { //Ray gun is diamond hoe now
 				event.setCancelled(true);
 			}
 		}
