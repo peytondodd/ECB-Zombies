@@ -14,10 +14,7 @@ import net.endercraftbuild.cod.zombies.events.GameEntityDeathEvent;
 import net.endercraftbuild.cod.zombies.events.PlayerReviveEvent;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 import net.endercraftbuild.cod.zombies.events.RoundStartEvent;
-import net.endercraftbuild.cod.zombies.events.SpawnGameEntityEvent;
 import net.endercraftbuild.cod.zombies.objects.GameEntity;
-import net.endercraftbuild.cod.zombies.objects.GameWolf;
-import net.endercraftbuild.cod.zombies.objects.GameZombie;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -72,7 +69,7 @@ public class GameProgressListener implements Listener {
 		game.rebuildBarriers();
 		game.healPlayers();
 		game.broadcast(ChatColor.GRAY + "Round " + ChatColor.RED + game.getCurrentWave() + ChatColor.GRAY + " will begin shortly!");
-		game.broadcast(ChatColor.GRAY + "There are " + ChatColor.RED + game.getMaxEntityCount() + ChatColor.GRAY + " " + (game.isWolfRound() ? "wolves": "zombies") + " in this round!");
+		game.broadcast(ChatColor.GRAY + "There are " + ChatColor.RED + game.getMaxEntityCount() + ChatColor.GRAY + " " + game.getWaveMob() + " in this round!");
 	}
 	
 	@EventHandler
@@ -94,16 +91,6 @@ public class GameProgressListener implements Listener {
 		for (GameEntity gameEntity : game.getGameEntities())
 			if (!gameEntity.getMob().getEntity().isValid())
 				gameEntity.respawn();
-	}
-	
-	@EventHandler
-	public void onSpawnGameEntity(SpawnGameEntityEvent event) {
-		if (event.getGame() != game)
-			return;
-		
-		GameEntity gameEntity = game.isWolfRound() ? new GameWolf(game, event.getSpawner()) : new GameZombie(game, event.getSpawner());
-		gameEntity.spawn();
-		game.addGameEntity(gameEntity);
 	}
 	
 	@EventHandler

@@ -1,19 +1,24 @@
 package net.endercraftbuild.cod.zombies;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 import net.endercraftbuild.cod.zombies.events.RoundStartEvent;
-import net.endercraftbuild.cod.zombies.events.SpawnGameEntityEvent;
 import net.endercraftbuild.cod.zombies.listeners.GameProgressListener;
 import net.endercraftbuild.cod.zombies.listeners.PlayerDeathListener;
 import net.endercraftbuild.cod.zombies.objects.Barrier;
 import net.endercraftbuild.cod.zombies.objects.Door;
+import net.endercraftbuild.cod.zombies.objects.GameCaveSpider;
 import net.endercraftbuild.cod.zombies.objects.GameEntity;
+import net.endercraftbuild.cod.zombies.objects.GameWolf;
+import net.endercraftbuild.cod.zombies.objects.GameZombie;
 import net.endercraftbuild.cod.zombies.objects.Spawner;
 import net.milkbowl.vault.economy.Economy;
 
@@ -30,6 +35,7 @@ public class ZombieGame extends Game {
 	private Long maxWaves;
 	private Location spawnLocation;
 	
+	private final Map<Integer, String> waveMobs;
 	private final List<Spawner> spawners;
 	private final List<Barrier> barriers;
 	private final List<Door> doors;
@@ -41,6 +47,8 @@ public class ZombieGame extends Game {
 
 	public ZombieGame(CoDMain plugin) {
 		super(plugin);
+		
+		waveMobs = new HashMap<Integer, String>();
 		spawners = new ArrayList<Spawner>();
 		barriers = new ArrayList<Barrier>();
 		doors = new ArrayList<Door>();
@@ -64,6 +72,11 @@ public class ZombieGame extends Game {
 		this.setMaxWaves(config.getLong("max-waves"));
 		
 		setSpawnLocation(Utils.loadLocation(config));
+		
+		ConfigurationSection waveMobsSection = config.getConfigurationSection("wave-mobs");
+		if (waveMobsSection != null)
+			for (String wave : waveMobsSection.getKeys(false))
+				waveMobs.put(Integer.parseInt(wave), waveMobsSection.getString(wave));
 		
 		ConfigurationSection spawnersSection = config.getConfigurationSection("spawners");
 		for (String name : spawnersSection.getKeys(false)) {
@@ -106,6 +119,10 @@ public class ZombieGame extends Game {
 		gameSection.set("max-waves", getMaxWaves());
 		
 		Utils.saveLocation(getSpawnLocation(), gameSection);
+		
+		ConfigurationSection mobRoundsSection = gameSection.createSection("wave-mobs");
+		for (Integer wave : waveMobs.keySet())
+			mobRoundsSection.set(wave.toString(), waveMobs.get(wave));
 		
 		ConfigurationSection spawnersSection = gameSection.createSection("spawners");
 		for (Spawner spawner : getSpawners())
@@ -409,8 +426,21 @@ public class ZombieGame extends Game {
 		while (spawnCount > 0) {
 			Spawner spawner = getSpawners().get(getRandom(spawnerCount));
 			if (spawner.isActive()) {
+				GameEntity gameEntity = null;
+				switch (getWaveMob()) {
+				case "wolves":
+					gameEntity = new GameWolf(this, spawner);
+					break;
+				case "spiders":
+					gameEntity = new GameCaveSpider(this, spawner);
+					break;
+				default:
+					gameEntity = new GameZombie(this, spawner);
+					break;
+				}
+				gameEntity.spawn();
+				gameEntities.add(gameEntity);
 				spawnCount--;
-				callEvent(new SpawnGameEntityEvent(this, spawner));
 			}
 		}
 	}
@@ -434,8 +464,18 @@ public class ZombieGame extends Game {
 		}
 	}
 	
-	public boolean isWolfRound() {
-		return (currentWave % 5) == 0;
+	public String getWaveMob() {
+		for (Integer wave : waveMobs.keySet())
+			if ((currentWave % wave) == 0)
+				return waveMobs.get(wave);
+		return "zombies";
+	}
+	
+	public void setWaveMob(Integer wave, String mob) {
+		if (mob == null)
+			waveMobs.remove(wave);
+		else
+			waveMobs.put(wave, mob);
 	}
 	
 	public boolean shouldSpawnRunner() {

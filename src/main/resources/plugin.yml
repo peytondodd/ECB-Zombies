@@ -92,6 +92,15 @@ commands:
       Example: /<command> nooktown nuketown 2 16 2 128
     permissions: cod.admin.edit
     permission-message: You do not have permission to run that command.
+  zmob:
+    description: Sets a specific mob type to spawn on specified waves.
+    usage: |
+      /<command> <name> <wave> <type>
+      Example: /<command> nacht 5 wolves - will spawn wolves on waves 5, 10, 15, etc.
+      Example: /<command> nacht 6 spiders - will spawn spiders on waves 6, 12, 18, etc.
+      Example: /<command> nacht 5 - will remove the specific mob setup
+    permissions: cod.admin.mob
+    permission-message: You do not have permission to run that command.
   zspawn:
     description: Puts you in CoD Zombies spawn edit mode, allowing you to add and remove spawners.
     usage: |
@@ -178,6 +187,7 @@ permissions:
       cod.admin.toggle: true
       cod.admin.zcreate: true
       cod.admin.zedit: true
+      cod.admin.zmob: true
       cod.admin.zspawn: true
       cod.admin.zbarrier: true
       cod.admin.zdoor: true
@@ -201,6 +211,8 @@ permissions:
     description: Allows you to create a CoD Zombies game.
   cod.admin.zedit:
     description: Allows you to edit an existing CoD Zombies game.
+  cod.admin.zmob:
+    description: Allows you to set specific mobs to spawn in CoD Zombies games.
   cod.admin.zspawn:
     description: Allows you to edit CoD Zombies game spawners.
   cod.admin.zbarrier:
