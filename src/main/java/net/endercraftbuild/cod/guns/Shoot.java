@@ -1,5 +1,7 @@
 package net.endercraftbuild.cod.guns;
 
+import java.util.Map;
+
 import net.endercraftbuild.cod.CoDMain;
 
 import org.bukkit.Bukkit;
@@ -12,7 +14,6 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -34,7 +35,6 @@ public class Shoot implements Listener {
 		this.plugin = plugin;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action action = event.getAction();
@@ -42,17 +42,8 @@ public class Shoot implements Listener {
 		ItemStack hand = player.getItemInHand();
 		
 		if ((action == Action.RIGHT_CLICK_AIR) || (action == Action.RIGHT_CLICK_BLOCK)) {
-			int ammoSlot = player.getInventory().first(Material.CLAY_BALL);
-			ItemStack ammo = ammoSlot > -1 ? player.getInventory().getItem(ammoSlot) : null;
-			
 			if (hand.getType() == Material.IRON_HOE) { // AK-47
-				if (ammo != null && ammo.getAmount() >= 2) {
-					if (ammo.getAmount() == 2)
-						player.getInventory().remove(ammo);
-					else
-						ammo.setAmount(ammo.getAmount() - 2);
-					player.updateInventory();
-				} else {
+				if (!consumeAmmo(player, 2)) {
 					player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
 					return;
 				}
@@ -63,17 +54,10 @@ public class Shoot implements Listener {
 				player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
 			
 			} else if (hand.getType() == Material.STONE_HOE) { // Shotgun 
-				if (this.plugin.reloaders.contains(player.getName())) {
+				if (this.plugin.reloaders.contains(player.getName()))
 					return;
-				}
 			
-				if (ammo != null && ammo.getAmount() >= 5) {
-					if (ammo.getAmount() == 5)
-						player.getInventory().remove(ammo);
-					else
-						ammo.setAmount(ammo.getAmount() - 5);
-					player.updateInventory();
-				} else {
+				if (!consumeAmmo(player, 5)) {
 					player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
 					return;
 				}
@@ -96,47 +80,36 @@ public class Shoot implements Listener {
 					}
 				}, 40L);
 				
-			} else if (hand.getType() == Material.DIAMOND_HOE) { //RAY GUN
-				  if (this.plugin.pistol.contains(player.getName())) {
-			        	return;
-			        }
-			        
-					if (ammo != null && ammo.getAmount() >= 1) {
-						if (ammo.getAmount() == 1)
-							player.getInventory().remove(ammo);
-						else
-							ammo.setAmount(ammo.getAmount() - 1);
-						player.updateInventory();
-					} else {
-						player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
-						return;
+			} else if (hand.getType() == Material.DIAMOND_HOE) { // RAY GUN
+				if (this.plugin.pistol.contains(player.getName()))
+					return;
+				
+				if (!consumeAmmo(player, 1)) {
+					player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
+					return;
+				}
+				
+				// Pistol fire rate
+				this.plugin.pistol.add(player.getName());
+				player.launchProjectile(Snowball.class);
+				player.launchProjectile(Snowball.class);
+				Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+				smokepase(player, loc);
+				player.playSound(player.getLocation(), Sound.FIZZ, 160.0F, 0.0F);
+				
+				final Shoot self = this;
+				Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+					public void run() {
+						self.plugin.pistol.remove(player.getName());
 					}
-					//Pistol fire rate
-					this.plugin.pistol.add(player.getName());
-					player.launchProjectile(Snowball.class);
-					player.launchProjectile(Snowball.class);
-					Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
-					smokepase(player, loc);
-					player.playSound(player.getLocation(), Sound.FIZZ, 160.0F, 0.0F);
-					
-					final Shoot self = this;
-					Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
-						public void run() {
-							self.plugin.pistol.remove(player.getName());
-						}
-					}, 12L);
+				}, 12L);
+			
 			} else if (hand.getType() == Material.WOOD_HOE) { // Pistol
 		        if (this.plugin.pistol.contains(player.getName())) {
 		        	return;
 		        }
 		        
-				if (ammo != null && ammo.getAmount() >= 1) {
-					if (ammo.getAmount() == 1)
-						player.getInventory().remove(ammo);
-					else
-						ammo.setAmount(ammo.getAmount() - 1);
-					player.updateInventory();
-				} else {
+				if (!consumeAmmo(player, 1)) {
 					player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
 					return;
 				}
@@ -158,14 +131,29 @@ public class Shoot implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerDamageArrow(EntityDamageByEntityEvent event) {
+	public void onBulletHit(EntityDamageByEntityEvent event) { // Bullet hit
 		Entity damager = event.getDamager();
 		
-		if ((damager instanceof Snowball)) {
-			damager = ((Snowball) damager).getShooter();
-			((HumanEntity)damager).getItemInHand();
-			event.setDamage(12);
-		}
+		if (!(damager instanceof Snowball))
+			return;
+		
+		damager = ((Snowball) damager).getShooter();
+		((HumanEntity) damager).getItemInHand();
+		event.setDamage(12);
+	}
+	
+	@EventHandler
+	public void onRayGunHit(ProjectileHitEvent event) { // Make ray gun explode
+		if (event.getEntity().getType() != EntityType.SNOWBALL)
+			return;
+		
+		if (!(event.getEntity().getShooter() instanceof Player))
+			return;
+		
+		Player player = (Player) event.getEntity().getShooter();
+	
+		if (player.getItemInHand().getType() == Material.DIAMOND_HOE) 
+			player.getWorld().createExplosion(event.getEntity().getLocation(), 1F);
 	}
 	
 	@EventHandler
@@ -192,51 +180,55 @@ public class Shoot implements Listener {
 	
 	public void smokepase(Player player, Location loc) {
 		double rotation = (player.getLocation().getYaw() - 90.0F) % 360.0F;
-	    if (rotation < 0.0D) {
+	    if (rotation < 0.0D)
 	      rotation += 360.0D;
-	    }
-	    if ((0.0D <= rotation) && (rotation < 22.5D)) {
+	    if ((0.0D <= rotation) && (rotation < 22.5D))
 	      player.getWorld().playEffect(loc, Effect.SMOKE, 3);
-	    }
-	    else if ((22.5D <= rotation) && (rotation < 67.5D)) {
+	    else if ((22.5D <= rotation) && (rotation < 67.5D))
 	      player.getWorld().playEffect(loc, Effect.SMOKE, 9);
-	    }
-	    else if ((67.5D <= rotation) && (rotation < 112.5D)) {
+	    else if ((67.5D <= rotation) && (rotation < 112.5D))
 	      player.getWorld().playEffect(loc, Effect.SMOKE, 1);
-	    }
-	    else if ((112.5D <= rotation) && (rotation < 157.5D)) {
+	    else if ((112.5D <= rotation) && (rotation < 157.5D))
 	      player.getWorld().playEffect(loc, Effect.SMOKE, 2);
-	    }
-	    else if ((157.5D <= rotation) && (rotation < 202.5D)) {
+	    else if ((157.5D <= rotation) && (rotation < 202.5D))
 	      player.getWorld().playEffect(loc, Effect.SMOKE, 5);
-	    }
-	    else if ((202.5D <= rotation) && (rotation < 247.5D)) {
+	    else if ((202.5D <= rotation) && (rotation < 247.5D))
 	      player.getWorld().playEffect(loc, Effect.SMOKE, 8);
-	    }
-	    else if ((247.5D <= rotation) && (rotation < 292.5D)) {
+	    else if ((247.5D <= rotation) && (rotation < 292.5D))
 	      player.getWorld().playEffect(loc, Effect.SMOKE, 7);
-	    }
-	    else if ((292.5D <= rotation) && (rotation < 337.5D)) {
+	    else if ((292.5D <= rotation) && (rotation < 337.5D))
 	      player.getWorld().playEffect(loc, Effect.SMOKE, 6);
-	    }
 	    else if ((337.5D <= rotation) && (rotation < 360.0D))
 	      player.getWorld().playEffect(loc, Effect.SMOKE, 3);
 	}
 	
-//Make ray gun explode
-
-@EventHandler
-public void RayGunShot(ProjectileHitEvent event) {
-	{
-	if(event.getEntity().getType() == EntityType.SNOWBALL) 
-	{
-	Location l = event.getEntity().getLocation();	
-	LivingEntity player = event.getEntity().getShooter();
-	Float power = 1F;
-
-		if(((Player) player).getItemInHand().getType() == Material.DIAMOND_HOE) 
-			player.getWorld().createExplosion(l, power); 
-			}
+	@SuppressWarnings("deprecation")
+	public boolean consumeAmmo(Player player, int count) {
+		Map<Integer, ? extends ItemStack> ammo = player.getInventory().all(Material.CLAY_BALL);
+		
+		int found = 0;
+		for (ItemStack stack : ammo.values())
+			found += stack.getAmount();
+		if (count > found)
+			return false;
+		
+		for (Integer index : ammo.keySet()) {
+			ItemStack stack = ammo.get(index);
+			
+			int removed = Math.min(count, stack.getAmount());
+			count -= removed;
+			
+			if (stack.getAmount() == removed)
+				player.getInventory().setItem(index, null);
+			else
+				stack.setAmount(stack.getAmount() - removed);
+			
+			if (count <= 0)
+				break;
 		}
+		
+		player.updateInventory();
+		return true;
 	}
+	
 }
