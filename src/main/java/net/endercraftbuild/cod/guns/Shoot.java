@@ -20,7 +20,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -153,7 +152,7 @@ public class Shoot implements Listener {
 		Player player = (Player) event.getEntity().getShooter();
 	
 		if (player.getItemInHand().getType() == Material.DIAMOND_HOE) 
-			player.getWorld().createExplosion(event.getEntity().getLocation(), 1F);
+			player.getWorld().createExplosion(event.getEntity().getLocation(), 1F, false);
 	}
 	
 	@EventHandler
@@ -169,13 +168,6 @@ public class Shoot implements Listener {
 			v.multiply(new Vector(x, x, x));
 			event.getEntity().setVelocity(v);
 		}
-	}
-	
-	@EventHandler
-	public void onEntityExplode(EntityExplodeEvent event) {
-		event.setCancelled(true);
-		Location loc = event.getLocation();
-		event.getLocation().getWorld().createExplosion(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 4.0F, false, false);
 	}
 	
 	public void smokepase(Player player, Location loc) {
