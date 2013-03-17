@@ -58,6 +58,22 @@ commands:
       Example: /<command> nuketown
     permissions: cod.admin.stop
     permission-message: You do not have permission to run that command.
+  cremove:
+    description: Removes the specified game.
+    usage: |
+      /<command> <name>
+      Example: /<command> nacht
+      Example: /<command> nuketown
+    permissions: cod.admin.remove
+    permission-message: You do not have permission to run that command.
+  ctoggle:
+    description: Enables/disabled the specified game.
+    usage: |
+      /<command> <name>
+      Example: /<command> nacht
+      Example: /<command> nuketown
+    permissions: cod.admin.toggle
+    permission-message: You do not have permission to run that command.
 
 # zombies admin commands
   zcreate:
@@ -135,12 +151,16 @@ permissions:
     description: Gives access to all player commands/permissions.
     children:
       cod.player.join: true
+      cod.player.join.*: true
       cod.player.leave: true
       cod.player.signs: true
       cod.player.stats: true
     default: true
   cod.player.join:
     description: Allows you to join a game.
+  cod.player.join.*:
+    description: Gives access to all games.
+    default: true
   cod.player.leave:
     description: Allows you to leave a game.
   cod.player.stats:
@@ -154,6 +174,8 @@ permissions:
       cod.admin.reload: true
       cod.admin.start: true
       cod.admin.stop: true
+      cod.admin.remove: true
+      cod.admin.toggle: true
       cod.admin.zcreate: true
       cod.admin.zedit: true
       cod.admin.zspawn: true
@@ -171,6 +193,10 @@ permissions:
     description: Allows you to start a specific game.
   cod.admin.stop:
     description: Allows you to stop a specific game.
+  cod.admin.remove:
+    description: Allows you to remove a specific game.
+  cod.admin.toggle:
+    description: Allows you to enable/disable a specific game.
   cod.admin.zcreate:
     description: Allows you to create a CoD Zombies game.
   cod.admin.zedit:

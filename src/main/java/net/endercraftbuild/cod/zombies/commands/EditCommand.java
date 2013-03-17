@@ -37,8 +37,6 @@ public class EditCommand implements CommandExecutor {
 			game.setMaximumPlayers(Long.parseLong(args[3]));
 			game.setZombieMultiplier(Double.parseDouble(args[4]));
 			game.setMaxWaves(Long.parseLong(args[5]));
-			
-			plugin.getGameManager().replace(game);
 		} catch (IllegalArgumentException e) {
 			player.sendMessage(ChatColor.RED + e.getLocalizedMessage());
 			return true;

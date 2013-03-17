@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.permissions.Permission;
 
 public abstract class Game {
 	
@@ -27,7 +28,9 @@ public abstract class Game {
 	private String name;
 	private Long minimumPlayers;
 	private Long maximumPlayers;
+	private boolean isEnabled;
 	
+	private Permission permission;
 	private boolean isActive;
 	
 	public Game(CoDMain plugin) {
@@ -47,8 +50,10 @@ public abstract class Game {
 	
 	public ConfigurationSection load(ConfigurationSection config) {
 		this.setName(config.getName());
+		
 		this.setMinimumPlayers(config.getLong("min-players"));
 		this.setMaximumPlayers(config.getLong("max-players"));
+		this.setEnabled(config.getBoolean("enabled", true));
 		
 		return config;
 	}
@@ -58,6 +63,7 @@ public abstract class Game {
 		
 		gameSection.set("min-players", getMinimumPlayers());
 		gameSection.set("max-players", getMaximumPlayers());
+		gameSection.set("enabled", isEnabled());
 		
 		return gameSection;
 	}
@@ -68,6 +74,10 @@ public abstract class Game {
 	
 	public void setName(String name) {
 		this.name = name;
+		if (this.permission != null)
+			plugin.getServer().getPluginManager().removePermission(this.permission);
+		this.permission = new Permission("cod.player.join." + name);
+		plugin.getServer().getPluginManager().addPermission(this.permission);
 	}
 
 	public Long getMinimumPlayers() {
@@ -85,13 +95,29 @@ public abstract class Game {
 	public void setMaximumPlayers(Long maximumPlayers) {
 		this.maximumPlayers = maximumPlayers;
 	}
-
+	
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+	
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
+	
+	public boolean toggleEnabled() {
+		return this.isEnabled = !isEnabled;
+	}
+	
 	public boolean isActive() {
 		return isActive;
 	}
 
 	private void setActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+	
+	public Permission getPermission() {
+		return permission;
 	}
 	
 	public void start() {
@@ -141,6 +167,10 @@ public abstract class Game {
 	}
 	
 	public void addPlayer(Player player) {
+		if (!isEnabled())
+			throw new RuntimeException("This game is not enabled.");
+		if (!player.hasPermission(getPermission()))
+			throw new RuntimeException("You do not have permission to join this game.");
 		if (isInGame(player))
 			throw new IllegalArgumentException(player.getName() + " is already in this game.");
 		if (plugin.getGameManager().didRecentlyLeave(player))

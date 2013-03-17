@@ -33,7 +33,7 @@ public class GameManager implements Listener {
 	private final CoDMain plugin;
 	private final GameTickTask gameTickTask;
 	private final PerpetualNightTask perpetualNightTask;
-	private final Map<String, Game> games;
+	private final List<Game> games;
 	
 	private final List<Game> activeGames;
 	private final Map<String, Game> recentPlayers;
@@ -42,7 +42,7 @@ public class GameManager implements Listener {
 		this.plugin = plugin;
 		this.gameTickTask = new GameTickTask(plugin);
 		this.perpetualNightTask = new PerpetualNightTask(plugin);
-		this.games = new HashMap<String, Game>();
+		this.games = new ArrayList<Game>();
 		this.activeGames = new ArrayList<Game>();
 		this.recentPlayers = new HashMap<String, Game>();
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -108,9 +108,10 @@ public class GameManager implements Listener {
 	}
 	
 	public Game get(String name) {
-		if (!games.containsKey(name))
-			throw new IllegalArgumentException("There is no game with that name.");
-		return games.get(name);
+		for (Game game : getGames())
+			if (game.getName().equalsIgnoreCase(name))
+				return game;
+		throw new IllegalArgumentException("There is no game with that name.");
 	}
 	
 	public Game get(Player player) {
@@ -121,23 +122,27 @@ public class GameManager implements Listener {
 	}
 	
 	public void add(Game game) {
-		if (games.containsKey(game.getName()))
-			throw new IllegalArgumentException("A game with that name already exists.");
-		games.put(game.getName(), game);
+		for (Game existingGame : getGames())
+			if (existingGame.getName().equalsIgnoreCase(game.getName()))
+				throw new IllegalArgumentException("A game with that name already exists.");
+		games.add(game);
 	}
 	
-	public void replace(Game game) {
-		if (!games.containsKey(game.getName()))
-			throw new IllegalArgumentException("There is no game with that name.");
-		games.put(game.getName(), game);
+	public void remove(Game game) {
+		if (!games.contains(game))
+			throw new IllegalArgumentException("That does not appear to be a registered game.");
+		games.remove(game);
 	}
 	
 	public Collection<Game> getGames() {
-		return games.values();
+		return games;
 	}
 	
 	public Collection<String> getGameNames() {
-		return games.keySet();
+		List<String> names = new ArrayList<>();
+		for (Game game : getGames())
+			names.add(game.getName());
+		return names;
 	}
 	
 	public Collection<Game> getActiveGames() {
