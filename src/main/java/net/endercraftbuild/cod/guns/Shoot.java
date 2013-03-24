@@ -10,6 +10,7 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -78,6 +79,28 @@ public class Shoot implements Listener {
 						self.plugin.reloaders.remove(player.getName());
 					}
 				}, 40L);
+			} else if (hand.getType() == Material.GOLD_HOE) { //Sniper
+				if (this.plugin.reloaders.contains(player.getName()))
+					return;
+			
+				if (!consumeAmmo(player, 1)) {
+					player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
+					return;
+				}
+
+				this.plugin.reloaders.add(player.getName());
+				player.launchProjectile(Snowball.class);
+				player.launchProjectile(Snowball.class);
+				Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+				smokepase(player, loc);
+				player.playSound(player.getLocation(), Sound.PISTON_RETRACT, 70.0F, 70.0F);
+				
+				final Shoot self = this;
+				Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+					public void run() {
+						self.plugin.reloaders.remove(player.getName());
+					}
+				}, 30L);
 				
 			} else if (hand.getType() == Material.DIAMOND_HOE) { // RAY GUN
 				if (this.plugin.pistol.contains(player.getName()))
@@ -140,6 +163,18 @@ public class Shoot implements Listener {
 		((HumanEntity) damager).getItemInHand();
 		event.setDamage(12);
 	}
+	@EventHandler
+	public void SniperHit(EntityDamageByEntityEvent event) { //Sniper bullets shall deal more damage!
+		Entity damager = event.getDamager();
+		
+		if (!(damager instanceof Snowball))
+			return;
+		
+		damager = ((Snowball) damager).getShooter();
+		((HumanEntity) damager).getItemInHand();
+		if (((HumanEntity) damager).getItemInHand().getType() == Material.GOLD_HOE) 
+		event.setDamage(20);
+	}
 	
 	@EventHandler
 	public void onRayGunHit(ProjectileHitEvent event) { // Make ray gun explode
@@ -152,7 +187,7 @@ public class Shoot implements Listener {
 		Player player = (Player) event.getEntity().getShooter();
 	
 		if (player.getItemInHand().getType() == Material.DIAMOND_HOE) 
-			player.getWorld().createExplosion(event.getEntity().getLocation(), 1F, false);
+			player.getWorld().createExplosion(event.getEntity().getLocation(), 1.5F, false);
 	}
 	
 	@EventHandler
