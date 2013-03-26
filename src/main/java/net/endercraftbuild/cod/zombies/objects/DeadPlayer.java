@@ -46,7 +46,10 @@ public class DeadPlayer {
 		player.getInventory().setArmorContents(null);
 		player.getInventory().clear();
 		
-		player.teleport(game.getSpawnLocation().getWorld().getSpawnLocation());
+		if (game.getLobbyLocation() != null)
+			player.teleport(game.getLobbyLocation());
+		else
+			player.teleport(game.getSpawnLocation().getWorld().getSpawnLocation());
 		
 		player.setHealth(player.getMaxHealth());
 		player.setFireTicks(0);

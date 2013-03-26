@@ -16,6 +16,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 public abstract class Game {
 	
@@ -76,7 +77,7 @@ public abstract class Game {
 		this.name = name;
 		if (this.permission != null)
 			plugin.getServer().getPluginManager().removePermission(this.permission);
-		this.permission = new Permission("cod.player.join." + name);
+		this.permission = new Permission("cod.player.join." + name, PermissionDefault.TRUE);
 		plugin.getServer().getPluginManager().addPermission(this.permission);
 	}
 

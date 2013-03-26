@@ -34,6 +34,7 @@ public class ZombieGame extends Game {
 	private Double zombieMultiplier;
 	private Long maxWaves;
 	private Location spawnLocation;
+	private Location lobbyLocation;
 	
 	private final Map<Integer, String> waveMobs;
 	private final List<Spawner> spawners;
@@ -72,6 +73,10 @@ public class ZombieGame extends Game {
 		this.setMaxWaves(config.getLong("max-waves"));
 		
 		setSpawnLocation(Utils.loadLocation(config));
+		
+		ConfigurationSection lobbyLocationSection = config.getConfigurationSection("lobby-location");
+		if (lobbyLocationSection != null)
+			setLobbyLocation(Utils.loadLocation(lobbyLocationSection));
 		
 		ConfigurationSection waveMobsSection = config.getConfigurationSection("wave-mobs");
 		if (waveMobsSection != null)
@@ -119,6 +124,11 @@ public class ZombieGame extends Game {
 		gameSection.set("max-waves", getMaxWaves());
 		
 		Utils.saveLocation(getSpawnLocation(), gameSection);
+		
+		if (getLobbyLocation() != null) {
+			ConfigurationSection lobbyLocationSection = gameSection.createSection("lobby-location");
+			Utils.saveLocation(getLobbyLocation(), lobbyLocationSection);
+		}
 		
 		ConfigurationSection mobRoundsSection = gameSection.createSection("wave-mobs");
 		for (Integer wave : waveMobs.keySet())
@@ -176,6 +186,14 @@ public class ZombieGame extends Game {
 
 	public void setSpawnLocation(Location spawnLocation) {
 		this.spawnLocation = spawnLocation;
+	}
+	
+	public Location getLobbyLocation() {
+		return lobbyLocation;
+	}
+	
+	public void setLobbyLocation(Location lobbyLocation) {
+		this.lobbyLocation = lobbyLocation;
 	}
 	
 	public boolean isSpawningPaused() {

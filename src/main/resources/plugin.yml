@@ -149,6 +149,14 @@ commands:
       Example: /<command> nuketown
     permissions: cod.admin.advance
     permission-message: You do not have permission to run that command.
+  zlobby:
+    description: Sets the lobby location for dead players in a CoD Zombies game.
+    usage: |
+      /<command> <name>
+      Example: /<command> nacht
+      Example: /<command> nuketown
+    permissions: cod.admin.lobby
+    permission-message: You do not have permission to run that command.
 
 permissions:
   cod.*:
@@ -187,6 +195,7 @@ permissions:
       cod.admin.toggle: true
       cod.admin.zcreate: true
       cod.admin.zedit: true
+      cod.admin.zlobby: true
       cod.admin.zmob: true
       cod.admin.zspawn: true
       cod.admin.zbarrier: true
@@ -211,6 +220,8 @@ permissions:
     description: Allows you to create a CoD Zombies game.
   cod.admin.zedit:
     description: Allows you to edit an existing CoD Zombies game.
+  cod.admin.zlobby:
+    description: Allows you to define a lobby for dead CoD Zombie players.
   cod.admin.zmob:
     description: Allows you to set specific mobs to spawn in CoD Zombies games.
   cod.admin.zspawn:

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import net.endercraftbuild.cod.CoDMain;
+import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameTickEvent;
 import net.endercraftbuild.cod.events.PlayerDiedEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
@@ -43,6 +44,10 @@ public class PlayerDeathListener implements Listener {
 		
 		if (deadPlayers.containsKey(player))
 			deadPlayers.remove(player).removeSign();
+		
+		// TODO(mortu): move player count into event, setting oldPlayerCount and newPlayerCount 
+		if ((game.getPlayers().size() - 1) == deadPlayers.size())
+			safelyEndGame();
 	}
 	
 	@EventHandler
@@ -58,6 +63,19 @@ public class PlayerDeathListener implements Listener {
 			else
 				deadPlayer.updateSign();
 		}
+	}
+	
+	@EventHandler
+	public void onGameEnd(GameEndEvent event) {
+		if (event.getGame() != game)
+			return;
+		
+		for (DeadPlayer deadPlayer : deadPlayers.values()) {
+			deadPlayer.removeSign();
+			deadPlayer.spawn();
+		}
+		
+		deadPlayers.clear();
 	}
 	
 	@EventHandler
@@ -84,16 +102,10 @@ public class PlayerDeathListener implements Listener {
 		deadPlayers.put(player, deadPlayer);
 		deadPlayer.spawn();
 		
-		// XXX(mortu): the delay is to keep MC and ControllableMobsAPI from fighting over the mob 
 		if (deadPlayers.size() == game.getPlayers().size())
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					game.stop();
-				}
-			}.runTask(plugin);
+			safelyEndGame();
 	}
-	
+
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();
@@ -113,6 +125,16 @@ public class PlayerDeathListener implements Listener {
 			iterator.remove();
 			game.callEvent(new PlayerReviveEvent(deadPlayer.getPlayer(), event.getPlayer()));
 		}
+	}
+	
+	private void safelyEndGame() {
+		// XXX(mortu): the delay is to keep MC and ControllableMobsAPI from fighting over the mob 
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				game.stop();
+			}
+		}.runTask(plugin);
 	}
 	
 }
