@@ -10,7 +10,6 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -79,7 +78,7 @@ public class Shoot implements Listener {
 						self.plugin.reloaders.remove(player.getName());
 					}
 				}, 40L);
-			} else if (hand.getType() == Material.GOLD_HOE) { //Sniper
+			} else if (hand.getType() == Material.GOLD_HOE) { // Sniper
 				if (this.plugin.reloaders.contains(player.getName()))
 					return;
 			
@@ -160,20 +159,14 @@ public class Shoot implements Listener {
 			return;
 		
 		damager = ((Snowball) damager).getShooter();
-		((HumanEntity) damager).getItemInHand();
-		event.setDamage(12);
-	}
-	@EventHandler
-	public void SniperHit(EntityDamageByEntityEvent event) { //Sniper bullets shall deal more damage!
-		Entity damager = event.getDamager();
-		
-		if (!(damager instanceof Snowball))
-			return;
-		
-		damager = ((Snowball) damager).getShooter();
-		((HumanEntity) damager).getItemInHand();
-		if (((HumanEntity) damager).getItemInHand().getType() == Material.GOLD_HOE) 
-		event.setDamage(20);
+		switch (((HumanEntity) damager).getItemInHand().getType()) {
+		case GOLD_HOE: // Sniper bullets deal more damage!
+			event.setDamage(20);
+			break;
+		default:
+			event.setDamage(12);
+			break;
+		}
 	}
 	
 	@EventHandler
