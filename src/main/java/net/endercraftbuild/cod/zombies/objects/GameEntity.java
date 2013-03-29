@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 
 import de.ntcomputer.minecraft.controllablemobs.api.ControllableMob;
 import de.ntcomputer.minecraft.controllablemobs.api.ControllableMobs;
-import de.ntcomputer.minecraft.controllablemobs.api.aibehaviors.AITargetNearest;
-import de.ntcomputer.minecraft.controllablemobs.api.aibehaviors.EntityFilter;
+import de.ntcomputer.minecraft.controllablemobs.api.ai.behaviors.AITargetNearest;
+import de.ntcomputer.minecraft.controllablemobs.api.ai.EntityFilter;
 
 public abstract class GameEntity implements EntityFilter {
 	private static final int NEAR = 3;
