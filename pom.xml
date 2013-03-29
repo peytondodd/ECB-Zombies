@@ -37,9 +37,9 @@
         <dependency>
         	<artifactId>controllable-mobs-api</artifactId>
         	<groupId>org.bukkit</groupId>
-        	<version>3</version>
-        	<scope>system</scope>
-        	<systemPath>${project.basedir}/lib/ControllableMobsAPI-v3.jar</systemPath>
+        	<version>4</version>
+        	
+        	<scope>system</scope><systemPath>${project.basedir}/lib/ControllableMobsAPI.jar</systemPath>
         </dependency>
     </dependencies>
 
