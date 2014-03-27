@@ -20,8 +20,11 @@ public class ToggleCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
 			return true;
+		if(!sender.hasPermission("cod.admin.toggle")) 
+			return true;
 		if (args.length < 1)
 			return false;
+
 		
 		Player player = (Player) sender;
 		

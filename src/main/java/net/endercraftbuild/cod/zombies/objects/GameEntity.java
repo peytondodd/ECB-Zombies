@@ -3,9 +3,10 @@ package net.endercraftbuild.cod.zombies.objects;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 import de.ntcomputer.minecraft.controllablemobs.api.ControllableMob;
 import de.ntcomputer.minecraft.controllablemobs.api.ControllableMobs;
@@ -46,29 +47,25 @@ public abstract class GameEntity implements EntityFilter {
 	public boolean isEntityValid(Entity target) {
 		if (!(target instanceof Player))
 			return false;
+		
 		Player player = (Player) target;
+		if(player.hasPotionEffect(PotionEffectType.INVISIBILITY))
+			return false;
+		else
 		return game.isInGame(player);
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected void enrage() {
 		ControllableMob<?> mob = getMob();
 		
 		// FIXME(mortu): runner code isn't changing speed ... will fix later
-		/*
-		if (game.shouldSpawnRunner()) {
-			mob.getProperties().setMovementSpeed(2.0f);
-			game.broadcast("I'm coming for you!");
-		} else {
-			mob.getProperties().setMovementSpeed(0.25f);
-			game.broadcast("I'll get there one day!");
-		}
-		*/
 		
-		mob.getAI().addAIBehavior(new AITargetNearest(10, 0, false, 0, this));
+	//	AttributeModifierFactory.create(UUID.fromString("8971a510-ec88-11e2-91e2-ecb200c9a66"), "Speed", 1, ModifyOperation.ADD_TO_BASIS_VALUE);
+	
+		mob.getAI().addBehavior(new AITargetNearest(10, 0, false, 0, this));
 
-		Creature creature = (Creature) mob.getEntity();
-		creature.setMaxHealth(creature.getMaxHealth() + game.getCurrentWave().intValue() - 1);
-		creature.setHealth(creature.getMaxHealth());
+	
 	}
 	
 	public abstract ControllableMob<?> getMob();
@@ -80,13 +77,20 @@ public abstract class GameEntity implements EntityFilter {
 	}
 
 	public void respawn() {
+		Entity entity = getMob().getEntity();
+		
+		if(ControllableMobs.isAssigned((LivingEntity) entity))
+		
 		despawn();
 		spawn();
 	}
 	
 	public void despawn() {
 		Entity entity = getMob().getEntity();
+		
+		if(ControllableMobs.isAssigned((LivingEntity) entity))
 		ControllableMobs.unassign(getMob());
+	
 		entity.remove();
 	}
 	

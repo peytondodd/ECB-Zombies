@@ -22,9 +22,11 @@ public class EditCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
 			return true;
+		if(!sender.hasPermission("cod.admin.zedit")) 	
+			return true;
 		if (args.length < 6)
 			return false;
-		
+	
 		Player player = (Player) sender;
 		
 		try {

@@ -41,7 +41,8 @@ public class JoinSignListener implements Listener {
 		try {
 			game = plugin.getGameManager().get(sign.getLine(1));
 			game.addPlayer(player);
-			player.getServer().broadcastMessage(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");
+			game.broadcast(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");
+			//player.getServer().broadcastMessage(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");
 		} catch (RuntimeException e) {
 			player.sendMessage(ChatColor.RED + e.getLocalizedMessage());
 		}

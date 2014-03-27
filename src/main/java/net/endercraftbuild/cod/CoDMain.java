@@ -15,23 +15,21 @@ import net.endercraftbuild.cod.zombies.commands.*;
 import net.endercraftbuild.cod.zombies.listeners.*;
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-
 public class CoDMain extends JavaPlugin {
 	
-	public String prefix = "[" + ChatColor.DARK_GREEN + ChatColor.BOLD + "ECB Zombies" + ChatColor.RESET + "] ";
+	public String prefix = ChatColor.DARK_GREEN.toString() + ChatColor.BOLD + "Zombies" + ChatColor.GREEN + "> ";
+	
 	
 	private Economy economy;
-	private WorldGuardPlugin worldGuard;
 	
 	private GameManager gameManager;
 	
@@ -53,13 +51,13 @@ public class CoDMain extends JavaPlugin {
 		if (!setupEconomy())
 			getLogger().warning("Vault not found!");
 		
-		if (!setupWorldGuard())
-			getLogger().warning("WorldGuard not found!");
+
 		
 		registerDynamicPermissions();
 		registerListeners();
 		registerCommands();
 		setupGameManager();
+		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	}
 	
 	public void onDisable() {
@@ -95,6 +93,8 @@ public class CoDMain extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new MysterBoxListener(this), this);
 		getServer().getPluginManager().registerEvents(new Shoot(this), this);  // FIXME: should be called ShootListener
 		getServer().getPluginManager().registerEvents(new WallWeaponSignListener(this), this);
+		getServer().getPluginManager().registerEvents(new MiscListener(this), this);
+		//getServer().getPluginManager().registerEvents(new PVPJoinLeaveListener(this), this);
 	}
 	
 	private void registerCommands() {
@@ -102,6 +102,8 @@ public class CoDMain extends JavaPlugin {
 		getCommand("leave").setExecutor(new LeaveCommand(this));
 		getCommand("stats").setExecutor(new StatsCommand(this));
 		
+		getCommand("texture").setExecutor(new TextureCommand(this));
+		getCommand("tpack").setExecutor(new TextureCommand(this));
 		// generic admin commands
 		getCommand("csave").setExecutor(new SaveCommand(this));
 		getCommand("creload").setExecutor(new ReloadCommand(this));
@@ -112,6 +114,7 @@ public class CoDMain extends JavaPlugin {
 		
 		// zombie admin commands
 		getCommand("zcreate").setExecutor(new CreateCommand(this));
+		getCommand("zsendallhub").setExecutor(new SendAllHub(this));
 		getCommand("zedit").setExecutor(new EditCommand(this));
 		getCommand("zmob").setExecutor(new MobCommand(this));
 		getCommand("zspawn").setExecutor(new SpawnerCommand(this));
@@ -121,7 +124,10 @@ public class CoDMain extends JavaPlugin {
 		getCommand("zlinkclear").setExecutor(new LinkClearCommand(this));
 		getCommand("zlobby").setExecutor(new LobbyCommand(this));
 		getCommand("zadvance").setExecutor(new AdvanceCommand(this));
+		
+		getCommand("setlobbysign").setExecutor(new LobbySignCommand(this));
 	}
+		
 	
 	private boolean setupEconomy() {
 		if (getServer().getPluginManager().getPlugin("Vault") == null)
@@ -137,22 +143,6 @@ public class CoDMain extends JavaPlugin {
 	
 	public Economy getEconomy() {
 		return economy;
-	}
-	
-	private boolean setupWorldGuard() {
-	    Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
-	
-	    // WorldGuard may not be loaded
-	    if (plugin == null || !(plugin instanceof WorldGuardPlugin))
-	        return false;
-	    
-	    worldGuard = (WorldGuardPlugin) plugin;
-	
-	    return true;
-	}
-	
-	public WorldGuardPlugin getWorldGuard() {
-	    return worldGuard;
 	}
 	
 	private void setupGameManager() {

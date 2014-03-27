@@ -46,6 +46,9 @@ public class PlayerSignEvent extends PlayerEvent {
 	public boolean isDoorSign() {
 		return getLine(0).toLowerCase().endsWith("door");
 	}
+	public boolean isPaPSign() {
+		return getLine(0).toLowerCase().endsWith("pap");
+	}
 	
 	public HandlerList getHandlers() {
 		return handlers;

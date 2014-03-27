@@ -3,6 +3,7 @@ package net.endercraftbuild.cod.zombies.listeners;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameTickEvent;
@@ -17,10 +18,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerDeathListener implements Listener {
@@ -86,6 +90,7 @@ public class PlayerDeathListener implements Listener {
 		for (DeadPlayer deadPlayer : deadPlayers.values())
 			deadPlayer.respawn();
 		deadPlayers.clear();
+		
 	}
 	
 	@EventHandler
@@ -101,11 +106,44 @@ public class PlayerDeathListener implements Listener {
 		DeadPlayer deadPlayer = new DeadPlayer(player, this.game);
 		deadPlayers.put(player, deadPlayer);
 		deadPlayer.spawn();
-		
 		if (deadPlayers.size() == game.getPlayers().size())
 			safelyEndGame();
 	}
-
+	@EventHandler
+	public void deadPlayerDamage(EntityDamageByEntityEvent event) {
+	
+		Entity damager = event.getDamager();
+		
+		if(damager instanceof Player && deadPlayers.containsKey(damager))
+			event.setCancelled(true);
+			
+		
+		
+		}
+	@EventHandler
+	public void onPlayerDeathMsg(PlayerDiedEvent event) {
+		if (event.getGame() != game)
+			return;
+		Player player = event.getPlayer();
+		if(deadPlayers.containsKey(player))
+			return;
+			
+		
+		game.broadcast(ChatColor.DARK_RED + event.getDeathMessage());
+	}
+	//idk but... :P
+	@EventHandler
+	public void DamageDeadPlayer(EntityDamageByEntityEvent event) {
+	
+		Entity damaged = event.getEntity();
+		
+		if(damaged instanceof Player && deadPlayers.containsKey(damaged))
+			event.setCancelled(true);
+			
+		
+		
+		}
+	
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();

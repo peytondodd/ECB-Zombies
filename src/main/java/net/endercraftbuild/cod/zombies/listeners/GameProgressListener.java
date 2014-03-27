@@ -7,7 +7,6 @@ import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.GameTickEvent;
-import net.endercraftbuild.cod.events.PlayerDiedEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.events.GameEntityDeathEvent;
@@ -17,16 +16,26 @@ import net.endercraftbuild.cod.zombies.events.RoundStartEvent;
 import net.endercraftbuild.cod.zombies.objects.GameEntity;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.util.Vector;
 
 public class GameProgressListener implements Listener {
-
+	
+		//tring dir = "/home/ecb/servers/coins/";
+		String dir = "C:/Users/CP/Desktop/";
+		String prefix = ChatColor.BLUE + "ECB>"  + ChatColor.BOLD + ChatColor.DARK_GREEN;
+		String boldgreen =  ChatColor.BOLD + ""+ ChatColor.DARK_GREEN;
 	private final CoDMain plugin;
 	private final ZombieGame game;
-
+	
 	public GameProgressListener(CoDMain plugin, ZombieGame game) {
 		this.plugin = plugin;
 		this.game = game;
@@ -46,6 +55,7 @@ public class GameProgressListener implements Listener {
 		
 		game.broadcastToAll(ChatColor.AQUA + game.getName() + " has started!");
 		game.advanceWave();
+		game.updateLobbySign();
 	}
 
 	@EventHandler
@@ -59,6 +69,7 @@ public class GameProgressListener implements Listener {
 		game.closeDoors();
 		
 		game.broadcastToAll(ChatColor.AQUA + game.getName() + " has ended!"); 
+		game.updateLobbySign();
 	}
 
 	@EventHandler
@@ -66,11 +77,20 @@ public class GameProgressListener implements Listener {
 		if (event.getGame() != game)
 			return;
 		
+			
+			
 		game.rebuildBarriers();
 		game.healPlayers();
 		game.broadcast(ChatColor.GRAY + "Round " + ChatColor.RED + game.getCurrentWave() + ChatColor.GRAY + " will begin shortly!");
 		game.broadcast(ChatColor.GRAY + "There are " + ChatColor.RED + game.getMaxEntityCount() + ChatColor.GRAY + " " + game.getWaveMob() + " in this round!");
-	}
+		game.updateLobbySign();
+		
+		//Effect player
+		
+}
+
+		
+	
 	
 	@EventHandler
 	public void onRoundStart(RoundStartEvent event) {
@@ -78,7 +98,11 @@ public class GameProgressListener implements Listener {
 			return;
 		
 		game.broadcast(ChatColor.GRAY + "The round has begun!");
-	}
+		
+		
+		}
+	
+	
 	
 	@EventHandler
 	public void onGameTick(GameTickEvent event) {
@@ -129,15 +153,11 @@ public class GameProgressListener implements Listener {
 		event.getKiller().giveExp(game.getRandom(25));
 		game.payPlayer(event.getKiller(), game.getRandom(25) + 1);
 		game.incrementWaveKills();
+		
+		
 	}
 	
-	@EventHandler
-	public void onPlayerDeath(PlayerDiedEvent event) {
-		if (event.getGame() != game)
-			return;
-		
-		game.broadcast(ChatColor.DARK_RED + event.getDeathMessage());
-	}
+
 	
 	@EventHandler
 	public void onPlayerRevive(PlayerReviveEvent event) {
@@ -149,6 +169,9 @@ public class GameProgressListener implements Listener {
 			return;
 		
 		game.broadcast(ChatColor.DARK_GREEN + player.getName() + " was revived by " + revivedBy.getName() + "!"); 
+		}
+	
+	
 	}
 
-}
+

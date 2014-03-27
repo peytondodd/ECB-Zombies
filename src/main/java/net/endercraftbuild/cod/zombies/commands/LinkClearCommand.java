@@ -23,9 +23,10 @@ public class LinkClearCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
 			return true;
+		if(!sender.hasPermission("cod.admin.zlinkclear")) 
+			return true;
 		if (args.length < 1)
 			return false;
-		
 		Player player = (Player) sender;
 		
 		try {

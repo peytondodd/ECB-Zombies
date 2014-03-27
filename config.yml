@@ -1,0 +1,40 @@
+# Global configuration settings.
+
+# Player kit setup.  In order for a player to get a kit when they spawn they
+# must have a permission similar to 'cod.kits.zombies.normal'.  If a player
+# has more than one kit permission, they will get all kits they have the proper
+# permssion nodes for.
+kits:
+  zombies:
+    normal:
+      - id: 268
+        name: Knife
+      - id: 290
+        name: Pistol
+      - id: 337
+        name: Ammo
+        quantity: 64
+    donor:
+      - id: 267
+        name: Combat Knife
+      - id: 307
+        name: Body Armor
+        wear: chest
+      - id: 292
+        name: AK-47
+      - id: 337
+        name: Ammo
+        quantity: 64
+
+# Mystery box items.  All options available in kits section work here as well.
+mystery-box:
+  - id: 268
+    name: Knife
+  - id: 290
+    name: Pistol
+  - id: 267
+    name: Combat Knife
+  - id: 307
+    name: Body Armor
+  - id: 292
+    name: AK-47

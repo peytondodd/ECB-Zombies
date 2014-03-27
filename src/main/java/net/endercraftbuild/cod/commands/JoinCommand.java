@@ -24,6 +24,7 @@ public class JoinCommand implements CommandExecutor{
 		if (args.length < 1) {
 			sender.sendMessage(ChatColor.GREEN + "Available games: " + ChatColor.WHITE + plugin.getGameManager().getGameNames().toString());
 			return false;
+		
 		}
 		
 		Player player = (Player) sender;
@@ -33,11 +34,11 @@ public class JoinCommand implements CommandExecutor{
 			player.sendMessage(ChatColor.RED + "You are already in a game!");
 			return true;
 		}
-
+		//if(game.getType() == "")
 		try {
 			game = plugin.getGameManager().get(args[0]);
 			game.addPlayer(player);
-			player.getServer().broadcastMessage(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");
+			game.broadcast(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");
 		} catch (RuntimeException e) {
 			player.sendMessage(ChatColor.RED + e.getLocalizedMessage());
 		}

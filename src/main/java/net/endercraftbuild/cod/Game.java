@@ -25,7 +25,6 @@ public abstract class Game {
 	private final List<Listener> listeners;
 	private final List<Player> players;
 	private final Random random;
-	
 	private String name;
 	private Long minimumPlayers;
 	private Long maximumPlayers;
@@ -39,12 +38,11 @@ public abstract class Game {
 		this.listeners = new ArrayList<Listener>();
 		this.players = new ArrayList<Player>();
 		this.random = new Random();
-	}
+	} 
 	
 	public CoDMain getPlugin() {
 		return plugin;
 	}
-	
 	public String getType() {
 		return this.getClass().getSimpleName();
 	}

@@ -21,6 +21,8 @@ public class StartCommand implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
 			return true;
+		if(!sender.hasPermission("cod.admin.start")) 
+			return true;
 		if (args.length < 1) {
 			sender.sendMessage(ChatColor.GREEN + "Available games: " + ChatColor.WHITE + plugin.getGameManager().getGameNames().toString());
 			return false;

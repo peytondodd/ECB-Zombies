@@ -7,6 +7,7 @@ import net.endercraftbuild.cod.zombies.objects.Door;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,6 +41,7 @@ public class DoorSignListener implements Listener {
 			player.sendMessage(ChatColor.RED + "You do not have enough to open that door!");
 			return;
 		}
+	
 		
 		boolean foundDoor = false;
 		Location location = sign.getLocation();
@@ -47,12 +49,15 @@ public class DoorSignListener implements Listener {
 			if (door.getLocation().distance(location) < 6) {
 				if (door.isOpen())
 					continue;
+				
 				door.open();
 				foundDoor = true;
 			}
 		
-		if (foundDoor)
+		if(foundDoor)
 			plugin.getEconomy().withdrawPlayer(player.getName(), cost);
+			player.sendMessage(plugin.prefix + ChatColor.RED + "Door opened!");
+			player.playSound(player.getLocation(), Sound.ANVIL_USE, 160.0F, 0.0F);
 	}
 	
 }

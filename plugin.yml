@@ -3,7 +3,7 @@ author: [superpeanut911, geekguy44, MortuTBK]
 description: CoD Zombies/PVP plugin for Endercraftbuild minecraft server! endercraftbuild.net!
 website: http://ci.mortu.net/job/ECB-Zombies/
 main: net.endercraftbuild.cod.CoDMain
-version: 1.1
+version: 1.3
 depend: [Vault, WorldGuard, ControllableMobsAPI]
 
 commands:
@@ -21,6 +21,12 @@ commands:
     usage: /<command>
     permissions: cod.player.leave
     permission-message: You do not have permission to run that command.
+  tpack:
+    description: Texture
+    usage: /<command>
+  texture:
+    description: Texture
+    usage: /<command>
   stats:
     description: Displays stats for the game you are in or a specified game.
     usage: |
@@ -37,6 +43,11 @@ commands:
     usage: /<command> - saves the current games setup
     permissions: cod.admin.save
     permission-message: You do not have permission to run that command.
+  zsendallhub:
+    description: Hub
+    usage: /<command> 
+    permissions: cod.admin.sendall
+    permission-message: You do not have permission to run that 
   creload:
     description: Reloads the plugin configuration.
     usage: /<command>
@@ -157,6 +168,14 @@ commands:
     permission-message: You do not have permission to run that command.
   zlobby:
     description: Sets the lobby location for dead players in a CoD Zombies game.
+    usage: |
+      /<command> <name>
+      Example: /<command> nacht
+      Example: /<command> nuketown
+    permissions: cod.admin.lobby
+    permission-message: You do not have permission to run that command.
+  setlobbysign:
+    description: Sets the lobby sign loc
     usage: |
       /<command> <name>
       Example: /<command> nacht

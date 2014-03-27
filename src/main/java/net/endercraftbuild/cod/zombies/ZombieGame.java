@@ -19,6 +19,7 @@ import net.endercraftbuild.cod.zombies.objects.GameCaveSpider;
 import net.endercraftbuild.cod.zombies.objects.GameEntity;
 import net.endercraftbuild.cod.zombies.objects.GameWolf;
 import net.endercraftbuild.cod.zombies.objects.GameZombie;
+import net.endercraftbuild.cod.zombies.objects.LobbySign;
 import net.endercraftbuild.cod.zombies.objects.Spawner;
 import net.milkbowl.vault.economy.Economy;
 
@@ -40,6 +41,7 @@ public class ZombieGame extends Game {
 	private final List<Spawner> spawners;
 	private final List<Barrier> barriers;
 	private final List<Door> doors;
+	private final List<LobbySign> signs;
 	
 	private BukkitRunnable pendingRoundStartTask;
 	private Long currentWave;
@@ -53,7 +55,7 @@ public class ZombieGame extends Game {
 		spawners = new ArrayList<Spawner>();
 		barriers = new ArrayList<Barrier>();
 		doors = new ArrayList<Door>();
-		
+		signs = new ArrayList<LobbySign>();
 		setCurrentWave(0L);
 		setWaveKills(0L);
 		gameEntities = new ArrayList<GameEntity>();
@@ -90,6 +92,16 @@ public class ZombieGame extends Game {
 			spawner.load(spawnerSection);
 			spawners.add(spawner);
 		}
+		
+		ConfigurationSection signsSection = config.getConfigurationSection("signs");
+		if (signsSection != null)
+		for (String name : signsSection.getKeys(false)) {
+			ConfigurationSection signSection = signsSection.getConfigurationSection(name);
+			LobbySign sign = new LobbySign(getPlugin());
+			sign.load(signSection);
+			signs.add(sign);
+		}
+			
 		
 		ConfigurationSection barriersSection = config.getConfigurationSection("barriers");
 		for (String name : barriersSection.getKeys(false)) {
@@ -141,6 +153,9 @@ public class ZombieGame extends Game {
 		ConfigurationSection barriersSection = gameSection.createSection("barriers");
 		for (Barrier barrier : getBarriers())
 			barrier.save(barriersSection);
+		ConfigurationSection signsSection = gameSection.createSection("signs");
+		for (LobbySign sign : getLobbySigns())
+			sign.save(signsSection);
 		
 		ConfigurationSection doorsSection = gameSection.createSection("doors");
 		for (Door door : getDoors()) {
@@ -389,6 +404,34 @@ public class ZombieGame extends Game {
 			door.close();
 	}
 	
+	
+	public void removeLobbySign(LobbySign lobbysign) {
+		signs.remove(lobbysign);
+	}
+	public LobbySign findSign(Location location) {
+		for (LobbySign sign : signs)
+			if (sign.getLocation().equals(location))
+				return sign;
+		return null;
+	}
+	
+	
+	public void updateLobbySign() {
+
+		for (LobbySign sign : signs)
+			sign.updateSign();
+			//sign.placeSign();
+	}
+
+	
+	public List<LobbySign> getLobbySigns() {
+		return signs;
+	}
+	
+	public void addLobbySign(LobbySign lobbySign) {
+		signs.add(lobbySign);
+	}
+	
 	public List<GameEntity> getGameEntities() {
 		return gameEntities;
 	}
@@ -410,6 +453,9 @@ public class ZombieGame extends Game {
 	
 	public void giveKit(Player player) {
 		Utils.giveKit(player, getPlugin().getConfig());
+	//	player.setAllowFlight(false);
+		//player.setFlying(false);
+		//player.removePotionEffect(PotionEffectType.INVISIBILITY);
 	}
 	
 	public Long getMaxEntityCount() {

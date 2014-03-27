@@ -23,6 +23,8 @@ public class BarrierCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
 			return true;
+		if(!sender.hasPermission("cod.admin.zbarrier")) 
+			return true;
 		if (args.length < 1)
 			return false;
 		

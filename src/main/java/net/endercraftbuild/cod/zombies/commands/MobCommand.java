@@ -21,6 +21,8 @@ public class MobCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
 			return true;
+		if(!sender.hasPermission("cod.admin.zmob")) 
+			return true;
 		if (args.length < 2)
 			return false;
 		

@@ -1,14 +1,17 @@
 package net.endercraftbuild.cod.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import net.minecraft.server.v1_7_R1.NBTTagCompound;
+import net.minecraft.server.v1_7_R1.NBTTagList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -19,11 +22,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Utils {
 
-	//Temp methods
-	public static ArrayList<String> ISA = new ArrayList<String>();
-	public static ArrayList<String> Mercs = new ArrayList<String>();
-	public static ArrayList<String> Out = new ArrayList<String>();
-	
 	//functions for getting/setting names
 	public static String getItemName(ItemStack is) {
 		ItemMeta im = is.getItemMeta();
@@ -100,7 +98,18 @@ public class Utils {
 			break;
 		}
 	}
-	
+	public static boolean isGunPaP(ItemStack is) {
+		if(getItemName(is) == null) {
+			return false;
+		}
+		if(getItemName(is).contains("PaP")) {
+			return true;
+		}
+		else {
+			
+		return false;
+		}
+	}
 	public static Entity getDamager(EntityDamageByEntityEvent event) {
 		Entity entity = event.getDamager();
 		if (entity instanceof Projectile)
@@ -108,9 +117,26 @@ public class Utils {
 		else
 			return entity;
 	}
+	public static ItemStack addGlow(ItemStack item){ 
+		net.minecraft.server.v1_7_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+	  NBTTagCompound tag = null;
+	  if (!nmsStack.hasTag()) {
+	      tag = new NBTTagCompound();
+	      nmsStack.setTag(tag);
+	  }
+	  if (tag == null) tag = nmsStack.getTag();
+	  NBTTagList ench = new NBTTagList();
+	  tag.set("ench", ench);
+	  nmsStack.setTag(tag);
+	  return CraftItemStack.asCraftMirror(nmsStack);
+	}
+	
 	
 	public static String formatMessage(String message, Object... args) {
 		return ChatColor.translateAlternateColorCodes('&', String.format(message, args));
 	}
+
+
+	}
 	
-}
+

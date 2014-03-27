@@ -20,10 +20,14 @@ public class RemoveCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
 			return true;
+		if(!sender.hasPermission("cod.admin.remove")) 
+			return true;
 		if (args.length < 1)
 			return false;
 		
-		Player player = (Player) sender;
+	
+	
+			Player player = (Player) sender;
 		
 		try {
 			plugin.getGameManager().remove(plugin.getGameManager().get(args[0]));
@@ -37,3 +41,4 @@ public class RemoveCommand implements CommandExecutor {
 	}
 	
 }
+	

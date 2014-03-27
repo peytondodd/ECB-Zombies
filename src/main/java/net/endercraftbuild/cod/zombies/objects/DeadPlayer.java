@@ -9,6 +9,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 public class DeadPlayer {
 	
@@ -53,7 +57,9 @@ public class DeadPlayer {
 		
 		player.setHealth(player.getMaxHealth());
 		player.setFireTicks(0);
+
 	}
+	
 	
 	public void revive() {
 		if (isExpired())
@@ -63,21 +69,15 @@ public class DeadPlayer {
 		player.getInventory().setArmorContents(armor);
 		player.getInventory().setContents(inventory);
 		
-		Location loc = sign.getLocation();
-		Location loc0 = loc;
-		loc0.setY(loc0.getY()+1);
-		Location loc1 = loc;
-		loc1.setY(loc1.getY()+2);
-		if (loc0.getBlock().getType() == Material.AIR && loc1.getBlock().getType() == Material.AIR)
-			player.teleport(loc0);
-		else
-			player.teleport(loc);
+		player.teleport(game.getSpawnLocation());
+
 	}
 	
 	public void respawn() {
 		removeSign();
 		player.teleport(game.getSpawnLocation());
 		game.giveKit(player);
+
 	}
 	
 	public void removeSign() {
@@ -118,7 +118,7 @@ public class DeadPlayer {
 		sign.setLine(2, "TIME LEFT");
 		sign.setLine(3, ChatColor.GREEN + "30");
 		sign.update();
-		
+		player.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "You have DIED! Wait for a revive, next round, or type /leave !");
 		return sign;
 	}
 	
