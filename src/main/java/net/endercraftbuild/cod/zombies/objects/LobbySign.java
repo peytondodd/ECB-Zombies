@@ -75,10 +75,12 @@ public class LobbySign extends SerializableGameObject {
 
 	public void updateSign() {
 		
+		
 		Block block = getLobbySignBlock();
 		
 		block.setType(Material.WALL_SIGN);
 		Sign sign = (Sign) block.getState();
+		
 		
 		ZombieGame game = (ZombieGame) plugin.getGameManager().get(sign.getLine(1));
 		int playersongame = game.getPlayers().size();
