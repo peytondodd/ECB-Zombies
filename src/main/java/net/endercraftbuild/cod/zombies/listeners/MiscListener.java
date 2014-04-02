@@ -1,6 +1,7 @@
 package net.endercraftbuild.cod.zombies.listeners;
 
 import java.util.Iterator;
+
 import me.confuser.barapi.BarAPI;
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.GameTickEvent;
@@ -9,7 +10,7 @@ import net.endercraftbuild.cod.events.PlayerLeaveEvent;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.events.GameEntityDeathEvent;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
-import net.endercraftbuild.zombies.tasks.FireworkTask;
+import net.endercraftbuild.cod.zombies.tasks.FireworkTask;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;

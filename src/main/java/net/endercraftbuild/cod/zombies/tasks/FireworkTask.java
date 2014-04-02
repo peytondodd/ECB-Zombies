@@ -1,4 +1,4 @@
-package net.endercraftbuild.zombies.tasks;
+package net.endercraftbuild.cod.zombies.tasks;
 
 import java.util.List;
 
