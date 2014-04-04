@@ -25,6 +25,11 @@
     </distributionManagement>
 
     <dependencies>
+	<dependency>
+		<groupId>org.bukkit</groupId>
+		<artifactId>bukkit</artifactId>
+		<version>1.7.2-R0.3</version>
+	</dependency>
         <dependency>
 		<groupId>org.bukkit</groupId>
 		<artifactId>craftbukkit</artifactId>
@@ -72,11 +77,6 @@
 		<artifactId>powermock-api-mockito</artifactId>
 		<version>1.5.4</version>
 		<scope>test</scope>
-	</dependency>
-	<dependency>
-		<groupId>org.bukkit</groupId>
-		<artifactId>bukkit</artifactId>
-		<version>1.7.2-R0.3</version>
 	</dependency>
     </dependencies>
 
