@@ -1,5 +1,6 @@
 package net.endercraftbuild.cod.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -136,7 +137,21 @@ public class Utils {
 		return ChatColor.translateAlternateColorCodes('&', String.format(message, args));
 	}
 
-
-	}
-	
-
+    public static List<Location> circle (Location location, Integer radius, Integer height, Boolean hollow, Boolean sphere, int y_offset) {
+        List<Location> circleblocks = new ArrayList<Location>();
+        int centerX = location.getBlockX();
+        int centerY = location.getBlockY();
+        int centerZ = location.getBlockZ();
+        for (int x = centerX - radius; x <= centerX +radius; x++)
+            for (int z = centerZ - radius; z <= centerZ +radius; z++)
+                for (int y = (sphere ? centerY - radius : centerY); y < (sphere ? centerY + radius : centerY + height); y++) {
+                    double dist = (centerX - x) * (centerX - x) + (centerZ - z) * (centerZ - z) + (sphere ? (centerY - y) * (centerY - y) : 0);
+                    if (dist < radius*radius && !(hollow && dist < (radius-1)*(radius-1))) {
+                        Location l = new Location(location.getWorld(), x, y + y_offset, z);
+                        circleblocks.add(l);
+                    }
+                }
+     
+        return circleblocks;
+    }
+}
