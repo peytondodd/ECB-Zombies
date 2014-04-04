@@ -3,9 +3,11 @@ package net.endercraftbuild.cod.zombies.objects;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import de.ntcomputer.minecraft.controllablemobs.api.ControllableMob;
@@ -47,25 +49,25 @@ public abstract class GameEntity implements EntityFilter {
 	public boolean isEntityValid(Entity target) {
 		if (!(target instanceof Player))
 			return false;
-		
+
 		Player player = (Player) target;
 		if(player.hasPotionEffect(PotionEffectType.INVISIBILITY))
 			return false;
 		else
-		return game.isInGame(player);
+			return game.isInGame(player);
 	}
 	
-	@SuppressWarnings("deprecation")
 	protected void enrage() {
 		ControllableMob<?> mob = getMob();
-		
-		// FIXME(mortu): runner code isn't changing speed ... will fix later
-		
-	//	AttributeModifierFactory.create(UUID.fromString("8971a510-ec88-11e2-91e2-ecb200c9a66"), "Speed", 1, ModifyOperation.ADD_TO_BASIS_VALUE);
-	
 		mob.getAI().addBehavior(new AITargetNearest(10, 0, false, 0, this));
-
-	
+		
+		// NOTE(mortu): proof of concept ... makes it take about 600 shots from AK-47 to kill 4 zombies
+		Damageable damageable = (Damageable) mob.getEntity();
+		damageable.setMaxHealth(500);
+		damageable.setHealth(damageable.getMaxHealth());
+		
+		// NOTE(mortu): proof of concept ... makes the zombies zoom around faster than any player can run
+		mob.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 5, true), true);
 	}
 	
 	public abstract ControllableMob<?> getMob();
@@ -76,22 +78,23 @@ public abstract class GameEntity implements EntityFilter {
 		enrage();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void respawn() {
 		Entity entity = getMob().getEntity();
 		
 		if(ControllableMobs.isAssigned((LivingEntity) entity))
+			despawn();
 		
-		despawn();
 		spawn();
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void despawn() {
 		Entity entity = getMob().getEntity();
 		
 		if(ControllableMobs.isAssigned((LivingEntity) entity))
-		ControllableMobs.unassign(getMob());
+			ControllableMobs.unassign(getMob());
 	
 		entity.remove();
 	}
-	
 }
