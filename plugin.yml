@@ -3,8 +3,8 @@ author: [superpeanut911, geekguy44, MortuTBK]
 description: CoD Zombies/PVP plugin for Endercraftbuild minecraft server! endercraftbuild.net!
 website: http://ci.mortu.net/job/ECB-Zombies/
 main: net.endercraftbuild.cod.CoDMain
-version: 1.3
-depend: [Vault, WorldGuard, ControllableMobsAPI]
+version: 1.3.1
+depend: [Vault, WorldGuard, ControllableMobsAPI, BarAPI]
 
 commands:
 # player commands

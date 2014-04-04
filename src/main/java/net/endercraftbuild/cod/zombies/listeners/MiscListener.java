@@ -7,6 +7,7 @@ import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.GameTickEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
+import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.events.GameEntityDeathEvent;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
@@ -33,12 +34,9 @@ public class MiscListener implements Listener {
 		this.plugin = plugin;
 	}
 	
-	
-	
 	@EventHandler
 	public void onTick(GameTickEvent event) {
 		ZombieGame game = (ZombieGame) event.getGame();
-		
 		
 		Iterator<Player> iterator = game.getPlayers().iterator();
 		while (iterator.hasNext()) {
@@ -52,65 +50,50 @@ public class MiscListener implements Listener {
 	@EventHandler
 	public void FireworkRoundAdvance(RoundAdvanceEvent event) {
 		ZombieGame game = (ZombieGame) event.getGame();
-		this.fireworktask = new FireworkTask(game, plugin);
-		fireworktask.start();
+		
+		new FireworkTask(game.getSpawnLocation().getWorld(), Utils.circle(game.getSpawnLocation(), 10, 1, true, false, 9)).runTask(plugin);
 	}
 		
-	
 	@EventHandler
 	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-		if (event.getEntityType() == EntityType.FALLING_BLOCK) {
-
+		if (event.getEntityType() == EntityType.FALLING_BLOCK)
 			event.setCancelled(true);
-		}
 	}
 
-	 
-	@EventHandler(priority=EventPriority.HIGHEST)
-	  public void onExplosion(EntityExplodeEvent event)
-	  {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	  public void onExplosion(EntityExplodeEvent event) {
 	    if (!event.isCancelled()) {
+	    	// List<Block> blockListclone;
+	    	// final List<Block> blockListclone = new ArrayList<Block>(event.blockList());
 	    	
+	    	for (Block block : event.blockList()) {
+	    		Vector newVelo = event.getLocation().subtract(event.getLocation()).toVector();
+	    		newVelo.setX(event.getYield() * 2.0F - newVelo.getX());
+	    		newVelo.setY(event.getYield() * 2.5F - newVelo.getY());
+	    		newVelo.setZ(event.getYield() * 2.0F - newVelo.getZ());
+	    		
+	    		final FallingBlock fallBlock = block.getWorld().spawnFallingBlock(block.getLocation(), block.getType(), block.getData());
+	    		fallBlock.setVelocity(newVelo);
+	    		fallBlock.setDropItem(false);
+	    		
+	    		break;
+	    	}
 	    	
-	    	///List<Block> blockListclone;
-	    	//final List<Block> blockListclone = new ArrayList<Block>(event.blockList());
-	    	
-	      for (Block block : event.blockList())
-	      {
-	    	  
-	        Vector newVelo = event.getLocation().subtract(event.getLocation()).toVector();
-	        
-	        newVelo.setX(event.getYield() * 2.0F - newVelo.getX());
-	        
-	        newVelo.setY(event.getYield() * 2.5F - newVelo.getY());
-	        
-	        newVelo.setZ(event.getYield() * 2.0F - newVelo.getZ());
-	        
-	        final FallingBlock fallBlock = block.getWorld().spawnFallingBlock(block.getLocation(), block.getType(), block.getData());
-	        
-	        fallBlock.setVelocity(newVelo);
-	        
-	        fallBlock.setDropItem(false);
-	        break;
-	      }    
-	      event.blockList().clear();
+	    	event.blockList().clear();
 	    }
 	  }
 
-	
-	
   	//@EventHandler
 	public void onGameEntityDeath(GameEntityDeathEvent event) {
 		ZombieGame game = (ZombieGame) event.getGame();
-		
 	
 		Iterator<Player> iterator = game.getPlayers().iterator();
 		while (iterator.hasNext()) {
 			Player player = iterator.next();
 			
-		//FakeDragon.setStatus(player, "", 100);
+			//FakeDragon.setStatus(player, "", 100);
 			BarAPI.setMessage(player, ChatColor.BLUE  + game.getName() + " Stats: " + ChatColor.DARK_AQUA + "Round: " +  game.getCurrentWave() + ChatColor.AQUA + " |" 
-							+ ChatColor.DARK_AQUA + " Zombies Alive: " + game.getRemainingEntityCount() + "/" + game.getMaxEntityCount(), 100);
+				+ ChatColor.DARK_AQUA + " Zombies Alive: " + game.getRemainingEntityCount() + "/" + game.getMaxEntityCount(), 100);
 		}
 	}
 	
@@ -119,7 +102,7 @@ public class MiscListener implements Listener {
 		ZombieGame game = (ZombieGame) event.getGame();
 		Player player = event.getPlayer();
 		BarAPI.setMessage(player, ChatColor.BLUE  + game.getName() + " Stats: " + ChatColor.DARK_AQUA + "Round: " +  game.getCurrentWave() + ChatColor.AQUA + " |" 
-				+ ChatColor.DARK_AQUA + " Zombies Alive: " + game.getLivingEntityCount() + "/" + game.getMaxEntityCount(), 100);
+			+ ChatColor.DARK_AQUA + " Zombies Alive: " + game.getLivingEntityCount() + "/" + game.getMaxEntityCount(), 100);
 	}
 	
 	@EventHandler(priority = EventPriority.HIGH)
@@ -128,9 +111,5 @@ public class MiscListener implements Listener {
 		
 		player.teleport(player.getWorld().getSpawnLocation());
 		BarAPI.setMessage(player, ChatColor.DARK_AQUA + "Visit " + ChatColor.AQUA + "ecb-mc.net " + ChatColor.DARK_AQUA + "| Donate | Forums | Vote", 100);
-		
 	}
-	
-	
-	
 }
