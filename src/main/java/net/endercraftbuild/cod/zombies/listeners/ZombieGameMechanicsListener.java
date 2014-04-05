@@ -5,6 +5,7 @@ import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.CaveSpider;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -27,8 +28,8 @@ public class ZombieGameMechanicsListener implements Listener {
 	public void onPlayerHitPlayer(EntityDamageByEntityEvent event) { // don't let zombie players kill each other
 		if (!(event.getEntity() instanceof Player))
 			return;
-		if (!(Utils.getDamager(event) instanceof Player))
-			return;
+		if (!(Utils.getDamager(event) instanceof Player))	
+			return; 
 		
 		Player player = (Player) event.getEntity();
 		ZombieGame game = (ZombieGame) plugin.getGameManager().get(player);

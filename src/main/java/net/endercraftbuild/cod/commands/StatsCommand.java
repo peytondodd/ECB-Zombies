@@ -2,7 +2,6 @@ package net.endercraftbuild.cod.commands;
 
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.Game;
-import net.endercraftbuild.cod.pvp.CoDGame;
 import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
@@ -41,8 +40,7 @@ public class StatsCommand implements CommandExecutor{
 				
 			if (game instanceof ZombieGame)
 				doZombieStats(player, (ZombieGame) game);
-			else if (game instanceof CoDGame)
-				doCoDStats(player, (CoDGame) game);
+			
 		} catch (RuntimeException e) {
 			player.sendMessage(ChatColor.RED + e.getLocalizedMessage());
 		}
@@ -55,10 +53,6 @@ public class StatsCommand implements CommandExecutor{
 		player.sendMessage(Utils.formatMessage("&7Wave: &c%d&7 of &c%d&7 (max)", game.getCurrentWave(), game.getMaxWaves()));
 		player.sendMessage(Utils.formatMessage("&7Players: &c%d&7 of &c%d&7 (max)", game.getPlayers().size(), game.getMaximumPlayers()));
 		player.sendMessage(Utils.formatMessage("&7Enemies alive: &c%d&7 of &c%d&7 (this round)", game.getLivingEntityCount(), game.getMaxEntityCount()));
-	}
-	
-	private void doCoDStats(Player player, CoDGame game) {
-		// TODO(mortu): implement CoDGame stats
 	}
 	
 }

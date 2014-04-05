@@ -131,11 +131,6 @@ public class GlobalMechanicsListener implements Listener {
 		event.setCancelled(true);
 	}
 	
-	@EventHandler(priority = EventPriority.LOW)
-	public void preventLandDestructionOnExplode(EntityExplodeEvent event) { // Prevent land damage
-		//event.blockList().clear();
-	}
-	
 	
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)

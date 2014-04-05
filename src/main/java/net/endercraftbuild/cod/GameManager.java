@@ -14,7 +14,6 @@ import java.util.logging.Level;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
-import net.endercraftbuild.cod.pvp.CoDGame;
 import net.endercraftbuild.cod.tasks.GameTickTask;
 import net.endercraftbuild.cod.tasks.PerpetualNightTask;
 import net.endercraftbuild.cod.zombies.ZombieGame;
@@ -79,9 +78,6 @@ public class GameManager implements Listener {
 			switch (gameSection.getString("type")) {
 			case "ZombieGame":
 				game = new ZombieGame(plugin);
-				break;
-			case "CoDGame":
-				game = new CoDGame(plugin);
 				break;
 			default:
 				// TODO(mortu): handle unknown game type? error?
