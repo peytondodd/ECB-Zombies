@@ -27,6 +27,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
 public class Shoot implements Listener {
@@ -183,67 +184,46 @@ public class Shoot implements Listener {
 		if (!(damager instanceof Snowball))
 			return;
 
-		damager = ((Snowball) damager).getShooter();
-		ItemStack hand = ((HumanEntity) damager).getItemInHand();
-		Material handm = (((HumanEntity) damager).getItemInHand().getType()); 
-			// Sniper bullets deal more damage!
-
-			if(handm == Material.GOLD_HOE) {
-				if(Utils.isGunPaP(hand)) {
-					event.setDamage(28);
-				}
-				else
-					event.setDamage(21);
-
-			}
-			if(handm == Material.STONE_HOE) {
-				if(Utils.isGunPaP(hand)) {
-					event.setDamage(25);
-				}
-				else
-					event.setDamage(17);
-
-			}
-				if(handm == Material.WOOD_HOE) {
-					if(Utils.isGunPaP(hand)) {
-						event.setDamage(16);
-					}
-					else
-						event.setDamage(12);
-
-				}
-				if(handm == Material.DIAMOND_HOE) {
-					if(Utils.isGunPaP(hand)) {
-						event.setDamage(18);
-					}
-					else
-						event.setDamage(14);
-
-				}
-				if(handm == Material.IRON_HOE) {
-					if(Utils.isGunPaP(hand)) {
-						event.setDamage(16);
-					}
-					else
-						event.setDamage(12);
-
-				}
-			}
+		damager = Utils.getDamager(event);
 		
-
-
-	
-
-	@EventHandler  //seperate from raygun hit - more organized to me
-	public void onRocketHit(ProjectileHitEvent event) {
-		if( event.getEntity().getType() != EntityType.WITHER_SKULL)
+		if (!(damager instanceof Player))
 			return;
+		
+		ItemStack item = ((HumanEntity) damager).getItemInHand();
+		boolean pap = Utils.isGunPaP(item);
+		
+		// Sniper bullets deal more damage!
+		switch(item.getType()) {
+		case GOLD_HOE:
+			event.setDamage(pap ? 28 : 21);
+			break;
+		case STONE_HOE:
+			event.setDamage(pap ? 25 : 17);
+			break;
+		case WOOD_HOE:
+		case IRON_HOE:
+			event.setDamage(pap ? 16 : 12);
+			break;
+		case DIAMOND_HOE:
+			event.setDamage(pap ? 18 : 14);
+			break;
+		default:
+			event.setDamage(0);
+			break;
+		}
+	}
+		
+	@EventHandler
+	public void onRocketHit(ProjectileHitEvent event) { // Make rocket explode
+		if (event.getEntity().getType() != EntityType.WITHER_SKULL)
+			return;
+		
 		Player player = (Player) event.getEntity().getShooter();
 
 		if (player.getItemInHand().getType() == Material.DIAMOND_AXE) 
 			player.getWorld().createExplosion(event.getEntity().getLocation(), 2.1F, false);
-
 	}
+	
 	@EventHandler
 	public void onRayGunHit(ProjectileHitEvent event) { // Make ray gun explode
 		if (event.getEntity().getType() != EntityType.SNOWBALL)
@@ -256,8 +236,6 @@ public class Shoot implements Listener {
 
 		if (player.getItemInHand().getType() == Material.DIAMOND_HOE) 
 			player.getWorld().createExplosion(event.getEntity().getLocation(), 1.8F, false);
-
-
 	}
 
 	@EventHandler
