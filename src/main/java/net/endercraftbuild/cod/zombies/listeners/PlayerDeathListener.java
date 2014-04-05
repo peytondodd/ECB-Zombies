@@ -109,17 +109,7 @@ public class PlayerDeathListener implements Listener {
 		if (deadPlayers.size() == game.getPlayers().size())
 			safelyEndGame();
 	}
-	@EventHandler //For possible spectators
-	public void deadPlayerDamage(EntityDamageByEntityEvent event) {
-	
-		Entity damager = event.getDamager();
-		
-		if(damager instanceof Player && deadPlayers.containsKey(damager))
-			event.setCancelled(true);
-			
-		
-		
-		}
+
 	@EventHandler
 	public void onPlayerDeathMsg(PlayerDiedEvent event) {
 		if (event.getGame() != game)
@@ -131,19 +121,7 @@ public class PlayerDeathListener implements Listener {
 		
 		game.broadcast(ChatColor.DARK_RED + event.getDeathMessage());
 	}
-	//For possible spectating
-	@EventHandler
-	public void DamageDeadPlayer(EntityDamageByEntityEvent event) {
-	
-		Entity damaged = event.getEntity();
-		
-		if(damaged instanceof Player && deadPlayers.containsKey(damaged))
-			event.setCancelled(true);
-			
-		
-		
-		}
-	
+
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();

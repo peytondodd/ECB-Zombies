@@ -3,7 +3,6 @@ package net.endercraftbuild.cod.listeners;
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.Game;
 
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;

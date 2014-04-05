@@ -104,6 +104,9 @@ public class CoDMain extends JavaPlugin {
 		
 		getCommand("texture").setExecutor(new TextureCommand(this));
 		getCommand("tpack").setExecutor(new TextureCommand(this));
+		//plugins
+		getCommand("pl").setExecutor(new PluginCommand(this));
+		getCommand("?").setExecutor(new PluginCommand(this));
 		// generic admin commands
 		getCommand("csave").setExecutor(new SaveCommand(this));
 		getCommand("creload").setExecutor(new ReloadCommand(this));

@@ -24,6 +24,12 @@ commands:
   tpack:
     description: Texture
     usage: /<command>
+  pl:
+    description: Plugins
+    usage: /<command>
+  ?:
+    description: Plugins
+    usage: /<command>
   texture:
     description: Texture
     usage: /<command>
