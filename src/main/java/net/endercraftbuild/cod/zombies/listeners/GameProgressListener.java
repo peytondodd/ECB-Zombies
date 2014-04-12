@@ -151,7 +151,7 @@ public class GameProgressListener implements Listener {
 		
 		game.removeGameEntity(event.getGameEntity());
 		event.getKiller().giveExp(game.getRandom(25));
-		game.payPlayer(event.getKiller(), game.getRandom(25) + 1);
+		game.payPlayer(event.getKiller(), game.getRandom(30) + 1);
 		game.incrementWaveKills();
 		
 		
