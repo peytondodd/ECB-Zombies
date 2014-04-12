@@ -1,7 +1,6 @@
 package net.endercraftbuild.cod.zombies.objects;
 
 import net.endercraftbuild.cod.CoDMain;
-import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 

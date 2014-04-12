@@ -2,7 +2,6 @@ package net.endercraftbuild.cod.zombies.objects;
 
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Zombie;
 
 import de.ntcomputer.minecraft.controllablemobs.api.ControllableMob;
