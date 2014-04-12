@@ -63,6 +63,7 @@ public class PlayerDeathListener implements Listener {
 		while (iterator.hasNext()) {
 			DeadPlayer deadPlayer = iterator.next();
 			if (deadPlayer.isExpired())
+				
 				deadPlayer.removeSign();
 			else
 				deadPlayer.updateSign();
@@ -106,21 +107,13 @@ public class PlayerDeathListener implements Listener {
 		DeadPlayer deadPlayer = new DeadPlayer(player, this.game);
 		deadPlayers.put(player, deadPlayer);
 		deadPlayer.spawn();
+		
+		game.broadcast(ChatColor.DARK_RED + event.getDeathMessage());
+		
 		if (deadPlayers.size() == game.getPlayers().size())
 			safelyEndGame();
 	}
 
-	@EventHandler
-	public void onPlayerDeathMsg(PlayerDiedEvent event) {
-		if (event.getGame() != game)
-			return;
-		Player player = event.getPlayer();
-		if(deadPlayers.containsKey(player))
-			return;
-			
-		
-		game.broadcast(ChatColor.DARK_RED + event.getDeathMessage());
-	}
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
