@@ -108,7 +108,7 @@ public class PlayerDeathListener implements Listener {
 		deadPlayers.put(player, deadPlayer);
 		deadPlayer.spawn();
 		
-		game.broadcast(ChatColor.DARK_RED + event.getDeathMessage());
+		game.broadcast(ChatColor.BOLD.toString() + ChatColor.DARK_RED + event.getDeathMessage());
 		
 		if (deadPlayers.size() == game.getPlayers().size())
 			safelyEndGame();
