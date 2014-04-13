@@ -1,7 +1,9 @@
 package net.endercraftbuild.cod.zombies.objects;
 
 import net.endercraftbuild.cod.zombies.ZombieGame;
+import net.minecraft.server.v1_7_R3.EntityPlayer;
 
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,13 +15,14 @@ import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.kitteh.tag.TagAPI;
 
 public class DeadPlayer {
 	
 	public static final String SIGN_HEADER = ChatColor.BLUE + "ECB Revive";
 	
 	private final Player player;
-	private final Sign sign;
+	//private final Sign sign;
 	private final ZombieGame game;
 	private final Long diedAt;
 	private final ItemStack[] armor;
@@ -27,7 +30,7 @@ public class DeadPlayer {
 	
 	public DeadPlayer(Player player, ZombieGame game) {
 		this.player = player;
-		this.sign = placeSign();
+		//this.sign = placeSign();
 		this.game = game;
 		this.diedAt = System.currentTimeMillis();
 		this.armor = player.getInventory().getArmorContents();
@@ -38,12 +41,25 @@ public class DeadPlayer {
 		return this.player;
 	}
 	
-	public Sign getSign() {
-		return this.sign;
+	//public Sign getSign() {
+	//	return this.sign;
+//	}
+	public void downPlayer() {
+		
+		player.getInventory().setArmorContents(null);
+		player.getInventory().clear();
+		player.setHealth(player.getMaxHealth());
+		player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 9999999, 5));
+		player.sendMessage(ChatColor.BOLD.toString() + ChatColor.DARK_RED + "BLEEDING OUT IN: " + ChatColor.DARK_GREEN + getTimeRemaining() + "seconds");
+		//downed nametag set via event
+		//TODO: Give them a a kit. modify giveKit to give a specific kit from the config
 	}
-
 	public boolean isExpired() {
 		return (System.currentTimeMillis() - diedAt) > 30 * 1000L;
+	}
+	public Long getTimeRemaining() {
+		return 30 - (System.currentTimeMillis() - diedAt) / 1000L;
+		
 	}
 	
 	public void spawn() {
@@ -57,6 +73,12 @@ public class DeadPlayer {
 		
 		player.setHealth(player.getMaxHealth());
 		player.setFireTicks(0);
+		player.sendMessage(ChatColor.BOLD.toString() + ChatColor.RED + "You bled out! Wait until next round or type /leave");
+		for(PotionEffect effect : player.getActivePotionEffects())
+		{
+			//Fool died, no perks 4 u!
+		    player.removePotionEffect(effect.getType());
+		}
 
 	}
 	
@@ -65,61 +87,33 @@ public class DeadPlayer {
 		if (isExpired())
 			return;
 		
-		removeSign();
+	//	removeSign();
 		player.getInventory().setArmorContents(armor);
 		player.getInventory().setContents(inventory);
 		
 		player.teleport(game.getSpawnLocation());
 
+		//Revived, don't clear all effects.
+		player.removePotionEffect(PotionEffectType.SLOW);
+		player.setHealth(player.getMaxHealth());
+		TagAPI.refreshPlayer(player);
 	}
 	
 	public void respawn() {
-		removeSign();
+	
 		player.teleport(game.getSpawnLocation());
 		game.giveKit(player);
+		
 
 	}
 	
-	public void removeSign() {
-		if (sign == null)
+	public void update() {
+		if(isExpired())
 			return;
-		sign.getLocation().getBlock().setType(Material.AIR);
-	}
-
-	public void updateSign() {
-		if (sign == null)
-			return;
-		
-		Long remaining = 30 - (System.currentTimeMillis() - diedAt) / 1000L;
-		ChatColor color = ChatColor.GREEN;
-		
-		if (remaining < 16)
-			color = ChatColor.YELLOW;
-		else if (remaining < 5)
-			color = ChatColor.RED;
-		
-		sign.setLine(3, color + remaining.toString());
-		sign.update();
-	}
-
-	private Sign placeSign() {
-		Block block = player.getLocation().getBlock();
-		
-		if (block.getType() != Material.AIR) {
-			player.sendMessage(ChatColor.RED + "Can't place revival sign!");
-			return null;
+		//Refreshes the players nameplate. 
+		TagAPI.refreshPlayer(getPlayer());
+		player.sendMessage(ChatColor.BOLD.toString() + ChatColor.RED + "BLEEDING OUT IN: " + ChatColor.DARK_GREEN + (30 - (System.currentTimeMillis() - diedAt) / 1000L) + " seconds");
 		}
 		
-		block.setType(Material.SIGN_POST);
-		Sign sign = (Sign) block.getState();
-		
-		sign.setLine(0, SIGN_HEADER);
-		sign.setLine(1, ChatColor.RED + player.getName());
-		sign.setLine(2, "TIME LEFT");
-		sign.setLine(3, ChatColor.GREEN + "30");
-		sign.update();
-		player.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "You have DIED! Wait for a revive, next round, or type /leave !");
-		return sign;
-	}
 	
 }

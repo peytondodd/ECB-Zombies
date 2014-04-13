@@ -18,14 +18,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.kitteh.tag.AsyncPlayerReceiveNameTagEvent;
+import org.kitteh.tag.TagAPI;
 
 public class PlayerDeathListener implements Listener {
 
@@ -47,11 +49,20 @@ public class PlayerDeathListener implements Listener {
 		Player player = event.getPlayer();
 		
 		if (deadPlayers.containsKey(player))
-			deadPlayers.remove(player).removeSign();
+			deadPlayers.remove(player);
 		
 		// TODO(mortu): move player count into event, setting oldPlayerCount and newPlayerCount 
 		if ((game.getPlayers().size() - 1) == deadPlayers.size())
 			safelyEndGame();
+	}
+	
+	@EventHandler //Event called when a nametag is rendered
+	public void onNameTag(AsyncPlayerReceiveNameTagEvent event) {
+		if (deadPlayers.containsKey(event.getNamedPlayer())) { //Check if the player whos name needs to be changed is downed.
+			DeadPlayer dp = deadPlayers.get(event.getNamedPlayer());
+			event.setTag(ChatColor.DARK_RED + "DOWNED! CLICK TO REVIVE: " + ChatColor.DARK_GREEN + dp.getTimeRemaining());
+		
+		}
 	}
 	
 	@EventHandler
@@ -62,11 +73,12 @@ public class PlayerDeathListener implements Listener {
 		Iterator<DeadPlayer> iterator = deadPlayers.values().iterator();
 		while (iterator.hasNext()) {
 			DeadPlayer deadPlayer = iterator.next();
-			if (deadPlayer.isExpired())
+			if (deadPlayer.getTimeRemaining() == 1)
 				
-				deadPlayer.removeSign();
+				deadPlayer.spawn();
+				
 			else
-				deadPlayer.updateSign();
+				deadPlayer.update();
 		}
 	}
 	
@@ -76,7 +88,7 @@ public class PlayerDeathListener implements Listener {
 			return;
 		
 		for (DeadPlayer deadPlayer : deadPlayers.values()) {
-			deadPlayer.removeSign();
+			
 			deadPlayer.spawn();
 		}
 		
@@ -106,7 +118,7 @@ public class PlayerDeathListener implements Listener {
 		
 		DeadPlayer deadPlayer = new DeadPlayer(player, this.game);
 		deadPlayers.put(player, deadPlayer);
-		deadPlayer.spawn();
+		deadPlayer.downPlayer();
 		
 		game.broadcast(ChatColor.BOLD.toString() + ChatColor.DARK_RED + event.getDeathMessage());
 		
@@ -115,7 +127,7 @@ public class PlayerDeathListener implements Listener {
 	}
 
 
-	@EventHandler
+	//@EventHandler - OLD sign revive
 	public void onBlockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();
 		if (block.getType() != Material.SIGN_POST)
@@ -135,7 +147,44 @@ public class PlayerDeathListener implements Listener {
 			game.callEvent(new PlayerReviveEvent(deadPlayer.getPlayer(), event.getPlayer()));
 		}
 	}
-	
+	@EventHandler
+	public void reviveInteract(PlayerInteractEntityEvent event) {
+		Player player = event.getPlayer();
+		
+		if(!(event.getRightClicked() instanceof Player)) 
+			return;
+		
+		Player interacted = (Player) event.getRightClicked();
+		if(deadPlayers.containsKey(interacted)) {
+			deadPlayers.get(interacted).revive();
+			deadPlayers.remove(interacted);
+			TagAPI.refreshPlayer(interacted);
+			game.callEvent(new PlayerReviveEvent(interacted, player));
+			
+			
+			
+		}
+		
+		
+		
+	}
+	@EventHandler //Zombies wont target dead players
+	public void onZombieTarget(EntityTargetEvent event) {
+
+		if(event.getEntity() instanceof Zombie && event.getTarget() instanceof Player) {
+			Player target = (Player) event.getTarget();
+			
+			if(plugin.getGameManager().get(target) == null)
+				return;
+			
+			
+			if(deadPlayers.containsKey(target)) {
+				event.setCancelled(true);
+
+			}
+		}
+	}
+
 	private void safelyEndGame() {
 		// XXX(mortu): the delay is to keep MC and ControllableMobsAPI from fighting over the mob 
 		new BukkitRunnable() {

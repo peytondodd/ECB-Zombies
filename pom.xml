@@ -78,6 +78,12 @@
 		<version>1.5.4</version>
 		<scope>test</scope>
 	</dependency>
+	<dependency>
+		<groupId>org.kitteh</groupId>
+		<artifactId>tagapi</artifactId>
+		<version>3.0</version>
+		<scope>compile</scope>
+	</dependency>
     </dependencies>
 
     <repositories>
