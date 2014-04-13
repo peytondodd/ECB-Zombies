@@ -1,20 +1,11 @@
 package net.endercraftbuild.cod.zombies.objects;
 
 import net.endercraftbuild.cod.zombies.ZombieGame;
-import net.minecraft.server.v1_7_R3.EntityPlayer;
-
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import org.kitteh.tag.TagAPI;
 
 public class DeadPlayer {
@@ -22,7 +13,6 @@ public class DeadPlayer {
 	public static final String SIGN_HEADER = ChatColor.BLUE + "ECB Revive";
 	
 	private final Player player;
-	//private final Sign sign;
 	private final ZombieGame game;
 	private final Long diedAt;
 	private final ItemStack[] armor;
@@ -30,7 +20,6 @@ public class DeadPlayer {
 	
 	public DeadPlayer(Player player, ZombieGame game) {
 		this.player = player;
-		//this.sign = placeSign();
 		this.game = game;
 		this.diedAt = System.currentTimeMillis();
 		this.armor = player.getInventory().getArmorContents();
@@ -41,9 +30,6 @@ public class DeadPlayer {
 		return this.player;
 	}
 	
-	//public Sign getSign() {
-	//	return this.sign;
-//	}
 	public void downPlayer() {
 		
 		player.getInventory().setArmorContents(null);
@@ -51,6 +37,7 @@ public class DeadPlayer {
 		player.setHealth(player.getMaxHealth());
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 9999999, 5));
 		player.sendMessage(ChatColor.BOLD.toString() + ChatColor.DARK_RED + "BLEEDING OUT IN: " + ChatColor.DARK_GREEN + getTimeRemaining() + "seconds");
+		TagAPI.refreshPlayer(getPlayer());
 		//downed nametag set via event
 		//TODO: Give them a a kit. modify giveKit to give a specific kit from the config
 	}
@@ -74,6 +61,7 @@ public class DeadPlayer {
 		player.setHealth(player.getMaxHealth());
 		player.setFireTicks(0);
 		player.sendMessage(ChatColor.BOLD.toString() + ChatColor.RED + "You bled out! Wait until next round or type /leave");
+		TagAPI.refreshPlayer(player);
 		for(PotionEffect effect : player.getActivePotionEffects())
 		{
 			//Fool died, no perks 4 u!
@@ -87,7 +75,6 @@ public class DeadPlayer {
 		if (isExpired())
 			return;
 		
-	//	removeSign();
 		player.getInventory().setArmorContents(armor);
 		player.getInventory().setContents(inventory);
 		
@@ -110,8 +97,7 @@ public class DeadPlayer {
 	public void update() {
 		if(isExpired())
 			return;
-		//Refreshes the players nameplate. 
-		TagAPI.refreshPlayer(getPlayer());
+
 		player.sendMessage(ChatColor.BOLD.toString() + ChatColor.RED + "BLEEDING OUT IN: " + ChatColor.DARK_GREEN + (30 - (System.currentTimeMillis() - diedAt) / 1000L) + " seconds");
 		}
 		

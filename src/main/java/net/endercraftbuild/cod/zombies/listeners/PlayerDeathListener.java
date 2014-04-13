@@ -15,14 +15,10 @@ import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 import net.endercraftbuild.cod.zombies.objects.DeadPlayer;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -127,26 +123,7 @@ public class PlayerDeathListener implements Listener {
 	}
 
 
-	//@EventHandler - OLD sign revive
-	public void onBlockBreak(BlockBreakEvent event) {
-		Block block = event.getBlock();
-		if (block.getType() != Material.SIGN_POST)
-			return;
-		
-		Sign sign = (Sign) block.getState();
-		if (sign.getLine(0) != DeadPlayer.SIGN_HEADER)
-			return;
-		
-		Iterator<DeadPlayer> iterator = deadPlayers.values().iterator();
-		while (iterator.hasNext()) {
-			DeadPlayer deadPlayer = iterator.next();
-			if (!deadPlayer.getPlayer().getName().startsWith(ChatColor.stripColor(sign.getLine(1))))
-				continue;
-			deadPlayer.revive();
-			iterator.remove();
-			game.callEvent(new PlayerReviveEvent(deadPlayer.getPlayer(), event.getPlayer()));
-		}
-	}
+
 	@EventHandler
 	public void reviveInteract(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
@@ -158,7 +135,7 @@ public class PlayerDeathListener implements Listener {
 		if(deadPlayers.containsKey(interacted)) {
 			deadPlayers.get(interacted).revive();
 			deadPlayers.remove(interacted);
-			TagAPI.refreshPlayer(interacted);
+			TagAPI.refreshPlayer(interacted); //Give them their normal skin back!
 			game.callEvent(new PlayerReviveEvent(interacted, player));
 			
 			
