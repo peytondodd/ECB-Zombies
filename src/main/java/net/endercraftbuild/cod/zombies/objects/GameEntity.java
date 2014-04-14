@@ -54,21 +54,18 @@ public abstract class GameEntity implements EntityFilter {
 		else
 		return game.isInGame(player);
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	protected void enrage() {
 		ControllableMob<?> mob = getMob();
 		
-		// FIXME(mortu): runner code isn't changing speed ... will fix later
-		
-	//	AttributeModifierFactory.create(UUID.fromString("8971a510-ec88-11e2-91e2-ecb200c9a66"), "Speed", 1, ModifyOperation.ADD_TO_BASIS_VALUE);
 	
-		mob.getAI().addBehavior(new AITargetNearest(10, 0, false, 0, this));
-
+		//mob.getAI().addBehavior(new AITargetNearest(10, 0, false, 0, this));
+		mob.getAI().reset();
 	
 	}
 	
 	public abstract ControllableMob<?> getMob();
+	
 	protected abstract void spawnMob();
 	
 	public void spawn() {
