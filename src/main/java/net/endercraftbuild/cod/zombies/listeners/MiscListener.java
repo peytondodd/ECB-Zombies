@@ -12,6 +12,7 @@ import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.events.GameEntityDeathEvent;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 import net.endercraftbuild.cod.zombies.tasks.FireworkTask;
+import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -32,17 +33,20 @@ public class MiscListener implements Listener {
 	
 	public MiscListener(CoDMain plugin) {
 		this.plugin = plugin;
+		
 	}
 	
 	@EventHandler
 	public void onTick(GameTickEvent event) {
 		ZombieGame game = (ZombieGame) event.getGame();
-		
+		Economy economy = plugin.getEconomy();
 		Iterator<Player> iterator = game.getPlayers().iterator();
 		while (iterator.hasNext()) {
 			Player player = iterator.next();
-			BarAPI.setMessage(player, ChatColor.BLUE  + game.getName() + " Stats: " + ChatColor.DARK_AQUA + "Round: " +  game.getCurrentWave() + ChatColor.AQUA + " |" 
-					+ ChatColor.DARK_AQUA + " Zombies Alive: " + game.getRemainingEntityCount() + "/" + game.getMaxEntityCount(), 100);
+			String balance = economy.format(economy.getBalance(player.getName()));
+			BarAPI.setMessage(player, ChatColor.BLUE  + game.getName() + ":" + ChatColor.DARK_AQUA + " Round: " +  game.getCurrentWave() + ChatColor.AQUA + " |" 
+					+ ChatColor.DARK_AQUA + " Zombies: " + game.getRemainingEntityCount() + "/" + game.getMaxEntityCount() 
+					+ ChatColor.AQUA + " | " + ChatColor.DARK_AQUA + "Money: " + balance, 100);
 		
 		}
 	}
@@ -83,19 +87,7 @@ public class MiscListener implements Listener {
 	    }
 	  }
 
-  	//@EventHandler
-	public void onGameEntityDeath(GameEntityDeathEvent event) {
-		ZombieGame game = (ZombieGame) event.getGame();
-	
-		Iterator<Player> iterator = game.getPlayers().iterator();
-		while (iterator.hasNext()) {
-			Player player = iterator.next();
-			
-			//FakeDragon.setStatus(player, "", 100);
-			BarAPI.setMessage(player, ChatColor.BLUE  + game.getName() + " Stats: " + ChatColor.DARK_AQUA + "Round: " +  game.getCurrentWave() + ChatColor.AQUA + " |" 
-				+ ChatColor.DARK_AQUA + " Zombies Alive: " + game.getRemainingEntityCount() + "/" + game.getMaxEntityCount(), 100);
-		}
-	}
+  
 	
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerJoin(PlayerJoinEvent event) {

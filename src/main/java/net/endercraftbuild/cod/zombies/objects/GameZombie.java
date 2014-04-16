@@ -24,7 +24,7 @@ public class GameZombie extends GameEntity {
 	@Override
 	protected void spawnMob() {
 		
-		this.zombie = ControllableMobs.assign(getGame().getSpawnLocation().getWorld().spawn(getSpawner().getLocation(), Zombie.class));
+		this.zombie = ControllableMobs.putUnderControl(getGame().getSpawnLocation().getWorld().spawn(getSpawner().getLocation(), Zombie.class));
 	}
 	
 }

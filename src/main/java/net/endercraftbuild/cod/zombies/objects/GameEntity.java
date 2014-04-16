@@ -10,7 +10,11 @@ import org.bukkit.potion.PotionEffectType;
 
 import de.ntcomputer.minecraft.controllablemobs.api.ControllableMob;
 import de.ntcomputer.minecraft.controllablemobs.api.ControllableMobs;
+import de.ntcomputer.minecraft.controllablemobs.api.ai.behaviors.AIBehavior;
+import de.ntcomputer.minecraft.controllablemobs.api.ai.behaviors.AIRandomStroll;
 import de.ntcomputer.minecraft.controllablemobs.api.ai.behaviors.AITargetNearest;
+import de.ntcomputer.minecraft.controllablemobs.api.ai.AIPart;
+import de.ntcomputer.minecraft.controllablemobs.api.ai.AIType;
 import de.ntcomputer.minecraft.controllablemobs.api.ai.EntityFilter;
 
 public abstract class GameEntity implements EntityFilter {
@@ -57,12 +61,13 @@ public abstract class GameEntity implements EntityFilter {
 
 	protected void enrage() {
 		ControllableMob<?> mob = getMob();
-		
-	
-		//mob.getAI().addBehavior(new AITargetNearest(10, 0, false, 0, this));
+		//They seem smarter like this... temporary!
 		mob.getAI().reset();
+			
+		}
+
 	
-	}
+
 	
 	public abstract ControllableMob<?> getMob();
 	
