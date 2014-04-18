@@ -22,6 +22,7 @@ import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -80,7 +81,21 @@ public class Shoot implements Listener {
 						self.plugin.reloaders.remove(player.getName());
 					}
 				}, 22L);
+			
+			} else if (hand.getType() == Material.STONE_PICKAXE) { // MP5
+					
+					if (!consumeAmmo(player, 1)) {
+						player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
+						return;
+					}
 
+				
+					player.launchProjectile(Snowball.class);
+					
+					Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+					smokepase(player, loc);
+					player.playSound(player.getLocation(), Sound.CLICK, 70.0F, 70.0F);
+					
 			} else if (hand.getType() == Material.DIAMOND_AXE) { // rpg
 				if (this.plugin.reloaders.contains(player.getName()))
 					return;
@@ -102,7 +117,7 @@ public class Shoot implements Listener {
 					public void run() {
 						self.plugin.reloaders.remove(player.getName());
 					}
-				}, 38L);
+				}, 40L);
 
 			} else if (hand.getType() == Material.GOLD_HOE) { // Sniper
 				if (this.plugin.reloaders.contains(player.getName()))
@@ -204,6 +219,8 @@ public class Shoot implements Listener {
 		case IRON_HOE:
 			event.setDamage(pap ? 16 : 12);
 			break;
+		case STONE_PICKAXE: //SMG
+			event.setDamage(pap ? 13 : 9);
 		case DIAMOND_HOE:
 			event.setDamage(pap ? 18 : 14);
 			break;
@@ -304,6 +321,16 @@ public class Shoot implements Listener {
 
 		player.updateInventory();
 		return true;
+	}
+	@EventHandler //Don't allow picks to be enchanted	
+	public void pickEnchant(EnchantItemEvent event) {
+		if(event.getItem().getType() == Material.STONE_PICKAXE) {
+			event.setCancelled(true);
+			event.getEnchanter().sendMessage(plugin.prefix + ChatColor.RED + "Guns can be Pack-a-punched at PaP signs!");
+					
+		}
+			
+		
 	}
 
 }
