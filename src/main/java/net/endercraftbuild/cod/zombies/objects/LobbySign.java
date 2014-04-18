@@ -92,7 +92,7 @@ public class LobbySign extends SerializableGameObject {
 			sign.setLine(3, ChatColor.BOLD.toString() + ChatColor.DARK_GREEN + "Round: " + game.getCurrentWave());
 		}
 		else if(game.isActive() == false) {
-			sign.setLine(3, ChatColor.DARK_RED + "Not Active");
+			sign.setLine(3, ChatColor.DARK_RED + "Waiting...");
 		}
 		//sign.setLine(2, "IT WKERS");
 		sign.update();
@@ -104,7 +104,7 @@ public class LobbySign extends SerializableGameObject {
 		block.setType(Material.WALL_SIGN);
 		Sign sign = (Sign) block.getState();
 		sign.setLine(line, string);
-		
+		sign.update();
 		
 	}
 	public Sign placeSign() {

@@ -422,7 +422,7 @@ public class ZombieGame extends Game {
 			sign.updateSign();
 			//sign.placeSign();
 	}
-
+	
 	
 	public List<LobbySign> getLobbySigns() {
 		return signs;

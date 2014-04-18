@@ -217,10 +217,10 @@ public class Shoot implements Listener {
 			break;
 		case WOOD_HOE:
 		case IRON_HOE:
-			event.setDamage(pap ? 16 : 12);
+			event.setDamage(pap ? 16 : 13);
 			break;
 		case STONE_PICKAXE: //SMG
-			event.setDamage(pap ? 13 : 9);
+			event.setDamage(pap ? 14 : 8);
 		case DIAMOND_HOE:
 			event.setDamage(pap ? 18 : 14);
 			break;
