@@ -29,6 +29,7 @@ public abstract class Game {
 	private Long minimumPlayers;
 	private Long maximumPlayers;
 	private boolean isEnabled;
+	private boolean isPrivate; //Dont allow joining in progress
 	
 	private Permission permission;
 	private boolean isActive;
@@ -53,6 +54,7 @@ public abstract class Game {
 		this.setMinimumPlayers(config.getLong("min-players"));
 		this.setMaximumPlayers(config.getLong("max-players"));
 		this.setEnabled(config.getBoolean("enabled", true));
+		this.setPrivate(config.getBoolean("private", true));
 		
 		return config;
 	}
@@ -63,7 +65,7 @@ public abstract class Game {
 		gameSection.set("min-players", getMinimumPlayers());
 		gameSection.set("max-players", getMaximumPlayers());
 		gameSection.set("enabled", isEnabled());
-		
+		gameSection.set("private", isPrivate());
 		return gameSection;
 	}
 	
@@ -98,9 +100,18 @@ public abstract class Game {
 	public boolean isEnabled() {
 		return isEnabled;
 	}
+	public boolean isPrivate() {
+		return isPrivate;
+	}
+	public boolean setPrivate(boolean isPrivate) {
+		return this.isPrivate = isPrivate;		
+	}
 	
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
+	}
+	public boolean togglePrivate() {
+		return this.isPrivate = !isPrivate;
 	}
 	
 	public boolean toggleEnabled() {
@@ -168,6 +179,8 @@ public abstract class Game {
 	public void addPlayer(Player player) {
 		if (!isEnabled())
 			throw new RuntimeException("This game is not enabled.");
+		if(isPrivate() && isActive())
+			throw new RuntimeException("You cannot join this game while it is running.");
 		if (!player.hasPermission(getPermission()))
 			throw new RuntimeException("You do not have permission to join this game.");
 		if (isInGame(player))

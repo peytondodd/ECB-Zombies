@@ -114,6 +114,7 @@ public class CoDMain extends JavaPlugin {
 		getCommand("cstop").setExecutor(new StopCommand(this));
 		getCommand("cremove").setExecutor(new RemoveCommand(this));
 		getCommand("ctoggle").setExecutor(new ToggleCommand(this));
+		getCommand("cprivate").setExecutor(new PrivateToggleCommand(this));
 		
 		// zombie admin commands
 		getCommand("zcreate").setExecutor(new CreateCommand(this));
