@@ -27,7 +27,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
@@ -330,6 +333,41 @@ public class Shoot implements Listener {
 					
 		}
 			
+		
+	}
+	@EventHandler
+	public void onSneak(PlayerToggleSneakEvent event) {
+		Player player = event.getPlayer();
+		
+		if(!plugin.getGameManager().isInGame(player))
+			return;
+		if(!(player.isSneaking()) && player.getItemInHand().getType() == Material.GOLD_HOE) { //SNIPER
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20000, 12));	
+			
+		}
+		if(!(player.isSneaking()) && player.getItemInHand().getType() == Material.WOOD_HOE) { //PISTOL
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20000, 7));	
+			
+		}
+		if(!(player.isSneaking()) && player.getItemInHand().getType() == Material.STONE_PICKAXE) { //SMG
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20000, 6));	
+			
+		}
+		if(!(player.isSneaking()) && player.getItemInHand().getType() == Material.DIAMOND_HOE) { //RAY GUN
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20000, 7));	
+			
+		}
+		if(!(player.isSneaking()) && player.getItemInHand().getType() == Material.STONE_HOE) { //SHOTGUN
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20000, 5));	
+			
+		}
+		if(!(player.isSneaking()) && player.getItemInHand().getType() == Material.IRON_HOE) { //AK47
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20000, 8));	
+			
+		}
+		else if(player.isSneaking() && player.hasPotionEffect(PotionEffectType.SLOW)) {
+			player.removePotionEffect(PotionEffectType.SLOW);
+		}
 		
 	}
 

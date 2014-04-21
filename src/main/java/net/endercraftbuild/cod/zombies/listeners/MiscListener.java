@@ -9,7 +9,6 @@ import net.endercraftbuild.cod.events.PlayerJoinEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
 import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.ZombieGame;
-import net.endercraftbuild.cod.zombies.events.GameEntityDeathEvent;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 import net.endercraftbuild.cod.zombies.tasks.FireworkTask;
 import net.milkbowl.vault.economy.Economy;
@@ -104,4 +103,5 @@ public class MiscListener implements Listener {
 		player.teleport(player.getWorld().getSpawnLocation());
 		BarAPI.setMessage(player, ChatColor.DARK_AQUA + "Visit " + ChatColor.AQUA + "ecb-mc.net " + ChatColor.DARK_AQUA + "| Donate | Forums | Vote", 100);
 	}
+	
 }
