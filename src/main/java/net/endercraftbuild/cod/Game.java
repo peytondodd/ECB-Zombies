@@ -10,6 +10,7 @@ import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -180,7 +181,7 @@ public abstract class Game {
 		if (!isEnabled())
 			throw new RuntimeException("This game is not enabled.");
 		if(isPrivate() && isActive())
-			throw new RuntimeException("You cannot join this game while it is running.");
+			throw new RuntimeException("You cannot join this game while it is running. (Private game - donate!)");
 		if (!player.hasPermission(getPermission()))
 			throw new RuntimeException("You do not have permission to join this game.");
 		if (isInGame(player))
@@ -194,6 +195,8 @@ public abstract class Game {
 			callEvent(new PlayerJoinEvent(player, this));
 		else if (players.size() >= minimumPlayers)
 			start();
+		else if (!(players.size() >= minimumPlayers))
+			player.sendMessage(ChatColor.DARK_GREEN + ChatColor.BOLD.toString() + "Added to queue! " + minimumPlayers + " needed for game to start!");
 	}
 	
 	public void removePlayer(Player player) {
@@ -201,7 +204,7 @@ public abstract class Game {
 			throw new IllegalArgumentException(player.getName() + " is not in this game.");
 		callEvent(new PlayerLeaveEvent(player, this));
 		players.remove(player);
-		if (isActive() && players.size() < minimumPlayers)
+		if (isActive() && players.size() < 1) //Always stop with less than 1. 0 duh
 			stop();
 	}
 	
