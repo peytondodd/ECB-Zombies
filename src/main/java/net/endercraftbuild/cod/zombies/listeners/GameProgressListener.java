@@ -16,23 +16,13 @@ import net.endercraftbuild.cod.zombies.events.RoundStartEvent;
 import net.endercraftbuild.cod.zombies.objects.GameEntity;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.util.Vector;
 
 public class GameProgressListener implements Listener {
 	
-		//tring dir = "/home/ecb/servers/coins/";
-		String dir = "C:/Users/CP/Desktop/";
-		String prefix = ChatColor.BLUE + "ECB>"  + ChatColor.BOLD + ChatColor.DARK_GREEN;
-		String boldgreen =  ChatColor.BOLD + ""+ ChatColor.DARK_GREEN;
 	private final CoDMain plugin;
 	private final ZombieGame game;
 	
@@ -68,8 +58,15 @@ public class GameProgressListener implements Listener {
 		game.rebuildBarriers();
 		game.closeDoors();
 		
-		game.broadcastToAll(ChatColor.AQUA + game.getName() + " has ended!"); 
+		
 		game.updateLobbySign();
+		
+		if(game.isPrivate()) {
+			game.broadcastToAll(ChatColor.GREEN + "Private game: " + game.getName() + " has ended! ");
+		}
+		else {
+			game.broadcastToAll(ChatColor.AQUA + game.getName() + " has ended!");
+		}
 	}
 
 	@EventHandler

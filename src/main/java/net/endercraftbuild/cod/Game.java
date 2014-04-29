@@ -204,8 +204,12 @@ public abstract class Game {
 			throw new IllegalArgumentException(player.getName() + " is not in this game.");
 		callEvent(new PlayerLeaveEvent(player, this));
 		players.remove(player);
-		if (isActive() && players.size() < 1) //Always stop with less than 1. 0 duh
+		if (isActive() && !isPrivate() && players.size() < minimumPlayers) 
 			stop();
+		else if(isPrivate() && isActive() && players.size() == 0) {
+			stop();
+			
+		}
 	}
 	
 	public void removePlayers() {
