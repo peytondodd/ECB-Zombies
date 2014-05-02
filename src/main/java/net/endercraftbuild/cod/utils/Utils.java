@@ -83,6 +83,7 @@ public class Utils {
 		player.updateInventory();
 	}
 	
+	
 	public static void wearItem(Player player, ItemStack itemStack, String location) {
 		switch (location) {
 		case "chest":
@@ -111,7 +112,7 @@ public class Utils {
 		else
 			return entity;
 	}
-	
+	 
 	public static ItemStack addGlow(ItemStack item){ 
 		net.minecraft.server.v1_7_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 		NBTTagCompound tag = null;

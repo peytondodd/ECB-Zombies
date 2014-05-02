@@ -15,7 +15,6 @@ import net.endercraftbuild.cod.zombies.listeners.GameProgressListener;
 import net.endercraftbuild.cod.zombies.listeners.PlayerDeathListener;
 import net.endercraftbuild.cod.zombies.objects.Barrier;
 import net.endercraftbuild.cod.zombies.objects.Door;
-import net.endercraftbuild.cod.zombies.objects.GameCaveSpider;
 import net.endercraftbuild.cod.zombies.objects.GameEntity;
 import net.endercraftbuild.cod.zombies.objects.GameWolf;
 import net.endercraftbuild.cod.zombies.objects.GameZombie;
@@ -446,7 +445,7 @@ public class ZombieGame extends Game {
 	
 	public GameEntity findGameEntity(Entity entity) {
 		for (GameEntity gameEntity : gameEntities)
-			if (gameEntity.getMob().getEntity() == entity)
+			if (gameEntity.getMob() == entity)
 				return gameEntity;
 		return null;
 	}
@@ -495,9 +494,7 @@ public class ZombieGame extends Game {
 				case "wolves":
 					gameEntity = new GameWolf(this, spawner);
 					break;
-				case "spiders":
-					gameEntity = new GameCaveSpider(this, spawner);
-					break;
+				
 				default:
 					gameEntity = new GameZombie(this, spawner);
 					break;

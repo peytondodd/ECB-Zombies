@@ -4,27 +4,23 @@ import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.entity.Zombie;
 
-import de.ntcomputer.minecraft.controllablemobs.api.ControllableMob;
-import de.ntcomputer.minecraft.controllablemobs.api.ControllableMobs;
-
 public class GameZombie extends GameEntity {
 	
-	private ControllableMob<Zombie> zombie;
+	private Zombie zombie;
 	
 	public GameZombie(ZombieGame game, Spawner spawner) {
 		super(game, spawner);
 	}
 	
 	@Override
-	public ControllableMob<?> getMob() {
+	public Zombie getMob() {
 		return zombie;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void spawnMob() {
 		
-		this.zombie = ControllableMobs.putUnderControl(getGame().getSpawnLocation().getWorld().spawn(getSpawner().getLocation(), Zombie.class));
+		this.zombie = getGame().getSpawnLocation().getWorld().spawn(getSpawner().getLocation(), Zombie.class);
 	}
 	
 }

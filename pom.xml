@@ -48,12 +48,7 @@
         	<version>5.9.1-SNAPSHOT</version>
 		<scope>compile</scope>
         </dependency>
-        <dependency>
-        	<artifactId>controllable-mobs-api</artifactId>
-		<groupId>de.ntcomputer</groupId>
-        	<version>1.7.2.6-SNAPSHOT</version>
-		<scope>compile</scope>
-        </dependency>
+        
 	<dependency>
 		<groupId>me.confuser</groupId>
 		<artifactId>BarAPI</artifactId>

@@ -33,6 +33,9 @@ commands:
   texture:
     description: Texture
     usage: /<command>
+  cprivate:
+    description: Toggles a games public/private state
+    usage: /<command> (game)
   stats:
     description: Displays stats for the game you are in or a specified game.
     usage: |
@@ -269,3 +272,4 @@ permissions:
     description: Allows you to advance a CoD Zombies game to the next round.
   cod.admin.signs:
     description: Allows you to create/edit CoD signs.
+

@@ -4,20 +4,12 @@ import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zombie;
 import org.bukkit.potion.PotionEffectType;
 
-import de.ntcomputer.minecraft.controllablemobs.api.ControllableMob;
-import de.ntcomputer.minecraft.controllablemobs.api.ControllableMobs;
-import de.ntcomputer.minecraft.controllablemobs.api.ai.behaviors.AIBehavior;
-import de.ntcomputer.minecraft.controllablemobs.api.ai.behaviors.AIRandomStroll;
-import de.ntcomputer.minecraft.controllablemobs.api.ai.behaviors.AITargetNearest;
-import de.ntcomputer.minecraft.controllablemobs.api.ai.AIPart;
-import de.ntcomputer.minecraft.controllablemobs.api.ai.AIType;
-import de.ntcomputer.minecraft.controllablemobs.api.ai.EntityFilter;
-
-public abstract class GameEntity implements EntityFilter {
+public abstract class GameEntity {
 	private static final int NEAR = 3;
 	
 	private final ZombieGame game;
@@ -37,7 +29,7 @@ public abstract class GameEntity implements EntityFilter {
 	}
 	
 	public boolean near(Location target) {
-		Location location = getMob().getEntity().getLocation();
+		Location location = getMob().getLocation();
 		
 		if (location.getBlockY() != target.getBlockY())
 			return false;
@@ -53,6 +45,7 @@ public abstract class GameEntity implements EntityFilter {
 			return false;
 		
 		Player player = (Player) target;
+		
 		if(player.hasPotionEffect(PotionEffectType.INVISIBILITY))
 			return false;
 		else
@@ -60,39 +53,33 @@ public abstract class GameEntity implements EntityFilter {
 	}
 
 	protected void enrage() {
-		ControllableMob<?> mob = getMob();
-		//They seem smarter like this... temporary!
-		mob.getAI().reset();
+		
 			
-		}
+	}
+
+	public abstract Entity getMob();
 
 	
 
-	
-	public abstract ControllableMob<?> getMob();
 	
 	protected abstract void spawnMob();
 	
 	public void spawn() {
+		
 		spawnMob();
-		enrage();
+		
 	}
 
 	public void respawn() {
-		Entity entity = getMob().getEntity();
 		
-		if(ControllableMobs.isAssigned((LivingEntity) entity))
-		
+			
 		despawn();
 		spawn();
 	}
 	
 	public void despawn() {
-		Entity entity = getMob().getEntity();
+		Entity entity = getMob();
 		
-		if(ControllableMobs.isAssigned((LivingEntity) entity))
-		ControllableMobs.unassign(getMob());
-	
 		entity.remove();
 	}
 	

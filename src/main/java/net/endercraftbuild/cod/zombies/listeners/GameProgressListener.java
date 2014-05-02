@@ -110,7 +110,7 @@ public class GameProgressListener implements Listener {
 		game.damageBarriers();
 		
 		for (GameEntity gameEntity : game.getGameEntities())
-			if (!gameEntity.getMob().getEntity().isValid())
+			if (!gameEntity.getMob().isValid())
 				gameEntity.respawn();
 	}
 	
