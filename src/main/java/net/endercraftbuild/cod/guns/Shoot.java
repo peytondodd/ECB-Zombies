@@ -258,7 +258,7 @@ public class Shoot implements Listener {
 		Player player = (Player) event.getEntity().getShooter();
 
 		if (player.getItemInHand().getType() == Material.DIAMOND_AXE) 
-			player.getWorld().createExplosion(event.getEntity().getLocation(), 2.1F, false);
+			player.getWorld().createExplosion(event.getEntity().getLocation(), 2.0F, false);
 	}
 	
 	@EventHandler
@@ -344,7 +344,7 @@ public class Shoot implements Listener {
 	}
 	@EventHandler //Don't allow picks to be enchanted	
 	public void pickEnchant(EnchantItemEvent event) {
-		if(event.getItem().getType() == Material.STONE_PICKAXE || event.getItem().getType() == Material.IRON_PICKAXE) {
+		if(event.getItem().getType() == Material.STONE_PICKAXE || event.getItem().getType() == Material.IRON_PICKAXE || event.getItem().getType() == Material.DIAMOND_AXE) {
 			event.setCancelled(true);
 			event.getEnchanter().sendMessage(plugin.prefix + ChatColor.RED + "Guns can be Pack-a-punched at PaP signs!");
 					
