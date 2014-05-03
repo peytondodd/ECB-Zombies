@@ -24,6 +24,7 @@ public class GameWolf extends GameEntity {
 		
 		this.wolf.setFireTicks(Integer.MAX_VALUE);
 		this.wolf.setAngry(true);
+		
 	}
 	
 }

@@ -54,7 +54,7 @@ public abstract class GameEntity {
 
 	protected void enrage() {
 		
-			
+		
 	}
 
 	public abstract Entity getMob();

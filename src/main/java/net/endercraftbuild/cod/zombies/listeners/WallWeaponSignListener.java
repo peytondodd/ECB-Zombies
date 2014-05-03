@@ -108,7 +108,7 @@ public class WallWeaponSignListener implements Listener {
 		
 
 		if(hand.getType() == Material.GOLD_HOE || hand.getType() == Material.STONE_HOE || hand.getType() == Material.WOOD_HOE || hand.getType() == Material.IRON_HOE ||
-				hand.getType() == Material.DIAMOND_HOE || hand.getType() == Material.STONE_PICKAXE) {
+				hand.getType() == Material.DIAMOND_HOE || hand.getType() == Material.STONE_PICKAXE || hand.getType() == Material.IRON_PICKAXE) {
 			
 			if(Utils.isGunPaP(hand)) {
 				player.sendMessage(plugin.prefix + "That is already Pack-a-Punched!");

@@ -58,7 +58,7 @@ public class Shoot implements Listener {
 				player.launchProjectile(Snowball.class);
 				Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
 				smokepase(player, loc);
-				player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
+				player.playSound(player.getLocation(), Sound.FIREWORK_BLAST2, 70.0F, 0.0F);
 
 			} else if (hand.getType() == Material.STONE_HOE) { // Shotgun 
 				if (this.plugin.reloaders.contains(player.getName()))
@@ -97,7 +97,21 @@ public class Shoot implements Listener {
 					
 					Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
 					smokepase(player, loc);
-					player.playSound(player.getLocation(), Sound.CLICK, 70.0F, 70.0F);
+					player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
+					
+			} else if (hand.getType() == Material.IRON_PICKAXE) { // M4
+				
+				if (!consumeAmmo(player, 1)) {
+					player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
+					return;
+				}
+
+			
+				player.launchProjectile(Snowball.class);
+				
+				Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+				smokepase(player, loc);
+				player.playSound(player.getLocation(), Sound.FIREWORK_BLAST, 70.0F, 70.0F);
 					
 			} else if (hand.getType() == Material.DIAMOND_AXE) { // rpg
 				if (this.plugin.reloaders.contains(player.getName()))
@@ -120,7 +134,7 @@ public class Shoot implements Listener {
 					public void run() {
 						self.plugin.reloaders.remove(player.getName());
 					}
-				}, 40L);
+				}, 65L);
 
 			} else if (hand.getType() == Material.GOLD_HOE) { // Sniper
 				if (this.plugin.reloaders.contains(player.getName()))
@@ -221,6 +235,9 @@ public class Shoot implements Listener {
 		case WOOD_HOE:
 		case IRON_HOE:
 			event.setDamage(pap ? 16 : 13);
+			break;
+		case IRON_PICKAXE:
+			event.setDamage(pap ? 15 : 11);
 			break;
 		case STONE_PICKAXE: //SMG
 			event.setDamage(pap ? 14 : 8);
@@ -327,7 +344,7 @@ public class Shoot implements Listener {
 	}
 	@EventHandler //Don't allow picks to be enchanted	
 	public void pickEnchant(EnchantItemEvent event) {
-		if(event.getItem().getType() == Material.STONE_PICKAXE) {
+		if(event.getItem().getType() == Material.STONE_PICKAXE || event.getItem().getType() == Material.IRON_PICKAXE) {
 			event.setCancelled(true);
 			event.getEnchanter().sendMessage(plugin.prefix + ChatColor.RED + "Guns can be Pack-a-punched at PaP signs!");
 					
@@ -362,6 +379,10 @@ public class Shoot implements Listener {
 			
 		}
 		if(!(player.isSneaking()) && player.getItemInHand().getType() == Material.IRON_HOE) { //AK47
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20000, 8));	
+			
+		}
+		if(!(player.isSneaking()) && player.getItemInHand().getType() == Material.IRON_PICKAXE) { //M4
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20000, 8));	
 			
 		}
