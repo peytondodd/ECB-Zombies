@@ -19,7 +19,7 @@ public class TextureCommand implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
-		sender.sendMessage(plugin.prefix + "Link: http://bit.ly/CoDTPack " + ChatColor.RED + "[CLICK IT]");
+		sender.sendMessage(plugin.prefix + "Link: http://bit.ly/ZombieTexture " + ChatColor.RED + "[CLICK IT]");
 		return true;
 
 	}

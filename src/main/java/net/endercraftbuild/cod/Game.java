@@ -181,7 +181,7 @@ public abstract class Game {
 		if (!isEnabled())
 			throw new RuntimeException("This game is not enabled.");
 		if(isPrivate() && isActive())
-			throw new RuntimeException("You cannot join this game while it is running. (Private game - donate!)");
+			throw new RuntimeException("This is a private donor only game and it has already started! Donate and wait until next game! ecb-mc.net");
 		if (!player.hasPermission(getPermission()))
 			throw new RuntimeException("You do not have permission to join this game.");
 		if (isInGame(player))
