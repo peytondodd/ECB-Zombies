@@ -21,8 +21,8 @@ public class FireworkTask extends BukkitRunnable {
 	}
 
 	@Override
-	public void run() {
-		while (!blocks.isEmpty()) {
+	public void run() {	
+		while (!blocks.isEmpty()) {		
 			Firework firework = (Firework) world.spawnEntity(blocks.get(0), EntityType.FIREWORK);
 			
 			FireworkMeta meta = firework.getFireworkMeta();
@@ -32,6 +32,10 @@ public class FireworkTask extends BukkitRunnable {
 			firework.detonate();
 			
 			blocks.remove(0);
+			
 		}
+		System.out.println("Cancelling firework task...");
+		this.cancel();
+		
 	}
 }
