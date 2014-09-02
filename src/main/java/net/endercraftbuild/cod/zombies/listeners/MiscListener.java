@@ -37,24 +37,11 @@ public class MiscListener implements Listener {
 		this.plugin = plugin;
 		
 	}
-    @EventHandler
-    public void onStart(GameStartEvent event) {
-        Game game = event.getGame();
 
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        Scoreboard board = manager.getNewScoreboard();
-
-        Objective objective = board.registerNewObjective(game.getName(), "dummy");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        objective.setDisplayName(ChatColor.BLUE.toString() + ChatColor.BOLD + game.getName());
-        Score score = objective.getScore(ChatColor.GREEN + "Money:");
-
-    }
 	
 	@EventHandler
 	public void onTick(GameTickEvent event) {
 		ZombieGame game = (ZombieGame) event.getGame();
-		Economy economy = plugin.getEconomy();
 
 
 
@@ -115,21 +102,6 @@ public class MiscListener implements Listener {
 
      }
   
-	
-	@EventHandler(priority = EventPriority.LOW)
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		ZombieGame game = (ZombieGame) event.getGame();
-		Player player = event.getPlayer();
-		game.createNewScoreboard(player);
-	}
-	
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerQuit(PlayerLeaveEvent event) {
-		Player player = event.getPlayer();
-		
-        ZombieGame game = (ZombieGame) event.getGame();
 
-        game.createNewScoreboard(null);
-	}
 	
 }
