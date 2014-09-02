@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.scoreboard.*;
 
@@ -18,7 +19,7 @@ public class PlayerJoinQuitServerListener implements Listener {
 	}
 
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
         Player player = event.getPlayer();
         player.teleport(event.getPlayer().getWorld().getSpawnLocation());
