@@ -2,8 +2,9 @@ package net.endercraftbuild.cod.zombies.listeners;
 
 import java.util.Iterator;
 
-import me.confuser.barapi.BarAPI;
 import net.endercraftbuild.cod.CoDMain;
+import net.endercraftbuild.cod.Game;
+import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.GameTickEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
 import net.endercraftbuild.cod.events.PlayerLeaveEvent;
@@ -13,6 +14,7 @@ import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
 import net.endercraftbuild.cod.zombies.tasks.FireworkTask;
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -23,6 +25,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.scoreboard.*;
 import org.bukkit.util.Vector;
 
 public class MiscListener implements Listener {
@@ -34,19 +37,33 @@ public class MiscListener implements Listener {
 		this.plugin = plugin;
 		
 	}
+    @EventHandler
+    public void onStart(GameStartEvent event) {
+        Game game = event.getGame();
+
+        ScoreboardManager manager = Bukkit.getScoreboardManager();
+        Scoreboard board = manager.getNewScoreboard();
+
+        Objective objective = board.registerNewObjective(game.getName(), "dummy");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        objective.setDisplayName(ChatColor.BLUE.toString() + ChatColor.BOLD + game.getName());
+        Score score = objective.getScore(ChatColor.GREEN + "Money:");
+
+    }
 	
 	@EventHandler
 	public void onTick(GameTickEvent event) {
 		ZombieGame game = (ZombieGame) event.getGame();
 		Economy economy = plugin.getEconomy();
+
+
+
 		Iterator<Player> iterator = game.getPlayers().iterator();
 		while (iterator.hasNext()) {
+
 			Player player = iterator.next();
-			String balance = economy.format(economy.getBalance(player.getName()));
-			BarAPI.setMessage(player, ChatColor.BLUE  + game.getName() + ":" + ChatColor.DARK_AQUA + " Round: " +  game.getCurrentWave() + ChatColor.AQUA + " |" 
-					+ ChatColor.DARK_AQUA + " Zombies: " + game.getRemainingEntityCount() + "/" + game.getMaxEntityCount() 
-					+ ChatColor.AQUA + " | " + ChatColor.DARK_AQUA + "Money: " + balance, 100);
-		
+			game.createNewScoreboard(player);
+
 		}
 	}
 	
@@ -73,7 +90,7 @@ public class MiscListener implements Listener {
 	    if (!event.isCancelled()) {
 	    	// List<Block> blockListclone;
 	    	// final List<Block> blockListclone = new ArrayList<Block>(event.blockList());
-	    	
+
 	    	for (Block block : event.blockList()) {
 	    		Vector newVelo = event.getLocation().subtract(event.getLocation()).toVector();
 	    		newVelo.setX(event.getYield() * 2.0F - newVelo.getX());
@@ -83,7 +100,7 @@ public class MiscListener implements Listener {
 	    		final FallingBlock fallBlock = block.getWorld().spawnFallingBlock(block.getLocation(), block.getType(), block.getData());
 	    		fallBlock.setVelocity(newVelo);
 	    		fallBlock.setDropItem(false);
-	    		
+
 	    		break;
 	    	}
 	    	
@@ -103,16 +120,16 @@ public class MiscListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		ZombieGame game = (ZombieGame) event.getGame();
 		Player player = event.getPlayer();
-		BarAPI.setMessage(player, ChatColor.BLUE  + game.getName() + " Stats: " + ChatColor.DARK_AQUA + "Round: " +  game.getCurrentWave() + ChatColor.AQUA + " |" 
-			+ ChatColor.DARK_AQUA + " Zombies Alive: " + game.getLivingEntityCount() + "/" + game.getMaxEntityCount(), 100);
+		game.createNewScoreboard(player);
 	}
 	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerLeaveEvent event) {
 		Player player = event.getPlayer();
 		
-		player.teleport(player.getWorld().getSpawnLocation());
-		BarAPI.setMessage(player, ChatColor.DARK_AQUA + "Visit " + ChatColor.AQUA + "ecb-mc.net " + ChatColor.DARK_AQUA + "| Donate | Forums | Vote", 100);
+        ZombieGame game = (ZombieGame) event.getGame();
+
+        game.createNewScoreboard(null);
 	}
 	
 }
