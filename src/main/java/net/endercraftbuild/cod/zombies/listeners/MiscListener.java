@@ -63,8 +63,13 @@ public class MiscListener implements Listener {
 			event.setCancelled(true);
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	//@EventHandler(priority = EventPriority.HIGHEST)
 	  public void onExplosion(EntityExplodeEvent event) {
+
+          //MINECRAFT 1.8 Spigot protocol hack: Throwing blocks seems to cause rendering issues...
+          //Client sees that the land is being destroyed (and glitches them a bit if they are in the holes)
+          //But it is just a rendering bug, nothing is actually destroyed. Temporary disable until full Spigot 1.8
+
 	    if (!event.isCancelled()) {
 	    	// List<Block> blockListclone;
 	    	// final List<Block> blockListclone = new ArrayList<Block>(event.blockList());
@@ -86,6 +91,12 @@ public class MiscListener implements Listener {
 	    }
 	  }
 
+     @EventHandler
+     public void onExplosionClear(EntityExplodeEvent event) {
+         //Prevent land damage completely
+         event.blockList().clear();
+
+     }
   
 	
 	@EventHandler(priority = EventPriority.LOW)
