@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
@@ -35,6 +36,17 @@ public class PlayerManager implements Listener {
 
     @EventHandler
     public void onLeave(final PlayerQuitEvent event) {
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+            @Override
+            public void run() {
+                savePlayer(event.getPlayer().getUniqueId());
+            }
+        });
+    }
+
+    @EventHandler
+    public void onRestart(final PlayerKickEvent event) {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
             @Override
@@ -105,7 +117,6 @@ public class PlayerManager implements Listener {
 
                                                     //   0        1          2          3              4              5
         List<String> loaded = jedis.hmget(u.toString(), "exp", "level", "revives", "doorsOpened", "weaponsBought", "rounds");
-            System.out.println(loaded);
             p.setXp(Double.parseDouble(loaded.get(0)));
             p.setLevel(Integer.parseInt(loaded.get(1)));
             p.setRevives(Integer.parseInt(loaded.get(2)));
@@ -118,7 +129,7 @@ public class PlayerManager implements Listener {
         players.put(u, p);
         plugin.getJedisPool().returnResource(jedis);
         System.out.println(System.currentTimeMillis() - started + "ms load time");
-        printDebug(p);
+       // printDebug(p);
     }
 
     public void giveExp(List<Player> players) {
