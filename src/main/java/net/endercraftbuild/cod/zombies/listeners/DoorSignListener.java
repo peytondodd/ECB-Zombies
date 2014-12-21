@@ -2,6 +2,7 @@ package net.endercraftbuild.cod.zombies.listeners;
 
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.PlayerSignEvent;
+import net.endercraftbuild.cod.player.CoDPlayer;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.objects.Door;
 
@@ -52,12 +53,16 @@ public class DoorSignListener implements Listener {
 				
 				door.open();
 				foundDoor = true;
+                plugin.getEconomy().withdrawPlayer(player.getName(), cost);
+                player.sendMessage(plugin.prefix + ChatColor.RED + "Door opened!");
+                player.playSound(player.getLocation(), Sound.ANVIL_USE, 160.0F, 0.0F);
+                CoDPlayer c = plugin.getPlayerManager().getPlayer(player);
+                c.incrementDoors();
+                c.giveXp(8);
+
 			}
-		
-		if(foundDoor)
-			plugin.getEconomy().withdrawPlayer(player.getName(), cost);
-			player.sendMessage(plugin.prefix + ChatColor.RED + "Door opened!");
-			player.playSound(player.getLocation(), Sound.ANVIL_USE, 160.0F, 0.0F);
+
+
 	}
 	
 }

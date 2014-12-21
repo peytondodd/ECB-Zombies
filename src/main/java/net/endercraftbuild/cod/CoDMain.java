@@ -7,10 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
+import io.puharesource.mc.titlemanager.api.ActionbarTitleObject;
+import io.puharesource.mc.titlemanager.api.TitleObject;
 import net.endercraftbuild.cod.GameManager;
 import net.endercraftbuild.cod.commands.*;
 import net.endercraftbuild.cod.guns.Shoot;
 import net.endercraftbuild.cod.listeners.*;
+import net.endercraftbuild.cod.player.PlayerManager;
+import net.endercraftbuild.cod.player.StatsPlayerListener;
 import net.endercraftbuild.cod.zombies.commands.*;
 import net.endercraftbuild.cod.zombies.listeners.*;
 import net.milkbowl.vault.economy.Economy;
@@ -19,19 +23,27 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 public class CoDMain extends JavaPlugin {
-	
-	public String prefix = ChatColor.DARK_GREEN.toString() + ChatColor.BOLD + "Zombies" + ChatColor.GREEN + "> ";
+
+
+    private JedisPool pool = null;
+	public String prefix = ChatColor.GOLD.toString() + ChatColor.BOLD + "Zombies" + ChatColor.YELLOW + "> ";
 	
 	
 	private Economy economy;
 	
 	private GameManager gameManager;
+    private PlayerManager playerManager;
 	
 	public List<String> pistol = new ArrayList<String>();
 	public List<String> reloaders = new ArrayList<String>();
@@ -50,18 +62,20 @@ public class CoDMain extends JavaPlugin {
 		
 		if (!setupEconomy())
 			getLogger().warning("Vault not found!");
-		
 
-		
+
+        setupJedis();
 		registerDynamicPermissions();
 		registerListeners();
 		registerCommands();
 		setupGameManager();
+        setupPlayerManager();
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	}
 	
 	public void onDisable() {
 		getGameManager().disable();
+        pool.destroy();
 	}
 	
 	public void reload() {
@@ -94,7 +108,8 @@ public class CoDMain extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new Shoot(this), this);  // FIXME: should be called ShootListener
 		getServer().getPluginManager().registerEvents(new WallWeaponSignListener(this), this);
 		getServer().getPluginManager().registerEvents(new MiscListener(this), this);
-		//getServer().getPluginManager().registerEvents(new PVPJoinLeaveListener(this), this);
+		getServer().getPluginManager().registerEvents(new StatsPlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new AdvanceListener(this), this);
 	}
 	
 	private void registerCommands() {
@@ -130,6 +145,10 @@ public class CoDMain extends JavaPlugin {
 		getCommand("zadvance").setExecutor(new AdvanceCommand(this));
 		
 		getCommand("setlobbysign").setExecutor(new LobbySignCommand(this));
+
+        getCommand("ztoggleadvanced").setExecutor(new AdvancedToggleCommand(this));
+        getCommand("zminlevel").setExecutor(new MinLevelCommand(this));
+        getCommand("setlevel").setExecutor(new SetPlayerLevelCommand(this));
 	}
 		
 	
@@ -157,11 +176,41 @@ public class CoDMain extends JavaPlugin {
 			getLogger().log(Level.SEVERE, "Failed to load games: ", e);
 		}
 	}
+
+    private void setupPlayerManager() {
+        playerManager = new PlayerManager(this);
+    }
+
+    private void setupJedis() {
+        try {
+            pool = new JedisPool(new JedisPoolConfig(), this.getConfig().getString("redis-server"), this.getConfig().getInt("redis-port"));
+
+            Jedis jedis = getJedisPool().getResource();
+            jedis.ping(); //make sure its alive
+            getJedisPool().returnResource(jedis);
+
+        } catch (JedisConnectionException e) {
+            System.out.println(e);
+        }
+
+    }
 	
 	public GameManager getGameManager() {
 		return this.gameManager;
 	}
-	
+
+    public JedisPool getJedisPool() {
+        return pool;
+    }
+
+    public PlayerManager getPlayerManager() { return playerManager; }
+
+    public void sendFloatingText(Player player, String title, String subtitle) {
+        new TitleObject(title, subtitle).setFadeIn(15).setFadeOut(15).setStay(80).send(player);
+    }
+    public  void sendActionbarMessage(Player player, String message) {
+        new ActionbarTitleObject(message).send(player);
+    }
 }
 
 

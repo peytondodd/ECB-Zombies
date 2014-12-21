@@ -4,6 +4,8 @@ import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.events.PlayerSignEvent;
 
+import net.endercraftbuild.cod.player.CoDPlayer;
+import net.endercraftbuild.cod.zombies.ZombieGame;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -38,8 +40,21 @@ public class JoinSignListener implements Listener {
 			return;
 		}
 
+
+
+
+
 		try {
+
+
 			game = plugin.getGameManager().get(sign.getLine(1));
+
+            CoDPlayer cp = plugin.getPlayerManager().getPlayer(player);
+            if(cp.getLevel() < game.getMinLevel()) {
+                player.sendMessage(plugin.prefix + ChatColor.BOLD + "You are NOT a high enough level to join this game! Required: " + game.getMinLevel());
+                return;
+            }
+
 			game.addPlayer(player);
 			game.broadcast(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");
 			//player.getServer().broadcastMessage(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");

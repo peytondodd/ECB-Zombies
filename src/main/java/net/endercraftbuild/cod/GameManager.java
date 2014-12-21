@@ -13,11 +13,10 @@ import java.util.logging.Level;
 
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
-import net.endercraftbuild.cod.events.PlayerLeaveEvent;
+import net.endercraftbuild.cod.events.PlayerLeaveGameEvent;
 import net.endercraftbuild.cod.tasks.GameTickTask;
 import net.endercraftbuild.cod.tasks.PerpetualNightTask;
 import net.endercraftbuild.cod.zombies.ZombieGame;
-import net.endercraftbuild.cod.CoDMain;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -171,7 +170,7 @@ public class GameManager implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerLeave(PlayerLeaveEvent event) {
+	public void onPlayerLeave(PlayerLeaveGameEvent event) {
 		final String name = event.getPlayer().getName();
 		final Game game = event.getGame();
 		

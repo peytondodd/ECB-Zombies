@@ -44,7 +44,7 @@ public class GameProgressListener implements Listener {
 		game.healPlayers();
 		
 		game.broadcastToAll(ChatColor.AQUA + game.getName() + " has started!");
-		game.advanceWave();
+        game.advanceWave();
 		game.updateLobbySign();
 	}
 
@@ -62,11 +62,14 @@ public class GameProgressListener implements Listener {
 		game.updateLobbySign();
 		
 		if(game.isPrivate()) {
-			game.broadcastToAll(ChatColor.GREEN + "Private game: " + game.getName() + " has ended! ");
+			game.broadcastToAll(ChatColor.GREEN + "Donor game: " + game.getName() + " has ended! ");
 		}
 		else {
 			game.broadcastToAll(ChatColor.AQUA + game.getName() + " has ended!");
 		}
+        for(Player  p : game.getPlayers()) {
+            plugin.sendFloatingText(p, ChatColor.DARK_RED + "Game Over", ChatColor.RED +  "You survived " + game.getCurrentWave() + " rounds!");
+        }
 	}
 
 	@EventHandler
@@ -81,7 +84,6 @@ public class GameProgressListener implements Listener {
 		game.broadcast(ChatColor.GRAY + "Round " + ChatColor.RED + game.getCurrentWave() + ChatColor.GRAY + " will begin shortly!");
 		game.broadcast(ChatColor.GRAY + "There are " + ChatColor.RED + game.getMaxEntityCount() + ChatColor.GRAY + " " + game.getWaveMob() + " in this round!");
 		game.updateLobbySign();
-		
 		//Effect player
 		
 }
@@ -95,7 +97,10 @@ public class GameProgressListener implements Listener {
 			return;
 		
 		game.broadcast(ChatColor.GRAY + "The round has begun!");
-		
+
+        for(Player p : game.getPlayers()) {
+            plugin.sendFloatingText(p, ChatColor.DARK_RED + ChatColor.BOLD.toString() + "Round " + game.getCurrentWave(), ChatColor.RED + "has begun!");
+        }
 		
 		}
 	
@@ -127,7 +132,6 @@ public class GameProgressListener implements Listener {
 		try {
 			Player killer = event.getEntity().getKiller();
 			Game game = plugin.getGameManager().get(killer);
-			
 			if (killer == null || gameEntity.getGame() != game) {
 				gameEntity.respawn();
 				return;
@@ -150,6 +154,8 @@ public class GameProgressListener implements Listener {
 		event.getKiller().giveExp(game.getRandom(25));
 		game.payPlayer(event.getKiller(), game.getRandom(30) + 1);
 		game.incrementWaveKills();
+        //yay randomly drop a perk
+        game.randomPerkDrop();
 		
 		
 	}

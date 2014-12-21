@@ -4,6 +4,9 @@
 # must have a permission similar to 'cod.kits.zombies.normal'.  If a player
 # has more than one kit permission, they will get all kits they have the proper
 # permssion nodes for.
+
+redis-server: 192.99.46.71
+redis-port: 6379
 kits:
   zombies:
     normal:
@@ -14,7 +17,7 @@ kits:
       - id: 337
         name: Ammo
         quantity: 64
-    donor:
+    slayer:
       - id: 267
         name: Combat Knife
       - id: 307
@@ -25,6 +28,8 @@ kits:
       - id: 337
         name: Ammo
         quantity: 64
+      - id: 369
+        name: "&cWundwaffe DG-2"
 
 # Mystery box items.  All options available in kits section work here as well.
 mystery-box:
@@ -38,3 +43,9 @@ mystery-box:
     name: Body Armor
   - id: 292
     name: AK-47
+donoronlybox:
+  - id: 293
+    name: "&c&lRay Gun"
+  - id: 368
+    name: "&c&lGrenades"
+    quantity: 16

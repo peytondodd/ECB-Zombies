@@ -5,11 +5,11 @@ import net.endercraftbuild.cod.Game;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
  
-public class PlayerLeaveEvent extends PlayerGameEvent {
+public class PlayerLeaveGameEvent extends PlayerGameEvent {
 	
     private static final HandlerList handlers = new HandlerList();
     
-    public PlayerLeaveEvent(Player player, Game game) {
+    public PlayerLeaveGameEvent(Player player, Game game) {
     	super(player, game);
     }
     

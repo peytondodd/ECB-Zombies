@@ -8,7 +8,7 @@ import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameTickEvent;
 import net.endercraftbuild.cod.events.PlayerDiedEvent;
-import net.endercraftbuild.cod.events.PlayerLeaveEvent;
+import net.endercraftbuild.cod.events.PlayerLeaveGameEvent;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 import net.endercraftbuild.cod.zombies.events.PlayerReviveEvent;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
@@ -18,13 +18,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerDeathListener implements Listener {
@@ -40,7 +38,7 @@ public class PlayerDeathListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerLeave(PlayerLeaveEvent event) {
+	public void onPlayerLeave(PlayerLeaveGameEvent event) {
 		if (event.getGame() != game)
 			return;
 		
@@ -107,9 +105,17 @@ public class PlayerDeathListener implements Listener {
 		DeadPlayer deadPlayer = new DeadPlayer(player, this.game);
 		deadPlayers.put(player, deadPlayer);
 		deadPlayer.spawn();
+
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
 		
 		game.broadcast(ChatColor.BOLD.toString() + ChatColor.DARK_RED + event.getDeathMessage());
-		
+
+        for(Player p : game.getPlayers()) {
+            plugin.sendActionbarMessage(p, ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + player.getName() + " has been downed! Go revive them!");
+        }
+
 		if (deadPlayers.size() == game.getPlayers().size())
 			safelyEndGame();
 	}
@@ -122,9 +128,11 @@ public class PlayerDeathListener implements Listener {
 			return;
 		
 		Sign sign = (Sign) block.getState();
-		if (sign.getLine(0) != DeadPlayer.SIGN_HEADER)
+
+
+		if (!sign.getLine(0).equals(DeadPlayer.SIGN_HEADER))
 			return;
-		
+
 		Iterator<DeadPlayer> iterator = deadPlayers.values().iterator();
 		while (iterator.hasNext()) {
 			DeadPlayer deadPlayer = iterator.next();

@@ -2,7 +2,7 @@ package net.endercraftbuild.cod.zombies.listeners;
 
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
-import net.endercraftbuild.cod.events.PlayerLeaveEvent;
+import net.endercraftbuild.cod.events.PlayerLeaveGameEvent;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.entity.Player;
@@ -27,7 +27,7 @@ public class InventorySpawnListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerLeave(PlayerLeaveEvent event) {
+	public void onPlayerLeave(PlayerLeaveGameEvent event) {
 		reset(event.getPlayer());
 	}
 	

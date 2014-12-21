@@ -4,7 +4,7 @@ import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.Game;
 import net.endercraftbuild.cod.events.PlayerDiedEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
-import net.endercraftbuild.cod.events.PlayerLeaveEvent;
+import net.endercraftbuild.cod.events.PlayerLeaveGameEvent;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -22,7 +22,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -105,8 +104,11 @@ public class GlobalMechanicsListener implements Listener {
 		if(!(event.getEntity() instanceof Player))
 			return;
 
-		if(event.getCause() == DamageCause.ENTITY_EXPLOSION || event.getCause() == DamageCause.BLOCK_EXPLOSION)
-			return;
+		if(event.getCause() == DamageCause.ENTITY_EXPLOSION || event.getCause() == DamageCause.BLOCK_EXPLOSION || event.getCause() == DamageCause.PROJECTILE || event.getCause() == DamageCause.LIGHTNING) {
+            event.setCancelled(true);
+            return;
+        }
+
 
 		Player player = (Player) event.getEntity();
 
@@ -122,7 +124,7 @@ public class GlobalMechanicsListener implements Listener {
 		}
 	}
 	@EventHandler
-	public void gameLeave(PlayerLeaveEvent event) {
+	public void gameLeave(PlayerLeaveGameEvent event) {
 		Player player = event.getPlayer();
 		player.setAllowFlight(false);
 		player.setFlying(false);

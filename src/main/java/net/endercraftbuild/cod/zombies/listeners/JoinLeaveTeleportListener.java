@@ -2,7 +2,7 @@ package net.endercraftbuild.cod.zombies.listeners;
 
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
-import net.endercraftbuild.cod.events.PlayerLeaveEvent;
+import net.endercraftbuild.cod.events.PlayerLeaveGameEvent;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
 import org.bukkit.ChatColor;
@@ -32,7 +32,7 @@ public class JoinLeaveTeleportListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerQuit(PlayerLeaveEvent event) {
+	public void onPlayerQuit(PlayerLeaveGameEvent event) {
 		ZombieGame game = (ZombieGame)event.getGame();
 		Player player = event.getPlayer();
 		player.teleport(player.getWorld().getSpawnLocation());

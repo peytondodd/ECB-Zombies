@@ -8,7 +8,7 @@ import java.util.Random;
 import net.endercraftbuild.cod.events.GameEndEvent;
 import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.PlayerJoinEvent;
-import net.endercraftbuild.cod.events.PlayerLeaveEvent;
+import net.endercraftbuild.cod.events.PlayerLeaveGameEvent;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -34,6 +34,8 @@ public abstract class Game {
 	
 	private Permission permission;
 	private boolean isActive;
+
+    private int minLevel = 0;
 	
 	public Game(CoDMain plugin) {
 		this.plugin = plugin;
@@ -56,7 +58,8 @@ public abstract class Game {
 		this.setMaximumPlayers(config.getLong("max-players"));
 		this.setEnabled(config.getBoolean("enabled", true));
 		this.setPrivate(config.getBoolean("private", true));
-		
+        this.setMinLevel(config.getInt("minimum-level"));
+
 		return config;
 	}
 	
@@ -67,9 +70,18 @@ public abstract class Game {
 		gameSection.set("max-players", getMaximumPlayers());
 		gameSection.set("enabled", isEnabled());
 		gameSection.set("private", isPrivate());
+        gameSection.set("minimum-level", getMinLevel());
+
 		return gameSection;
 	}
-	
+    public int getMinLevel() {
+        return minLevel;
+    }
+
+    public void setMinLevel(int minLevel) {
+        this.minLevel = minLevel;
+    }
+
 	public String getName() {
 		return name;
 	}
@@ -202,7 +214,7 @@ public abstract class Game {
 	public void removePlayer(Player player) {
 		if (!isInGame(player))
 			throw new IllegalArgumentException(player.getName() + " is not in this game.");
-		callEvent(new PlayerLeaveEvent(player, this));
+		callEvent(new PlayerLeaveGameEvent(player, this));
 		players.remove(player);
 		if (isActive() && !isPrivate() && players.size() < minimumPlayers) 
 			stop();
@@ -216,7 +228,7 @@ public abstract class Game {
 		Iterator<Player> iterator = players.iterator();
 		while (iterator.hasNext()) {
 			Player player = iterator.next();
-			callEvent(new PlayerLeaveEvent(player, this));
+			callEvent(new PlayerLeaveGameEvent(player, this));
 			iterator.remove();
 		}
 		if (isActive())

@@ -20,14 +20,18 @@ import net.endercraftbuild.cod.zombies.objects.GameWolf;
 import net.endercraftbuild.cod.zombies.objects.GameZombie;
 import net.endercraftbuild.cod.zombies.objects.LobbySign;
 import net.endercraftbuild.cod.zombies.objects.Spawner;
+import net.endercraftbuild.cod.zombies.tasks.FiresaleTask;
+import net.endercraftbuild.cod.zombies.tasks.InstaKillTask;
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.*;
 
 public class ZombieGame extends Game {
 	
@@ -46,6 +50,10 @@ public class ZombieGame extends Game {
 	private Long currentWave;
 	private Long waveKills;
 	private final List<GameEntity> gameEntities;
+    private boolean isAdvanced = false;
+    private boolean isFireSale;
+    private boolean isInstaKill;
+
 
 	public ZombieGame(CoDMain plugin) {
 		super(plugin);
@@ -58,6 +66,7 @@ public class ZombieGame extends Game {
 		setCurrentWave(0L);
 		setWaveKills(0L);
 		gameEntities = new ArrayList<GameEntity>();
+        isFireSale = false;
 	}
 	
 	@Override
@@ -72,7 +81,8 @@ public class ZombieGame extends Game {
 		
 		this.setZombieMultiplier(config.getDouble("zombie-multiplier"));
 		this.setMaxWaves(config.getLong("max-waves"));
-		
+		this.setAdvanced(config.getBoolean("advanced"));
+
 		setSpawnLocation(Utils.loadLocation(config));
 		
 		ConfigurationSection lobbyLocationSection = config.getConfigurationSection("lobby-location");
@@ -133,6 +143,8 @@ public class ZombieGame extends Game {
 		
 		gameSection.set("zombie-multiplier", getZombieMultiplier());
 		gameSection.set("max-waves", getMaxWaves());
+        gameSection.set("advanced", isAdvanced());
+
 		
 		Utils.saveLocation(getSpawnLocation(), gameSection);
 		
@@ -174,10 +186,40 @@ public class ZombieGame extends Game {
 	public void stop() {
 		cancelRoundStartTask();
 		clearRoundStartTask();
-		setCurrentWave(0L);
 		super.stop();
+        //call event first to display rounds survived
+        setCurrentWave(0L);
 	}
-	
+
+
+
+    public boolean isInstaKill() {
+        return isInstaKill;
+    }
+
+    public void setInstaKill(boolean isInstaKill) {
+        this.isInstaKill = isInstaKill;
+    }
+
+    public boolean isFireSaleActive() {
+        return isFireSale;
+    }
+
+    public void setFireSale(boolean isFireSale) {
+        this.isFireSale = isFireSale;
+    }
+
+    public boolean isAdvanced() {
+        return isAdvanced;
+    }
+    public void setAdvanced(boolean isAdvanced) {
+        this.isAdvanced = isAdvanced;
+    }
+
+    public boolean toggleAdvanced() {
+        return this.isAdvanced = !isAdvanced;
+    }
+
 	public Double getZombieMultiplier() {
 		return zombieMultiplier;
 	}
@@ -226,7 +268,7 @@ public class ZombieGame extends Game {
 				}
 			}
 		};
-		this.pendingRoundStartTask.runTaskLater(getPlugin(), 20L * 20L);
+		this.pendingRoundStartTask.runTaskLater(getPlugin(), 20L * 15L);
 	}
 	
 	private void cancelRoundStartTask() {
@@ -520,8 +562,24 @@ public class ZombieGame extends Game {
 		
 		if (economy.depositPlayer(player.getName(), amount).transactionSuccess()) {
 			String balance = economy.format(economy.getBalance(player.getName()));
-			String deposit = economy.format(amount);
-			player.sendMessage(getPlugin().prefix + ChatColor.GREEN + "You have " + ChatColor.DARK_GREEN + balance + ChatColor.GREEN + "! Gained: " + ChatColor.DARK_GREEN + deposit + "!");
+
+            if (player.hasPermission("cod.donor.1")) {
+                amount += 5;
+                String deposit = economy.format(amount);
+                player.sendMessage(getPlugin().prefix + ChatColor.BLUE + "Gained: " + ChatColor.DARK_GREEN + deposit + ChatColor.BLUE + " (+5 Slayer)! Total: " + ChatColor.DARK_GREEN + balance + "!");
+            } else if (player.hasPermission("cod.donor.2")) {
+                amount += 8;
+                String deposit = economy.format(amount);
+                player.sendMessage(getPlugin().prefix + ChatColor.BLUE + "Gained: " + ChatColor.DARK_GREEN + deposit + ChatColor.BLUE + " (+8 Slayer+)! Total: " + ChatColor.DARK_GREEN + balance + "!");
+            } else if (player.hasPermission("cod.donor.3")) {
+                amount += 10;
+                String deposit = economy.format(amount);
+                player.sendMessage(getPlugin().prefix + ChatColor.BLUE + "Gained: " + ChatColor.DARK_GREEN + deposit + ChatColor.BLUE + " (+10 ???)! Total: " + ChatColor.DARK_GREEN + balance + "!");
+            } else {
+                String deposit = economy.format(amount);
+                player.sendMessage(getPlugin().prefix + ChatColor.BLUE + "Gained: " + ChatColor.DARK_GREEN + deposit + ChatColor.BLUE + "! Total: " + ChatColor.DARK_GREEN + balance + "!");
+            }
+
 		}
 	}
 	
@@ -542,5 +600,71 @@ public class ZombieGame extends Game {
 	public boolean shouldSpawnRunner() {
 		return getRandom(10) < 5;
 	}
-	
+
+    public void updateScoreboard(Player player)
+    {
+        Economy economy = super.getPlugin().getEconomy();
+        Scoreboard board = player.getScoreboard();
+        Objective objective = board.getObjective(DisplaySlot.SIDEBAR);
+        Score score_money = objective.getScore(ChatColor.GREEN + "Money:");
+        Score remaining_zombies = objective.getScore(ChatColor.GREEN + "Zombies Left:");
+        Score round = objective.getScore(ChatColor.GREEN + "Round:");
+        Score health = objective.getScore(ChatColor.GREEN + "Health:");
+        int balance = (int)economy.getBalance(player.getName());
+        score_money.setScore(balance);
+        remaining_zombies.setScore((int)getRemainingEntityCount());
+        round.setScore(getCurrentWave().intValue());
+        health.setScore((int)player.getHealth());
+    }
+
+    public Scoreboard createNewScoreboard(Player player)
+    {
+        ScoreboardManager manager = Bukkit.getScoreboardManager();
+        Economy economy = super.getPlugin().getEconomy();
+        Scoreboard board = manager.getNewScoreboard();
+
+        Objective objective = board.registerNewObjective("zombies", "dummy");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        objective.setDisplayName(ChatColor.BLUE.toString() + ChatColor.BOLD + "Game: " + getName());
+        Score score_money = objective.getScore(ChatColor.GREEN + "Money:");
+        Score remaining_zombies = objective.getScore(ChatColor.GREEN + "Zombies Left:");
+        Score round = objective.getScore(ChatColor.GREEN + "Round:");
+        Score health = objective.getScore(ChatColor.GREEN + "Health:");
+        int balance = (int)economy.getBalance(player.getName());
+        score_money.setScore(balance);
+        remaining_zombies.setScore((int)getRemainingEntityCount());
+        round.setScore(getCurrentWave().intValue());
+        health.setScore((int)player.getHealth());
+        player.setScoreboard(board);
+        return board;
+    }
+
+    public void startFiresale() {
+        setFireSale(true);
+        broadcast(getPlugin().prefix + ChatColor.BOLD + "FIRESALE active for 15 seconds! All boxes $25!");
+        new FiresaleTask(this).runTaskLaterAsynchronously(getPlugin(), 300); //15s
+        for(Player p : getPlayers()) {
+            getPlugin().sendFloatingText(p, ChatColor.GREEN.toString() + ChatColor.BOLD + "FIRESALE Active!", ChatColor.YELLOW + "All boxes $25 for 15 seconds!");
+        }
+    }
+
+    public void startInstaKill() {
+        setInstaKill(true);
+        broadcast(getPlugin().prefix + ChatColor.BOLD + "INSTA-KILL active for 30 seconds!");
+        new InstaKillTask(this).runTaskLaterAsynchronously(getPlugin(), 600); //30 s
+        for(Player p : getPlayers()) {
+            getPlugin().sendFloatingText(p, ChatColor.GREEN.toString() + ChatColor.BOLD + "INSTA-KILL Active!", ChatColor.YELLOW + "All zombies insta-kill for 30 seconds!");
+        }
+    }
+
+
+    public void randomPerkDrop() {
+        int val = getRandom(450);
+        if (val == 1) {
+            startFiresale();
+        } else if (val == 2) {
+            startInstaKill();
+        }
+    }
+
 }

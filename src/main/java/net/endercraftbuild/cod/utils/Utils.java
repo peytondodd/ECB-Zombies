@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.server.v1_7_R3.NBTTagCompound;
-import net.minecraft.server.v1_7_R3.NBTTagList;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.NBTTagList;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -31,10 +28,17 @@ public class Utils {
 
 	public static ItemStack setItemName(ItemStack is, String str) {
 		ItemMeta im = is.getItemMeta();
-		im.setDisplayName(str);
+		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', str));
 		is.setItemMeta(im);
 		return is;
 	}
+
+    public static ItemStack setItemLore(ItemStack is, ArrayList<String> lore) {
+        ItemMeta im = is.getItemMeta();
+        im.setLore(lore);
+        is.setItemMeta(im);
+        return is;
+    }
 	
 	public static ConfigurationSection saveLocation(Location location, ConfigurationSection config) {
 		config.set("world", location.getWorld().getName());
@@ -75,8 +79,25 @@ public class Utils {
 				
 				if (item.containsKey("wear"))
 					wearItem(player, itemStack, (String) item.get("wear"));
-				else
-					inventory.addItem(itemStack);
+
+
+                else {
+
+                    if(itemStack.getType() == Material.BLAZE_ROD) {
+                        ArrayList<String> s = new ArrayList<>();
+                        s.add(ChatColor.YELLOW + "Charges left:"); //0
+                        if (player.hasPermission("cod.donor.1")) {
+                            s.add("5"); //1
+                        } else  if (player.hasPermission("cod.donor.2")) {
+                            s.add("7");
+                        } else  if (player.hasPermission("cod.donor.3")) {
+                            s.add("10");
+                        }
+                        setItemLore(itemStack, s);
+                    }
+                    inventory.addItem(itemStack);
+                }
+
 			}
 		}
 		
@@ -114,7 +135,7 @@ public class Utils {
 	}
 	 
 	public static ItemStack addGlow(ItemStack item){ 
-		net.minecraft.server.v1_7_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+		net.minecraft.server.v1_8_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 		NBTTagCompound tag = null;
 		if (!nmsStack.hasTag()) {
 			tag = new NBTTagCompound();

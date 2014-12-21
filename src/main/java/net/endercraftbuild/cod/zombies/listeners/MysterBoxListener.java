@@ -5,7 +5,9 @@ import java.util.Map;
 
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.Game;
+import net.endercraftbuild.cod.player.CoDPlayer;
 import net.endercraftbuild.cod.utils.Utils;
+import net.endercraftbuild.cod.zombies.ZombieGame;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -78,6 +80,10 @@ public class MysterBoxListener implements Listener {
 		((Chest) block.getState()).getInventory().clear();
 
 		Double cost = Double.parseDouble(sign.getLine(1).replaceAll("[^\\d\\.-]", ""));
+
+        if(((ZombieGame)game).isFireSaleActive()) {
+           cost = 25.0;
+        }
 		if (!plugin.getEconomy().withdrawPlayer(player.getName(), cost).transactionSuccess()) {
 			player.sendMessage(ChatColor.RED + "You do not have enough money!");
 			event.setCancelled(true);
@@ -85,6 +91,14 @@ public class MysterBoxListener implements Listener {
 		}
 		
 		List<Map<?, ?>> items = plugin.getConfig().getMapList("mystery-box");
+        if(player.hasPermission("cod.donor.1") || player.hasPermission("cod.donor.2") || player.hasPermission("cod.donor.3")) {
+            //donor no longer start with ray gun - to the box with it!
+            player.sendMessage(plugin.prefix + "It appears you are aa donor! You have a chance for donor items!"); //make sure they know
+            List<Map<?, ?>> ditems = plugin.getConfig().getMapList("donoronlybox");
+            for(Map<?, ?> i : ditems) {
+                items.add(i);
+            }
+        }
 		Map<?, ?> item = items.get(game.getRandom(items.size()));
 		
 		ItemStack itemStack = new ItemStack((Integer) item.get("id"), 1);
@@ -95,6 +109,9 @@ public class MysterBoxListener implements Listener {
 			Utils.setItemName(itemStack, (String) item.get("name"));
 		
 		inventory.setContents(new ItemStack[] {itemStack});
+        CoDPlayer cp = plugin.getPlayerManager().getPlayer(player);
+        cp.giveXp(8);
+        cp.setWeaponsBought(cp.getWeaponsBought() + 1);
 	}
 	
 }

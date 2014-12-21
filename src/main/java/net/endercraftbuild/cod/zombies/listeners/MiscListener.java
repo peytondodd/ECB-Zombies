@@ -3,29 +3,27 @@ package net.endercraftbuild.cod.zombies.listeners;
 import java.util.Iterator;
 
 import net.endercraftbuild.cod.CoDMain;
-import net.endercraftbuild.cod.Game;
-import net.endercraftbuild.cod.events.GameStartEvent;
 import net.endercraftbuild.cod.events.GameTickEvent;
-import net.endercraftbuild.cod.events.PlayerJoinEvent;
-import net.endercraftbuild.cod.events.PlayerLeaveEvent;
 import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.ZombieGame;
+import net.endercraftbuild.cod.zombies.events.GameEntityDeathEvent;
 import net.endercraftbuild.cod.zombies.events.RoundAdvanceEvent;
+import net.endercraftbuild.cod.zombies.objects.GameEntity;
 import net.endercraftbuild.cod.zombies.tasks.FireworkTask;
-import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.scoreboard.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class MiscListener implements Listener {
@@ -67,41 +65,86 @@ public class MiscListener implements Listener {
 			event.setCancelled(true);
 	}
 
-	//@EventHandler(priority = EventPriority.HIGHEST)
-	  public void onExplosion(EntityExplodeEvent event) {
+    @EventHandler
+    public void onLastZombie(GameEntityDeathEvent event) {
+        ZombieGame game = (ZombieGame)event.getGame();
 
-          //MINECRAFT 1.8 Spigot protocol hack: Throwing blocks seems to cause rendering issues...
-          //Client sees that the land is being destroyed (and glitches them a bit if they are in the holes)
-          //But it is just a rendering bug, nothing is actually destroyed. Temporary disable until full Spigot 1.8
+        if(game.getLivingEntityCount() == 2) {
 
-	    if (!event.isCancelled()) {
-	    	// List<Block> blockListclone;
-	    	// final List<Block> blockListclone = new ArrayList<Block>(event.blockList());
+            for(Player p : game.getPlayers()) {
+                if(!p.getInventory().contains(Material.COMPASS)) {
+                    ItemStack c = new ItemStack(Material.COMPASS);
+                    Utils.setItemName(c, ChatColor.RED + "Find Last Zombie");
+                    p.getInventory().addItem(c);
+                    //should always return last zombie
+                    p.setCompassTarget(game.getGameEntities().get(0).getMob().getLocation());
+                    p.sendMessage(plugin.prefix + "One zombie left! Check your compass for help finding it!");
+                }
 
-	    	for (Block block : event.blockList()) {
-	    		Vector newVelo = event.getLocation().subtract(event.getLocation()).toVector();
-	    		newVelo.setX(event.getYield() * 2.0F - newVelo.getX());
-	    		newVelo.setY(event.getYield() * 2.5F - newVelo.getY());
-	    		newVelo.setZ(event.getYield() * 2.0F - newVelo.getZ());
-	    		
-	    		final FallingBlock fallBlock = block.getWorld().spawnFallingBlock(block.getLocation(), block.getType(), block.getData());
-	    		fallBlock.setVelocity(newVelo);
-	    		fallBlock.setDropItem(false);
+            }
 
-	    		break;
-	    	}
-	    	
-	    	event.blockList().clear();
-	    }
-	  }
+        }
 
-     @EventHandler
-     public void onExplosionClear(EntityExplodeEvent event) {
-         //Prevent land damage completely
-         event.blockList().clear();
+    }
 
-     }
-  
+    @EventHandler
+    public void onFire(BlockIgniteEvent event) {
+        if(event.getCause() == BlockIgniteEvent.IgniteCause.LIGHTNING) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onAdvance(RoundAdvanceEvent event) {
+        ZombieGame game = (ZombieGame)event.getGame();
+        for (Player player : game.getPlayers()) {
+            if(player.getInventory().contains(Material.COMPASS)) {
+                player.getInventory().remove(Material.COMPASS);
+            }
+        }
+
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onExplosion(EntityExplodeEvent event) {
+
+        event.blockList().clear();
+    }
+
+    @EventHandler
+    public void onHit(EntityDamageByEntityEvent event) {
+        if(event.getEntityType() == EntityType.ZOMBIE) {
+            if(event.getDamager() instanceof Player) {
+
+                Player damager = (Player)event.getDamager();
+
+
+                if(plugin.getGameManager().get(damager) == null)
+                    return;
+
+                ZombieGame game = (ZombieGame)plugin.getGameManager().get(damager);
+
+                if(game.isInstaKill()) {
+                    event.setDamage(9999); //still want to count towards round
+                }
+                //not the best but it works...
+            } else if(event.getDamager() instanceof Projectile) {
+                Player d = (Player)((Projectile) event.getDamager()).getShooter();
+
+                if(plugin.getGameManager().get(d) == null)
+                    return;
+
+                ZombieGame game = (ZombieGame)plugin.getGameManager().get(d);
+
+                if(game.isInstaKill()) {
+                    event.setDamage(9999);
+                }
+            }
+
+        }
+
+    }
 
 	
 }

@@ -2,6 +2,7 @@ package net.endercraftbuild.cod.zombies.listeners;
 
 import net.endercraftbuild.cod.CoDMain;
 import net.endercraftbuild.cod.events.PlayerSignEvent;
+import net.endercraftbuild.cod.player.CoDPlayer;
 import net.endercraftbuild.cod.utils.Utils;
 import net.endercraftbuild.cod.zombies.ZombieGame;
 
@@ -52,6 +53,9 @@ public class WallWeaponSignListener implements Listener {
 		player.updateInventory();
 		player.sendMessage(plugin.prefix + "Item purchased!");
 		player.playSound(player.getLocation(), Sound.ANVIL_USE, 160.0F, 0.0F);
+        CoDPlayer cp = plugin.getPlayerManager().getPlayer(player);
+        cp.giveXp(6);
+        cp.setWeaponsBought(cp.getWeaponsBought() + 1);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -81,6 +85,8 @@ public class WallWeaponSignListener implements Listener {
 		player.updateInventory();
 		player.sendMessage(plugin.prefix + ChatColor.RED + "Ammo Purchased!");
 		player.playSound(player.getLocation(), Sound.ANVIL_USE, 160.0F, 0.0F);
+        CoDPlayer cp = plugin.getPlayerManager().getPlayer(player);
+        cp.giveXp(2);
 	}
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -120,6 +126,9 @@ public class WallWeaponSignListener implements Listener {
 		player.updateInventory();
 		player.sendMessage(plugin.prefix + ChatColor.RED + "Pack-A-Punched!");
 		player.playSound(player.getLocation(), Sound.ANVIL_LAND, 160.0F, 0.0F);
+        CoDPlayer cp = plugin.getPlayerManager().getPlayer(player);
+        cp.giveXp(10);
+
 		}
 		
 	}
