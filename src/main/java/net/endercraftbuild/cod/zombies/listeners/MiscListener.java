@@ -12,6 +12,7 @@ import net.endercraftbuild.cod.zombies.objects.GameEntity;
 import net.endercraftbuild.cod.zombies.tasks.FireworkTask;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
@@ -23,6 +24,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -78,7 +80,7 @@ public class MiscListener implements Listener {
                     p.getInventory().addItem(c);
                     //should always return last zombie
                     p.setCompassTarget(game.getGameEntities().get(0).getMob().getLocation());
-                    p.sendMessage(plugin.prefix + "One zombie left! Check your compass for help finding it!");
+                    p.sendMessage(plugin.prefix + "One zombie left! Check your compass! (NOTE: Compass seems inaccurate...)");
                 }
 
             }
@@ -110,6 +112,24 @@ public class MiscListener implements Listener {
     public void onExplosion(EntityExplodeEvent event) {
 
         event.blockList().clear();
+    }
+
+    @EventHandler(priority=EventPriority.HIGH)
+    public void EnderPearlGrenade(PlayerTeleportEvent event) {
+        Player player = event.getPlayer();
+
+
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+            event.setCancelled(true);
+
+            if(!player.hasPermission("cod.donor")) {
+                player.sendMessage(plugin.prefix + "Grenades are donor only, sorry! Shop @ ecb-mc.net/shop");
+                return;
+            }
+
+            Location toExplode = event.getTo();
+            event.getPlayer().getWorld().createExplosion(toExplode, 2.6f);
+        }
     }
 
     @EventHandler

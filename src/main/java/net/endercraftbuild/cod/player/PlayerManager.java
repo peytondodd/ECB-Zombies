@@ -45,16 +45,6 @@ public class PlayerManager implements Listener {
         });
     }
 
-    @EventHandler
-    public void onRestart(final PlayerKickEvent event) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-
-            @Override
-            public void run() {
-                savePlayer(event.getPlayer().getUniqueId());
-            }
-        });
-    }
 
 
 

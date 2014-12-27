@@ -46,6 +46,11 @@ public class JoinCommand implements CommandExecutor{
                 return true;
             }
 
+            if(game.isPrivate() && !player.hasPermission("cod.donor")) {
+                player.sendMessage(plugin.prefix + ChatColor.BOLD + "That is a private donor only game! Sorry! Shop @ ecb-mc.net/shop");
+                return true;
+            }
+
 			game.addPlayer(player);
 			game.broadcast(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");
 		} catch (RuntimeException e) {

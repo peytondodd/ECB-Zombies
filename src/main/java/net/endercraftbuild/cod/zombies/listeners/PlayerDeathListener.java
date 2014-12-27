@@ -133,6 +133,7 @@ public class PlayerDeathListener implements Listener {
 		if (!sign.getLine(0).equals(DeadPlayer.SIGN_HEADER))
 			return;
 
+
 		Iterator<DeadPlayer> iterator = deadPlayers.values().iterator();
 		while (iterator.hasNext()) {
 			DeadPlayer deadPlayer = iterator.next();

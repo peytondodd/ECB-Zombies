@@ -66,12 +66,14 @@ public class StatsPlayerListener implements Listener {
             event.setFormat(ChatColor.DARK_GRAY + "[" + ChatColor.RED + "Error!" + ChatColor.DARK_GRAY + "] " + ChatColor.RESET + event.getFormat());
             return; //prevent error
         }
-        if(p.getLevel() <= 5) {
+        if(p.getLevel() < 5) {
             event.setFormat(ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "Lv. " + p.getLevel() + ChatColor.DARK_GRAY + "] " + ChatColor.RESET + event.getFormat());
-        } else if(p.getLevel() > 5 && p.getLevel() <= 10) {
-            event.setFormat(ChatColor.DARK_GRAY + "[" + ChatColor.RED + "Lv. " + p.getLevel() + ChatColor.DARK_GRAY + "] " + ChatColor.RESET + event.getFormat());
-        } else {
+        } else if(p.getLevel() >= 5 && p.getLevel() < 10) {
+            event.setFormat(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Lv. " + p.getLevel() + ChatColor.DARK_GRAY + "] " + ChatColor.RESET + event.getFormat());
+        } else if(p.getLevel() >= 10 && p.getLevel() < 20) {
             event.setFormat(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Lv. " + p.getLevel() + ChatColor.DARK_GRAY + "] " + ChatColor.RESET + event.getFormat());
+        } else {
+            event.setFormat(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_PURPLE+ "Lv. " + p.getLevel() + ChatColor.DARK_GRAY + "] " + ChatColor.RESET + event.getFormat());
         }
     }
 }

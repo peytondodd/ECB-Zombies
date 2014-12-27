@@ -95,6 +95,20 @@ public class Shoot implements Listener {
                 Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
                 smokepase(player, loc);
                 player.playSound(player.getLocation(), Sound.CLICK, 160.0F, 0.0F);
+            } else if (hand.getType() == Material.GOLD_PICKAXE) { // M490
+
+                if (!consumeAmmo(player, 2)) {
+                    player.sendMessage(plugin.prefix + ChatColor.RED + "Out of ammo! Buy some at an ammo sign!");
+                    return;
+                }
+
+
+                player.launchProjectile(Snowball.class);
+                player.launchProjectile(Snowball.class);
+
+                Location loc = player.getEyeLocation().toVector().add(player.getLocation().getDirection().multiply(1)).toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+                smokepase(player, loc);
+                player.playSound(player.getLocation(), Sound.FIREWORK_LARGE_BLAST, 160.0F, 0.0F);
 
             } else if (hand.getType() == Material.IRON_PICKAXE) { // M4
 
@@ -183,15 +197,17 @@ public class Shoot implements Listener {
             } else if (hand.getType() == Material.BLAZE_ROD) { // wund
                 if (this.plugin.reloaders.contains(player.getName()))
                     return;
-                if (!isCharged(hand.getItemMeta())) {
-                    player.sendMessage(plugin.prefix + ChatColor.RED + "Out of charge!");
-                    return;
-                }
 
                 if(!player.hasPermission("cod.donor")) {
                     player.sendMessage(plugin.prefix + ChatColor.RED + "DONOR ONLY! Donate @ ecb-mc.net");
                     return;
                 }
+
+                if (!isCharged(hand.getItemMeta())) {
+                    player.sendMessage(plugin.prefix + ChatColor.RED + "Out of charge!");
+                    return;
+                }
+
 
                 this.plugin.reloaders.add(player.getName());
 
@@ -243,7 +259,7 @@ public class Shoot implements Listener {
                     public void run() {
                         self.plugin.pistol.remove(player.getName());
                     }
-                }, 15L);
+                }, 14L);
             }
         }
     }
@@ -286,11 +302,16 @@ public class Shoot implements Listener {
 		case IRON_HOE:
 			event.setDamage(pap ? 36 : 24);
 			break;
+        case GOLD_PICKAXE:
+            event.setDamage(pap ? 37 : 25);
+            System.out.println(event.getDamage());
+            break;
 		case IRON_PICKAXE:
 			event.setDamage(pap ? 30 : 20);
 			break;
 		case STONE_PICKAXE: //SMG
 			event.setDamage(pap ? 28 : 18);
+            break;
 		case DIAMOND_HOE:
 			event.setDamage(pap ? 40 : 28);
 			break;
@@ -410,7 +431,7 @@ public class Shoot implements Listener {
 
 	@EventHandler //Don't allow picks to be enchanted	
 	public void pickEnchant(EnchantItemEvent event) {
-		if(event.getItem().getType() == Material.STONE_PICKAXE || event.getItem().getType() == Material.IRON_PICKAXE || event.getItem().getType() == Material.DIAMOND_AXE) {
+		if(event.getItem().getType() == Material.STONE_PICKAXE || event.getItem().getType() == Material.IRON_PICKAXE  || event.getItem().getType() == Material.GOLD_PICKAXE|| event.getItem().getType() == Material.DIAMOND_AXE) {
 			event.setCancelled(true);
 			event.getEnchanter().sendMessage(plugin.prefix + ChatColor.RED + "Guns can be Pack-a-punched at PaP signs!");
 					

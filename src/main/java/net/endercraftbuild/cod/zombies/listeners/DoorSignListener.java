@@ -48,8 +48,11 @@ public class DoorSignListener implements Listener {
 		Location location = sign.getLocation();
 		for (Door door : game.getDoors())
 			if (door.getLocation().distance(location) < 6) {
-				if (door.isOpen())
-					continue;
+				if (door.isOpen()) { //why...?
+                    player.sendMessage(plugin.prefix + "Door already open!");
+                    return;
+                }
+
 				
 				door.open();
 				foundDoor = true;

@@ -74,7 +74,11 @@ public class CoDMain extends JavaPlugin {
 	}
 	
 	public void onDisable() {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            getPlayerManager().savePlayer(player.getUniqueId());
+        }
 		getGameManager().disable();
+
         pool.destroy();
 	}
 	

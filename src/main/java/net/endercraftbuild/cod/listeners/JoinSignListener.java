@@ -55,6 +55,11 @@ public class JoinSignListener implements Listener {
                 return;
             }
 
+            if(game.isPrivate() && !player.hasPermission("cod.donor")) {
+                player.sendMessage(plugin.prefix + ChatColor.BOLD + "That is a private donor only game! Sorry! Shop @ ecb-mc.net/shop");
+                return;
+            }
+
 			game.addPlayer(player);
 			game.broadcast(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");
 			//player.getServer().broadcastMessage(ChatColor.AQUA + player.getName() + " just joined " + game.getName() + ".");

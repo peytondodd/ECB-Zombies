@@ -45,6 +45,11 @@ public class WallWeaponSignListener implements Listener {
 			player.sendMessage(ChatColor.RED + "You do not have enough money!");
 			return;
 		}
+
+        if(name.equals("Grenade") && !player.hasPermission("ecb.donor")) {
+            player.sendMessage(plugin.prefix + ChatColor.RED + "Grenades are donor only! Sorry! Shop @ ecb-mc.net/shop");
+            return;
+        }
 		
 		PlayerInventory inv = player.getInventory();
 		ItemStack weapon = new ItemStack(id, 1);
@@ -54,7 +59,7 @@ public class WallWeaponSignListener implements Listener {
 		player.sendMessage(plugin.prefix + "Item purchased!");
 		player.playSound(player.getLocation(), Sound.ANVIL_USE, 160.0F, 0.0F);
         CoDPlayer cp = plugin.getPlayerManager().getPlayer(player);
-        cp.giveXp(6);
+        cp.giveXp(5);
         cp.setWeaponsBought(cp.getWeaponsBought() + 1);
 	}
 	
@@ -86,7 +91,7 @@ public class WallWeaponSignListener implements Listener {
 		player.sendMessage(plugin.prefix + ChatColor.RED + "Ammo Purchased!");
 		player.playSound(player.getLocation(), Sound.ANVIL_USE, 160.0F, 0.0F);
         CoDPlayer cp = plugin.getPlayerManager().getPlayer(player);
-        cp.giveXp(2);
+        cp.giveXp(1);
 	}
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -114,7 +119,7 @@ public class WallWeaponSignListener implements Listener {
 		
 
 		if(hand.getType() == Material.GOLD_HOE || hand.getType() == Material.STONE_HOE || hand.getType() == Material.WOOD_HOE || hand.getType() == Material.IRON_HOE ||
-				hand.getType() == Material.DIAMOND_HOE || hand.getType() == Material.STONE_PICKAXE || hand.getType() == Material.IRON_PICKAXE) {
+				hand.getType() == Material.DIAMOND_HOE || hand.getType() == Material.STONE_PICKAXE || hand.getType() == Material.IRON_PICKAXE || hand.getType() == Material.GOLD_PICKAXE) {
 			
 			if(Utils.isGunPaP(hand)) {
 				player.sendMessage(plugin.prefix + "That is already Pack-a-Punched!");
