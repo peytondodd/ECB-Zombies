@@ -282,13 +282,13 @@ permissions:
   cod.admin.signs:
     description: Allows you to create/edit CoD signs.
   cod.donor.1:
-    description: 1
+      description: 1
   cod.donor.2:
       description: 2
   cod.donor.3:
       description: 3
   cod.donor:
-        description: donor
+      description: donor
   cod.admin.minlevel:
       description: min level
   cod.admin.setlevel:
